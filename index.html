@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CICTAI 2026 | UNTELS</title>
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Vinculación a tu carpeta css -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Navegación -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top shadow">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <!-- Logo desde tu carpeta img -->
+                <img src="img/logo_UNTELS.png" alt="UNTELS" width="45" class="me-2 rounded-circle bg-white p-1">
+                <span class="fw-bold"><span class="text-gold">CICTAI</span> 2026</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto text-uppercase small fw-bold">
+                    <li class="nav-item"><a class="nav-link" href="#inicio">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#autoridades">Autoridades</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#comite">Organización</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#ejes">Ejes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#registro">Inscripción</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero / Portada -->
+    <header id="inicio" class="hero">
+        <div class="container text-center text-white">
+            <h4 class="fw-bold mb-3 tracking-widest">UNIVERSIDAD NACIONAL TECNOLÓGICA DE LIMA SUR</h4>
+            <h1 class="display-1 fw-800">I CONGRESO INTERNACIONAL <span class="text-gold">CICTAI</span></h1>
+            <p class="fs-3 italic">"Ciencia, Tecnología e Innovación para un Futuro Sostenible"</p>
+            <div class="mt-5">
+                <a href="#registro" class="btn btn-gold btn-lg px-5 py-3 fw-bold">REGISTRARSE</a>
+                <a href="#" class="btn btn-outline-light btn-lg px-5 py-3 ms-md-3">DESCARGAR LATEX (Overleaf)</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Autoridades Invitadas -->
+    <section id="autoridades" class="py-5 bg-light">
+        <div class="container">
+            <h2 class="section-title text-center mb-5">Autoridades de la UNTELS</h2>
+            <div class="row g-4 text-center">
+                <div class="col-md-4">
+                    <div class="p-3 shadow-sm bg-white rounded border-top-blue">
+                        <h6 class="fw-bold text-blue">Rectora</h6>
+                        <p class="mb-0">Dra. Gladys Marcionila Cruz Yupanqui</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 shadow-sm bg-white rounded border-top-blue">
+                        <h6 class="fw-bold text-blue">Vicerrectora Académica</h6>
+                        <p class="mb-0">Dra. Marina Vilca Cáceres</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="p-3 shadow-sm bg-white rounded border-top-blue">
+                        <h6 class="fw-bold text-blue">Vicerrector de Investigación</h6>
+                        <p class="mb-0">Dr. Ángel Fernando Navarro Raymundo</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Organización / Comité -->
+    <section id="comite" class="py-5">
+        <div class="container text-center">
+            <h2 class="section-title mb-5">Comité Organizador</h2>
+            <div class="row justify-content-center g-4">
+                <div class="col-md-5">
+                    <div class="p-4 border-gold rounded shadow-sm">
+                        <h5 class="fw-bold text-blue">Presidente</h5>
+                        <p class="fs-5">Dr. Manco Chávez, José Antonio</p>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="p-4 border-gold rounded shadow-sm">
+                        <h5 class="fw-bold text-blue">Vicepresidenta</h5>
+                        <p class="fs-5">Mag. Diaz Hinostroza, Mary Rosaura</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ejes Temáticos -->
+    <section id="ejes" class="py-5 bg-blue text-white">
+        <div class="container">
+            <h2 class="text-center mb-5 border-bottom-gold pb-3">Ejes Temáticos CICTAI</h2>
+            <div class="row g-3" id="grid-ejes">
+                <!-- Generado por JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Registro y Descarga -->
+    <section id="registro" class="py-5">
+        <div class="container">
+            <div class="row g-5">
+                <div class="col-lg-6">
+                    <h3 class="fw-bold text-blue">Inscripción al Evento</h3>
+                    <p>Evento gratuito para la comunidad académica. La certificación opcional tiene un costo de S/. 30.00.</p>
+                    <form id="formCictai" class="mt-4 shadow p-4 rounded bg-white">
+                        <div class="mb-3"><input type="text" class="form-control py-2" placeholder="Nombre Completo" required></div>
+                        <div class="mb-3"><input type="email" class="form-control py-2" placeholder="Correo Electrónico" required></div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Subir Voucher de Pago (Opcional - EasyChair)</label>
+                            <input type="file" class="form-control">
+                        </div>
+                        <button class="btn btn-blue w-100 py-3 fw-bold">ENVIAR REGISTRO</button>
+                    </form>
+                </div>
+                <div class="col-lg-6 bg-gold-light p-5 rounded shadow-sm">
+                    <h3 class="fw-bold text-blue">Recursos para Ponentes</h3>
+                    <p>Accede a las herramientas oficiales para la presentación de tus trabajos de investigación.</p>
+                    <ul class="list-unstyled mt-3">
+                        <li class="mb-2">✅ <strong>LaTeX:</strong> Plantillas oficiales en Overleaf.</li>
+                        <li class="mb-2">✅ <strong>Posters:</strong> Formato A0 (84cm x 119cm).</li>
+                        <li class="mb-2">✅ <strong>EasyChair:</strong> Plataforma de gestión de ponencias.</li>
+                        <li class="mb-2">✅ <strong>UNTELS:</strong> Repositorio institucional.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="py-4 bg-dark text-white text-center">
+        <p class="mb-0 small">© 2026 UNTELS - Facultad de Ingeniería de Sistemas Computacionales</p>
+    </footer>
+
+    <!-- Vinculación a tu carpeta js -->
+    <script src="js/script.js"></script>
+</body>
+</html>

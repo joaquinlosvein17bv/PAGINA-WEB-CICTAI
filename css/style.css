@@ -1,0 +1,61 @@
+:root {
+    --untels-blue: #002B5B;
+    --untels-gold: #FFD700;
+    --gold-soft: #fff9db;
+}
+
+body { font-family: 'Montserrat', sans-serif; overflow-x: hidden; }
+.text-gold { color: var(--untels-gold); }
+.text-blue { color: var(--untels-blue); }
+.bg-blue { background-color: var(--untels-blue); }
+.fw-800 { font-weight: 800; }
+.border-top-blue { border-top: 5px solid var(--untels-blue); }
+.border-gold { border: 2px solid var(--untels-gold); }
+.bg-gold-light { background-color: var(--gold-soft); }
+
+/* Navegación */
+.navbar { background-color: var(--untels-blue); border-bottom: 4px solid var(--untels-gold); }
+.nav-link { color: white !important; margin: 0 10px; transition: 0.3s; }
+.nav-link:hover { color: var(--untels-gold) !important; }
+
+/* Hero Section para PC */
+.hero {
+    height: 95vh;
+    background: linear-gradient(rgba(0,43,91,0.8), rgba(0,43,91,0.8)), 
+                url('https://www.untels.edu.pe/FTP/2021.05.21.0038_DISE%C3%91O%20PMESUT_WEB.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    display: flex;
+    align-items: center;
+}
+
+/* Títulos */
+.section-title {
+    color: var(--untels-blue);
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+/* Tarjetas de Ejes (Grid PC) */
+.card-eje {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid var(--untels-gold);
+    padding: 20px;
+    height: 100%;
+    text-align: center;
+    transition: 0.4s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.card-eje:hover {
+    background: white;
+    color: var(--untels-blue);
+    transform: scale(1.05);
+}
+
+/* Botones */
+.btn-gold { background-color: var(--untels-gold); color: var(--untels-blue); }
+.btn-blue { background-color: var(--untels-blue); color: white; }
+.btn-gold:hover { background-color: #e6c200; }
