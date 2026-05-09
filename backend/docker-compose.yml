@@ -1,0 +1,28 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: cictai-postgres
+    restart: unless-stopped
+    ports:
+      - "5427:5432"
+    environment:
+      POSTGRES_USER: cictai_user
+      POSTGRES_PASSWORD: cictai_pass
+      POSTGRES_DB: cictai_db
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: cictai-pgadmin
+    restart: unless-stopped
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@cictai.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    depends_on:
+      - postgres
+
+volumes:
+  pgdata:

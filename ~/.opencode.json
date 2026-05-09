@@ -1,0 +1,10 @@
+{
+  "models": [
+    {
+      "provider": "ollama",
+      "model": "gemma4:26b",
+      "apiBase": "http://localhost:11434/v1",
+      "title": "Gemma 4 Local"
+    }
+  ]
+}

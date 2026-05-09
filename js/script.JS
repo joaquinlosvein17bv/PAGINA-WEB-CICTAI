@@ -25,8 +25,33 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-document.getElementById('formCictai').addEventListener('submit', function(e) {
+document.getElementById('formCictai').addEventListener('submit', async function(e) {
     e.preventDefault();
-    alert("¡Registro enviado! Sebastian y el comité CICTAI revisarán tu solicitud.");
-    this.reset();
+
+    const formData = new FormData(this);
+    const btn = this.querySelector('button[type="submit"]');
+    const originalText = btn.textContent;
+    btn.disabled = true;
+    btn.textContent = 'ENVIANDO...';
+
+    try {
+        const res = await fetch('http://localhost:3000/auth/register', {
+            method: 'POST',
+            body: formData,
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            throw new Error(data.message?.[0] || data.message || 'Error al registrar');
+        }
+
+        alert(`¡Registro exitoso, ${data.user.nombre}! El comité CICTAI revisará tu solicitud.`);
+        this.reset();
+    } catch (err) {
+        alert('Error: ' + err.message);
+    } finally {
+        btn.disabled = false;
+        btn.textContent = originalText;
+    }
 });
