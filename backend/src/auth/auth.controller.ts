@@ -44,6 +44,7 @@ export class AuthController {
         id: user.id,
         nombre: user.nombre,
         email: user.email,
+        participacion: user.participacion,
         createdAt: user.createdAt,
       },
     };

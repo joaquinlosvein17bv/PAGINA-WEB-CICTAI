@@ -14,6 +14,9 @@ export class User {
   @Column({ type: 'varchar', length: 255 })
   password: string;
 
+  @Column({ type: 'varchar', length: 20, nullable: true })
+  participacion: string;
+
   @Column({ type: 'varchar', length: 500, nullable: true })
   voucherPath: string;
 

@@ -19,6 +19,7 @@ export class AuthService {
       nombre: dto.nombre,
       email: dto.email,
       password: hashedPassword,
+      participacion: dto.participacion,
       voucherPath,
     });
   }

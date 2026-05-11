@@ -1,158 +1,357 @@
-/
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CICTAI 2026 | UNTELS</title>
+    <meta name="description"
+        content="I Congreso Internacional Científico de Ciencias y Tecnologías Aplicadas a la Ingeniería — CICTAI 2026, organizado por la UNTELS. 25 y 26 de junio, modalidad híbrida.">
+    <meta property="og:title" content="CICTAI 2026 | UNTELS">
+    <meta property="og:description"
+        content="Ciencia, Tecnología e Innovación para un Futuro Sostenible. Congreso Internacional organizado por la Universidad Nacional Tecnológica de Lima Sur.">
+    <meta property="og:type" content="website">
+    <title>CICTAI 2026 | I Congreso Internacional — UNTELS</title>
 
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap" rel="stylesheet">
-
-    <!-- Vinculación a tu carpeta css -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 
-    <!-- Navegación -->
-    <nav class="navbar navbar-expand-lg navbar-dark sticky-top shadow">
+    <!-- ============ NAVBAR ============ -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top" id="mainNav">
         <div class="container">
-            <a class="navbar-brand d-flex align-items-center" href="#">
-                <!-- Logo desde tu carpeta img -->
+            <a class="navbar-brand d-flex align-items-center" href="#inicio">
                 <img src="img/logo_UNTELS.png" alt="UNTELS" width="45" class="me-2 rounded-circle bg-white p-1">
                 <span class="fw-bold"><span class="text-gold">CICTAI</span> 2026</span>
             </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto text-uppercase small fw-bold">
-                    <li class="nav-item"><a class="nav-link" href="#inicio">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="#inicio">Inicio</a></li>
                     <li class="nav-item"><a class="nav-link" href="#autoridades">Autoridades</a></li>
                     <li class="nav-item"><a class="nav-link" href="#comite">Organización</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#ejes">Ejes</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#ejes">Ejes Temáticos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#recursos">Recursos</a></li>
                     <li class="nav-item"><a class="nav-link" href="#registro">Inscripción</a></li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- Hero / Portada -->
+    <!-- ============ HERO ============ -->
     <header id="inicio" class="hero">
-        <div class="container text-center text-white">
-            <h4 class="fw-bold mb-3 tracking-widest">UNIVERSIDAD NACIONAL TECNOLÓGICA DE LIMA SUR</h4>
-            <h1 class="display-1 fw-800">I CONGRESO INTERNACIONAL <span class="text-gold">CICTAI</span></h1>
-            <p class="fs-3 italic">"Ciencia, Tecnología e Innovación para un Futuro Sostenible"</p>
-            <div class="mt-5">
-                <a href="#registro" class="btn btn-gold btn-lg px-5 py-3 fw-bold">REGISTRARSE</a>
-                <a href="#" class="btn btn-outline-light btn-lg px-5 py-3 ms-md-3">DESCARGAR LATEX (Overleaf)</a>
+        <div class="hero-particles">
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+            <div class="particle"></div>
+        </div>
+        <div class="container text-center text-white hero-content">
+            <div class="hero-badge mb-3">
+                <i class="fa-solid fa-calendar-days me-2"></i>25 &amp; 26 DE JUNIO 2026
+            </div>
+            <div class="hero-badge ms-2 mb-3">
+                <i class="fa-solid fa-globe me-2"></i>MODALIDAD HÍBRIDA
+            </div>
+            <h4 class="fw-bold mb-3" style="letter-spacing:3px; font-size:0.9rem; opacity:0.85;">UNIVERSIDAD NACIONAL
+                TECNOLÓGICA DE LIMA SUR</h4>
+            <h1>I CONGRESO INTERNACIONAL<br>CIENTÍFICO <span class="text-gold">CICTAI</span></h1>
+            <p class="subtitle">"Ciencia, tecnología e innovación para un futuro sostenible"</p>
+
+            <!-- Countdown -->
+            <div class="countdown-wrapper" id="countdown">
+                <div class="countdown-item">
+                    <span class="number" id="cd-days">--</span>
+                    <span class="label">Días</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="number" id="cd-hours">--</span>
+                    <span class="label">Horas</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="number" id="cd-minutes">--</span>
+                    <span class="label">Min</span>
+                </div>
+                <div class="countdown-item">
+                    <span class="number" id="cd-seconds">--</span>
+                    <span class="label">Seg</span>
+                </div>
+            </div>
+
+            <div class="mt-4 d-flex flex-wrap justify-content-center gap-3">
+                <a href="#registro" class="btn btn-gold btn-lg px-5 py-3">
+                    <i class="fa-solid fa-user-plus me-2"></i>Registrarse
+                </a>
+                <a href="#recursos" class="btn btn-outline-gold btn-lg px-5 py-3">
+                    <i class="fa-solid fa-file-lines me-2"></i>Recursos
+                </a>
             </div>
         </div>
     </header>
 
-    <!-- Autoridades Invitadas -->
-    <section id="autoridades" class="py-5 bg-light">
+    <!-- ============ AUTORIDADES ============ -->
+    <section id="autoridades" class="py-5">
         <div class="container">
-            <h2 class="section-title text-center mb-5">Autoridades de la UNTELS</h2>
-            <div class="row g-4 text-center">
-                <div class="col-md-4">
-                    <div class="p-3 shadow-sm bg-white rounded border-top-blue">
-                        <h6 class="fw-bold text-blue">Rectora</h6>
-                        <p class="mb-0">Dra. Gladys Marcionila Cruz Yupanqui</p>
+            <div class="section-header reveal">
+                <span class="badge-label">Liderazgo Institucional</span>
+                <h2>Autoridades de la UNTELS</h2>
+                <div class="divider"></div>
+            </div>
+            <div class="row g-4 justify-content-center">
+                <div class="col-lg-4 col-md-6 reveal">
+                    <div class="autoridad-card">
+                        <div class="autoridad-avatar"><i class="fa-solid fa-user-tie"></i></div>
+                        <p class="cargo">Rectora</p>
+                        <p class="nombre">Dra. Gladys Marcionila<br>Cruz Yupanqui</p>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="p-3 shadow-sm bg-white rounded border-top-blue">
-                        <h6 class="fw-bold text-blue">Vicerrectora Académica</h6>
-                        <p class="mb-0">Dra. Marina Vilca Cáceres</p>
+                <div class="col-lg-4 col-md-6 reveal">
+                    <div class="autoridad-card">
+                        <div class="autoridad-avatar"><i class="fa-solid fa-user-tie"></i></div>
+                        <p class="cargo">Vicerrectora Académica</p>
+                        <p class="nombre">Dra. Marina<br>Vilca Cáceres</p>
                     </div>
                 </div>
-                <div class="col-md-4">
-                    <div class="p-3 shadow-sm bg-white rounded border-top-blue">
-                        <h6 class="fw-bold text-blue">Vicerrector de Investigación</h6>
-                        <p class="mb-0">Dr. Ángel Fernando Navarro Raymundo</p>
+                <div class="col-lg-4 col-md-6 reveal">
+                    <div class="autoridad-card">
+                        <div class="autoridad-avatar"><i class="fa-solid fa-user-tie"></i></div>
+                        <p class="cargo">Vicerrector de Investigación</p>
+                        <p class="nombre">Dr. Ángel Fernando<br>Navarro Raymundo</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Organización / Comité -->
-    <section id="comite" class="py-5">
-        <div class="container text-center">
-            <h2 class="section-title mb-5">Comité Organizador</h2>
-            <div class="row justify-content-center g-4">
-                <div class="col-md-5">
-                    <div class="p-4 border-gold rounded shadow-sm">
-                        <h5 class="fw-bold text-blue">Presidente</h5>
-                        <p class="fs-5">Dr. Manco Chávez, José Antonio</p>
+    <!-- ============ COMITÉ ORGANIZADOR ============ -->
+    <section id="comite" class="py-5" style="background: var(--gray-50);">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="badge-label">Equipo Directivo</span>
+                <h2>Comité Organizador</h2>
+                <div class="divider"></div>
+            </div>
+            <div class="row g-4 justify-content-center">
+                <div class="col-lg-5 col-md-6 reveal">
+                    <div class="comite-card">
+                        <div class="icon-role"><i class="fa-solid fa-star"></i></div>
+                        <p class="cargo">Presidente</p>
+                        <p class="nombre">Dr. José Antonio Manco Chávez</p>
                     </div>
                 </div>
-                <div class="col-md-5">
-                    <div class="p-4 border-gold rounded shadow-sm">
-                        <h5 class="fw-bold text-blue">Vicepresidenta</h5>
-                        <p class="fs-5">Mag. Diaz Hinostroza, Mary Rosaura</p>
+                <div class="col-lg-5 col-md-6 reveal">
+                    <div class="comite-card">
+                        <div class="icon-role"><i class="fa-solid fa-award"></i></div>
+                        <p class="cargo">Vicepresidenta</p>
+                        <p class="nombre">Mag. Mary Rosaura Diaz Hinostroza</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Ejes Temáticos -->
-    <section id="ejes" class="py-5 bg-blue text-white">
+    <!-- ============ EJES TEMÁTICOS ============ -->
+    <section id="ejes" class="py-5 bg-blue text-white section-dark">
         <div class="container">
-            <h2 class="text-center mb-5 border-bottom-gold pb-3">Ejes Temáticos CICTAI</h2>
+            <div class="section-header reveal">
+                <span class="badge-label">Áreas de Investigación</span>
+                <h2>Ejes Temáticos CICTAI</h2>
+                <div class="divider"></div>
+            </div>
             <div class="row g-3" id="grid-ejes">
                 <!-- Generado por JavaScript -->
             </div>
         </div>
     </section>
 
-    <!-- Registro y Descarga -->
-    <section id="registro" class="py-5">
+    <!-- ============ RECURSOS CIENTÍFICOS ============ -->
+    <section id="recursos" class="py-5">
         <div class="container">
-            <div class="row g-5">
-                <div class="col-lg-6">
-                    <h3 class="fw-bold text-blue">Inscripción al Evento</h3>
-                    <p>Evento gratuito para la comunidad académica. La certificación opcional tiene un costo de S/.
-                        30.00.</p>
-                    <form id="formCictai" class="mt-4 shadow p-4 rounded bg-white">
-                        <div class="mb-3"><input type="text" name="nombre" class="form-control py-2"
-                                placeholder="Nombre Completo" required></div>
-                        <div class="mb-3"><input type="email" name="email" class="form-control py-2"
-                                placeholder="Correo Electrónico" required></div>
-                        <div class="mb-3"><input type="password" name="password" class="form-control py-2"
-                                placeholder="Contraseña (mín. 6 caracteres)" required minlength="6"></div>
-                        <div class="mb-3">
-                            <label class="form-label small fw-bold">Subir Voucher de Pago (Opcional - EasyChair)</label>
-                            <input type="file" name="voucher" class="form-control">
+            <div class="section-header reveal">
+                <span class="badge-label">Herramientas para Ponentes</span>
+                <h2>Recursos Científicos</h2>
+                <div class="divider"></div>
+            </div>
+            <div class="row g-4 justify-content-center">
+                <div class="col-lg-4 col-md-6 reveal">
+                    <div class="recurso-card">
+                        <div class="recurso-icon"><i class="fa-solid fa-file-code"></i></div>
+                        <div>
+                            <h5>Plantilla LaTeX</h5>
+                            <p>Plantilla oficial en Overleaf para la redacción de artículos científicos.</p>
+                            <a href="#" class="btn btn-blue btn-recurso"><i class="fa-solid fa-download me-1"></i>
+                                Descargar</a>
                         </div>
-                        <button type="submit" class="btn btn-blue w-100 py-3 fw-bold">ENVIAR REGISTRO</button>
-                    </form>
+                    </div>
                 </div>
-                <div class="col-lg-6 bg-gold-light p-5 rounded shadow-sm">
-                    <h3 class="fw-bold text-blue">Recursos para Ponentes</h3>
-                    <p>Accede a las herramientas oficiales para la presentación de tus trabajos de investigación.</p>
-                    <ul class="list-unstyled mt-3">
-                        <li class="mb-2">✅ <strong>LaTeX:</strong> Plantillas oficiales en Overleaf.</li>
-                        <li class="mb-2">✅ <strong>Posters:</strong> Formato A0 (84cm x 119cm).</li>
-                        <li class="mb-2">✅ <strong>EasyChair:</strong> Plataforma de gestión de ponencias.</li>
-                        <li class="mb-2">✅ <strong>UNTELS:</strong> Repositorio institucional.</li>
-                    </ul>
+                <div class="col-lg-4 col-md-6 reveal">
+                    <div class="recurso-card">
+                        <div class="recurso-icon"><i class="fa-solid fa-image"></i></div>
+                        <div>
+                            <h5>Instrucciones de Posters</h5>
+                            <p>Formato A0 (84 cm × 119 cm). Guía de diseño y contenido.</p>
+                            <a href="#" class="btn btn-blue btn-recurso"><i class="fa-solid fa-download me-1"></i>
+                                Descargar</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 reveal">
+                    <div class="recurso-card">
+                        <div class="recurso-icon"><i class="fa-solid fa-paper-plane"></i></div>
+                        <div>
+                            <h5>Enviar Ponencia</h5>
+                            <p>Sube tu trabajo vía EasyChair, la plataforma oficial del congreso.</p>
+                            <a href="#" class="btn btn-blue btn-recurso"><i
+                                    class="fa-solid fa-arrow-up-right-from-square me-1"></i> EasyChair</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <footer class="py-4 bg-dark text-white text-center">
-        <p class="mb-0 small">© 2026 UNTELS - Facultad de Ingeniería de Sistemas Computacionales</p>
+    <!-- ============ INSCRIPCIÓN ============ -->
+    <section id="registro" class="py-5" style="background: var(--gray-50);">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="badge-label">Únete al Congreso</span>
+                <h2>Inscripción al Evento</h2>
+                <div class="divider"></div>
+            </div>
+            <div class="row g-5 align-items-start">
+                <!-- Formulario -->
+                <div class="col-lg-7 reveal">
+                    <form id="formCictai" class="form-registro">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label">Nombre Completo</label>
+                                <input type="text" class="form-control" id="inputNombre" placeholder="Ingresa tu nombre"
+                                    required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Correo Electrónico</label>
+                                <input type="email" class="form-control" id="inputEmail"
+                                    placeholder="correo@ejemplo.com" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Contraseña</label>
+                                <input type="password" class="form-control" id="inputPassword"
+                                    placeholder="Crea una contraseña" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label">Tipo de Participación</label>
+                                <select class="form-select" id="inputTipo">
+                                    <option selected disabled>Seleccionar...</option>
+                                    <option>Presencial</option>
+                                    <option>Virtual</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label"><i class="fa-solid fa-receipt me-1"></i> Voucher de Pago
+                                    (Certificación — S/. 30.00)</label>
+                                <input type="file" class="form-control" id="inputVoucher" accept="image/*,.pdf">
+                                <div class="form-text">Adjunta tu comprobante de pago para certificación. Formatos: JPG,
+                                    PNG, PDF.</div>
+                            </div>
+                            <div class="col-12 mt-4">
+                                <button type="submit" class="btn btn-gold w-100 py-3 fw-bold" id="btnSubmit">
+                                    <i class="fa-solid fa-paper-plane me-2"></i>ENVIAR REGISTRO
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- Info lateral -->
+                <div class="col-lg-5 reveal">
+                    <div class="pago-info mb-4">
+                        <p class="precio-label mb-1">Certificación</p>
+                        <p class="precio mb-1">S/. 30.00</p>
+                        <p class="mb-0" style="font-size:0.88rem; opacity:0.8;">Pago único que incluye certificado
+                            digital del congreso para asistentes y ponentes.</p>
+                    </div>
+                    <div class="easychair-box">
+                        <i class="fa-solid fa-cloud-arrow-up fa-2x mb-2" style="color: var(--untels-blue);"></i>
+                        <h5>Recepción de Ponencias</h5>
+                        <p class="small text-muted mb-3">Las ponencias se reciben exclusivamente a través de la
+                            plataforma EasyChair.</p>
+                        <a href="#" class="btn btn-blue btn-sm px-4 py-2 fw-bold">
+                            <i class="fa-solid fa-arrow-up-right-from-square me-1"></i> Ir a EasyChair
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="img/logo_UNTELS.png" alt="UNTELS" width="40" class="me-2 rounded-circle bg-white p-1">
+                        <span class="fw-bold text-white"><span class="text-gold">CICTAI</span> 2026</span>
+                    </div>
+                    <p class="small">I Congreso Internacional Científico de Ciencias y Tecnologías Aplicadas a la
+                        Ingeniería. Organizado por la Universidad Nacional Tecnológica de Lima Sur.</p>
+                    <div class="mt-3">
+                        <a href="#" class="social-link"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fa-brands fa-youtube"></i></a>
+                        <a href="#" class="social-link"><i class="fa-solid fa-globe"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h5>ENLACES RÁPIDOS</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#inicio"><i
+                                    class="fa-solid fa-chevron-right me-2 small"></i>Inicio</a></li>
+                        <li class="mb-2"><a href="#autoridades"><i
+                                    class="fa-solid fa-chevron-right me-2 small"></i>Autoridades</a></li>
+                        <li class="mb-2"><a href="#ejes"><i class="fa-solid fa-chevron-right me-2 small"></i>Ejes
+                                Temáticos</a></li>
+                        <li class="mb-2"><a href="#recursos"><i
+                                    class="fa-solid fa-chevron-right me-2 small"></i>Recursos</a></li>
+                        <li class="mb-2"><a href="#registro"><i
+                                    class="fa-solid fa-chevron-right me-2 small"></i>Inscripción</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h5>CONTACTO</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="fa-solid fa-location-dot me-2 text-gold"></i>Av. Bolívar s/n, sector
+                            3, grupo 1A, Villa El Salvador, Lima</li>
+                        <li class="mb-2"><i class="fa-solid fa-envelope me-2 text-gold"></i>cictai@untels.edu.pe</li>
+                        <li class="mb-2"><i class="fa-solid fa-phone me-2 text-gold"></i>(01) 715-8878</li>
+                        <li class="mb-2"><i class="fa-solid fa-globe me-2 text-gold"></i>www.untels.edu.pe</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom text-center">
+                <p class="mb-0">© 2026 UNTELS — Facultad de Ingeniería de Sistemas Computacionales. Todos los derechos
+                    reservados.</p>
+            </div>
+        </div>
     </footer>
 
-    <!-- Vinculación a tu carpeta js -->
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Custom JS -->
     <script src="js/script.js"></script>
 </body>
 
