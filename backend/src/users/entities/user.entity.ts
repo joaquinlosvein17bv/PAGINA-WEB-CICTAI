@@ -17,8 +17,17 @@ export class User {
   @Column({ type: 'varchar', length: 20, nullable: true })
   participacion: string;
 
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  universidad: string;
+
+  @Column({ type: 'varchar', length: 255, unique: true, nullable: true })
+  voucherCode: string;
+
   @Column({ type: 'varchar', length: 500, nullable: true })
   voucherPath: string;
+
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  codigoOtic: string;
 
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;

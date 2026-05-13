@@ -7,7 +7,8 @@ async function bootstrap() {
 
   app.enableCors({
     origin: '*',
-    methods: ['GET', 'POST'],
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: '*',
   });
 
   app.useGlobalPipes(

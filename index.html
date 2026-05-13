@@ -30,7 +30,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top" id="mainNav">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="#inicio">
-                <img src="img/logo_UNTELS.png" alt="UNTELS" width="45" class="me-2 rounded-circle bg-white p-1">
+
                 <span class="fw-bold"><span class="text-gold">CICTAI</span> 2026</span>
             </a>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -62,15 +62,25 @@
             <div class="particle"></div>
         </div>
         <div class="container text-center text-white hero-content">
+
             <div class="hero-badge mb-3">
                 <i class="fa-solid fa-calendar-days me-2"></i>25 &amp; 26 DE JUNIO 2026
             </div>
             <div class="hero-badge ms-2 mb-3">
                 <i class="fa-solid fa-globe me-2"></i>MODALIDAD HÍBRIDA
             </div>
+
+            <div class="hero-untels-logo mb-3">
+                <img src="img/logo_UNTELS.png" alt="UNTELS" class="untels-logo-hero">
+            </div>
             <h4 class="fw-bold mb-3" style="letter-spacing:3px; font-size:0.9rem; opacity:0.85;">UNIVERSIDAD NACIONAL
                 TECNOLÓGICA DE LIMA SUR</h4>
-            <h1>I CONGRESO INTERNACIONAL<br>CIENTÍFICO <span class="text-gold">CICTAI</span></h1>
+            <div class="hero-logo-wrapper">
+                <img src="img/logo_cictai_horizontal.png"
+                    alt="I Congreso Internacional Científico de Ciencias y Tecnologías Aplicadas a la Ingeniería — CICTAI"
+                    class="hero-main-logo">
+                <div class="logo-glow"></div>
+            </div>
             <p class="subtitle">"Ciencia, tecnología e innovación para un futuro sostenible"</p>
 
             <!-- Countdown -->
@@ -93,7 +103,7 @@
                 </div>
             </div>
 
-            <div class="mt-4 d-flex flex-wrap justify-content-center gap-3">
+            <div class="mt-2 d-flex flex-wrap justify-content-center gap-3">
                 <a href="#registro" class="btn btn-gold btn-lg px-5 py-3">
                     <i class="fa-solid fa-user-plus me-2"></i>Registrarse
                 </a>
@@ -190,34 +200,42 @@
             <div class="row g-4 justify-content-center">
                 <div class="col-lg-4 col-md-6 reveal">
                     <div class="recurso-card">
-                        <div class="recurso-icon"><i class="fa-solid fa-file-code"></i></div>
-                        <div>
-                            <h5>Plantilla LaTeX</h5>
-                            <p>Plantilla oficial en Overleaf para la redacción de artículos científicos.</p>
-                            <a href="#" class="btn btn-blue btn-recurso"><i class="fa-solid fa-download me-1"></i>
-                                Descargar</a>
+                        <div class="recurso-icon"><i class="fa-solid fa-file-pdf"></i></div>
+                        <div style="width: 100%;">
+                            <h5 class="mb-2">Compendio General</h5>
+                            <p style="font-size: 0.85rem;" class="mb-3">Descarga el documento oficial en PDF con todos
+                                los artículos aprobados, ordenados por área temática.</p>
+                            <button onclick="descargarCompendioGeneral()" class="btn btn-blue btn-recurso w-100"><i
+                                    class="fa-solid fa-download me-1"></i>
+                                Descargar PDF</button>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6 reveal">
                     <div class="recurso-card">
-                        <div class="recurso-icon"><i class="fa-solid fa-image"></i></div>
-                        <div>
-                            <h5>Instrucciones de Posters</h5>
-                            <p>Formato A0 (84 cm × 119 cm). Guía de diseño y contenido.</p>
-                            <a href="#" class="btn btn-blue btn-recurso"><i class="fa-solid fa-download me-1"></i>
-                                Descargar</a>
+                        <div class="recurso-icon"><i class="fa-solid fa-calendar-days"></i></div>
+                        <div style="width: 100%;">
+                            <h5 class="mb-2">Programa Oficial</h5>
+                            <p style="font-size: 0.85rem;" class="mb-2">Cronograma detallado de ponencias, paneles y
+                                talleres magistrales.</p>
+                            <button onclick="showToast('El programa oficial estará disponible el 15 de Mayo.', 'info')"
+                                class="btn btn-outline-secondary btn-recurso w-100 mt-2"><i
+                                    class="fa-solid fa-clock me-1"></i>
+                                Próximamente</button>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6 reveal">
                     <div class="recurso-card">
-                        <div class="recurso-icon"><i class="fa-solid fa-paper-plane"></i></div>
-                        <div>
-                            <h5>Enviar Ponencia</h5>
-                            <p>Sube tu trabajo vía EasyChair, la plataforma oficial del congreso.</p>
-                            <a href="#" class="btn btn-blue btn-recurso"><i
-                                    class="fa-solid fa-arrow-up-right-from-square me-1"></i> EasyChair</a>
+                        <div class="recurso-icon"><i class="fa-solid fa-certificate"></i></div>
+                        <div style="width: 100%;">
+                            <h5 class="mb-2">Certificados Digitales</h5>
+                            <p style="font-size: 0.85rem;" class="mb-2">Descarga tu constancia de participación o
+                                ponencia con código QR.</p>
+                            <button
+                                onclick="showToast('Los certificados se habilitarán al finalizar el congreso.', 'info')"
+                                class="btn btn-outline-secondary btn-recurso w-100 mt-2"><i
+                                    class="fa-solid fa-lock me-1"></i> No disponible</button>
                         </div>
                     </div>
                 </div>
@@ -225,78 +243,404 @@
         </div>
     </section>
 
-    <!-- ============ INSCRIPCIÓN ============ -->
-    <section id="registro" class="py-5" style="background: var(--gray-50);">
+    <!-- ============ SECTOR 1: REGISTRO Y PASARELA DE PAGO ============ -->
+    <section id="registro" class="py-5 section-registro">
         <div class="container">
             <div class="section-header reveal">
                 <span class="badge-label">Únete al Congreso</span>
-                <h2>Inscripción al Evento</h2>
+                <h2>¡Inscríbete ya y obtén tu certificado oficial!</h2>
                 <div class="divider"></div>
             </div>
+
+
+
             <div class="row g-5 align-items-start">
-                <!-- Formulario -->
+                <!-- Formularios Desplegables -->
                 <div class="col-lg-7 reveal">
-                    <form id="formCictai" class="form-registro">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label class="form-label">Nombre Completo</label>
-                                <input type="text" class="form-control" id="inputNombre" placeholder="Ingresa tu nombre"
-                                    required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Correo Electrónico</label>
-                                <input type="email" class="form-control" id="inputEmail"
-                                    placeholder="correo@ejemplo.com" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Contraseña</label>
-                                <input type="password" class="form-control" id="inputPassword"
-                                    placeholder="Crea una contraseña" required>
-                            </div>
-                            <div class="col-md-6">
-                                <label class="form-label">Tipo de Participación</label>
-                                <select class="form-select" id="inputTipo">
-                                    <option selected disabled>Seleccionar...</option>
-                                    <option>Presencial</option>
-                                    <option>Virtual</option>
-                                </select>
-                            </div>
-                            <div class="col-12">
-                                <label class="form-label"><i class="fa-solid fa-receipt me-1"></i> Voucher de Pago
-                                    (Certificación — S/. 30.00)</label>
-                                <input type="file" class="form-control" id="inputVoucher" accept="image/*,.pdf">
-                                <div class="form-text">Adjunta tu comprobante de pago para certificación. Formatos: JPG,
-                                    PNG, PDF.</div>
-                            </div>
-                            <div class="col-12 mt-4">
-                                <button type="submit" class="btn btn-gold w-100 py-3 fw-bold" id="btnSubmit">
-                                    <i class="fa-solid fa-paper-plane me-2"></i>ENVIAR REGISTRO
+                    <!-- Selector Principal de Flujo -->
+                    <div class="card mb-4"
+                        style="border: 2px solid var(--untels-blue); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-sm);">
+                        <div class="card-body p-4 text-center"
+                            style="background: linear-gradient(to bottom, #ffffff, var(--gray-50));">
+                            <h5 class="fw-bold mb-3" style="color: var(--untels-blue);">¿Cómo vas a participar en el
+                                congreso?</h5>
+                            <select class="form-select form-select-lg mx-auto" id="mainParticipacionSelect"
+                                onchange="toggleFlujosParticipacion()"
+                                style="max-width: 400px; border: 2px solid var(--untels-gold); font-weight: 500; cursor: pointer;">
+                                <option value="" selected disabled>Selecciona tu rol...</option>
+                                <option value="ponente">Soy Ponente Oficial</option>
+                                <option value="general">Soy Asistente o Panelista</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Mensaje de asistencia -->
+                    <div class="alert alert-info d-flex align-items-center p-3 mb-4 flujo-general d-none"
+                        style="background-color: var(--untels-gold-soft); border-left: 4px solid var(--untels-gold); border-radius: var(--radius-sm); border-top: none; border-bottom: none; border-right: none; box-shadow: var(--shadow-sm);">
+                        <i class="fa-solid fa-clock-rotate-left fa-2x me-3" style="color: var(--untels-gold-dark);"></i>
+                        <div>
+                            <strong style="color: var(--untels-blue); font-size: 1rem;">¡Asistencia
+                                Flexible!</strong><br>
+                            <span
+                                style="font-size: 0.85rem; color: #444; line-height: 1.4; display: block; margin-top: 2px;">No
+                                es necesario asistir los 2 días completos para obtener tu certificado. Puedes combinar
+                                tu asistencia: <strong>2 mañanas</strong>, <strong>2 tardes</strong> o de forma
+                                <strong>mixta</strong>.</span>
+                        </div>
+                    </div>
+
+                    <!-- Validación de Código OTIC (para ponentes) -->
+                    <div class="card mb-4 flujo-ponencia d-none"
+                        style="border: 2px solid var(--untels-gold); border-radius: var(--radius); overflow: hidden;">
+                        <div class="card-header"
+                            style="background: linear-gradient(135deg, var(--untels-blue), var(--untels-blue-light)); border-bottom: 3px solid var(--untels-gold); padding: 1rem 1.5rem;">
+                            <h6 class="mb-0 text-white fw-bold"><i class="fa-solid fa-key me-2"
+                                    style="color: var(--untels-gold);"></i>Validación de Código OTIC (Solo Ponentes)
+                            </h6>
+                        </div>
+                        <div class="card-body" style="padding: 1.5rem;">
+                            <p style="font-size: 0.85rem; color: #555; margin-bottom: 1rem;">
+                                <i class="fa-solid fa-info-circle me-1" style="color: var(--untels-blue);"></i>
+                                Si eres <strong>ponente</strong>, ingresa el código proporcionado por OTIC para
+                                desbloquear el formulario de información técnica. Los <strong>asistentes y
+                                    panelistas</strong> pueden proceder directamente al registro.
+                            </p>
+                            <div class="input-group mb-2">
+                                <span class="input-group-text"
+                                    style="background: var(--untels-blue); color: var(--untels-gold); border: none;">
+                                    <i class="fa-solid fa-lock"></i>
+                                </span>
+                                <input type="text" class="form-control" id="inputCodigo"
+                                    placeholder="Ingresa tu código OTIC aquí..."
+                                    style="border: 2px solid var(--gray-100);">
+                                <button class="btn btn-gold fw-bold px-4" type="button" onclick="validarCodigoOTIC()">
+                                    <i class="fa-solid fa-check-circle me-1"></i>Validar
                                 </button>
                             </div>
+                            <!-- Mensaje de error (oculto por defecto) -->
+                            <div id="errorValidacion" class="d-none mt-2">
+                                <div class="alert alert-danger py-2 mb-0"
+                                    style="font-size: 0.85rem; border-radius: var(--radius-sm);">
+                                    <i class="fa-solid fa-triangle-exclamation me-1"></i>
+                                    <span>El código ingresado no es válido. Por favor, contacte a OTIC.</span>
+                                </div>
+                            </div>
                         </div>
-                    </form>
+                    </div>
+
+                    <!-- Formulario de información técnica (oculto hasta validar código OTIC) -->
+                    <div id="formularioInformacion" class="d-none mt-4 p-4 border rounded bg-white shadow-sm"
+                        style="border-radius: var(--radius) !important; border: 2px solid var(--untels-gold) !important;">
+                        <div class="alert alert-success d-flex align-items-center py-2 mb-3"
+                            style="border-radius: var(--radius-sm); font-size: 0.85rem;">
+                            <i class="fa-solid fa-circle-check me-2"></i>
+                            <span><strong>Código OTIC validado.</strong> Ya puedes completar tu información técnica como
+                                ponente.</span>
+                        </div>
+                        <h4 class="text-blue fw-bold mb-4"><i class="fa-solid fa-file-lines me-2"></i>Información
+                            Técnica de la Ponencia</h4>
+
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Título del Trabajo</label>
+                                <input type="text" id="tituloPonencia" class="form-control"
+                                    placeholder="Ej: Avances en Nanotecnología Aplicada" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Autor(es)</label>
+                                <input type="text" id="autoresPonencia" class="form-control"
+                                    placeholder="Nombres y Apellidos" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Afiliaciones</label>
+                                <input type="text" id="afiliacionPonencia" class="form-control"
+                                    placeholder="Ej: Universidad Nacional Mayor de San Marcos" required>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Eje Temático</label>
+                                <select id="selectEje" class="form-select" required>
+                                    <option value="" selected disabled>Seleccione un eje...</option>
+                                    <!-- Opciones generadas dinámicamente por JavaScript -->
+                                </select>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold">Correo (Autor de Correspondencia)</label>
+                                <input type="email" id="correoPonencia" class="form-control"
+                                    placeholder="correo@ejemplo.com" required>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Palabras Claves</label>
+                                <input type="text" id="palabrasClavePonencia" class="form-control"
+                                    placeholder="Ej: Ablación Laser, nanopartículas" required>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Resumen</label>
+                                <textarea id="resumenPonencia" class="form-control" rows="5"
+                                    placeholder="Escriba aquí el resumen de su investigación..." required></textarea>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="form-label fw-bold">Referencias</label>
+                                <textarea id="referenciasPonencia" class="form-control" rows="4"
+                                    placeholder="[1] Autor, Título..." required></textarea>
+                            </div>
+
+                            <div class="col-12 mt-4">
+                                <button onclick="generarArchivoLaTeX()" class="btn btn-gold btn-lg w-100 fw-bold"
+                                    style="letter-spacing: 1px;">
+                                    <i class="fa-solid fa-file-export me-2"></i>GENERAR Y DESCARGAR ARCHIVO .TEX
+                                </button>
+                                <p class="small text-muted mt-2 text-center">
+                                    <i class="fa-solid fa-cloud-arrow-up me-1"></i>Este archivo podrá ser subido
+                                    directamente a Overleaf o EasyChair.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="accordion flujo-general d-none" id="accordionRegistroMatricula">
+                        <!-- Apartado 1: Registro y Pago -->
+                        <div class="accordion-item mb-4"
+                            style="border: none; border-radius: var(--radius); box-shadow: var(--shadow-md); overflow: hidden;">
+                            <h2 class="accordion-header" id="headingRegistro">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseRegistro" aria-expanded="true"
+                                    aria-controls="collapseRegistro" data-bs-theme="dark"
+                                    style="background-color: var(--untels-blue-dark); color: white; font-weight: bold; font-size: 1.1rem; padding: 1.2rem 1.5rem;">
+                                    <span class="me-2"
+                                        style="color: var(--untels-gold); font-family: 'Montserrat', sans-serif;">I.</span>
+                                    REGISTRO Y PAGO
+                                </button>
+                            </h2>
+                            <div id="collapseRegistro" class="accordion-collapse collapse show"
+                                aria-labelledby="headingRegistro" data-bs-parent="#accordionRegistroMatricula">
+                                <div class="accordion-body p-0">
+                                    <form id="formCictai" class="form-registro"
+                                        style="border-top-left-radius: 0; border-top-right-radius: 0;">
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <label class="form-label">Nombre Completo</label>
+                                                <input type="text" class="form-control" id="inputNombre"
+                                                    placeholder="Ingresa tu nombre completo" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Correo Electrónico</label>
+                                                <input type="email" class="form-control" id="inputEmail"
+                                                    placeholder="correo@ejemplo.com" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Universidad / Institución</label>
+                                                <input type="text" class="form-control" id="inputUniv"
+                                                    placeholder="Ej: UNTELS" required>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Tipo de Participación</label>
+                                                <select class="form-select" id="inputTipo" required>
+                                                    <option selected disabled value="">Seleccionar...</option>
+                                                    <option value="ponente">Ponente</option>
+                                                    <option value="panelista">Panelista</option>
+                                                    <option value="asistente">Asistente</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Crear Contraseña</label>
+                                                <input type="password" class="form-control" id="inputPassword"
+                                                    placeholder="Mín. 6 caracteres" required minlength="6">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label">Confirmar Contraseña</label>
+                                                <input type="password" class="form-control" id="inputPasswordConfirm"
+                                                    placeholder="Repite tu contraseña" required minlength="6">
+                                            </div>
+
+                                            <!-- Pasarela de Pago -->
+                                            <div class="col-12 mt-3" id="paymentSection">
+                                                <div class="payment-gateway">
+                                                    <div class="payment-header">
+                                                        <i class="fa-solid fa-lock me-2"></i>Pasarela de Pago Seguro —
+                                                        <strong>S/. 30.00</strong>
+                                                    </div>
+                                                    <div class="payment-body">
+                                                        <p class="mb-3" style="font-size:0.85rem; color:#555;">
+                                                            Selecciona tu método de pago preferido para completar la
+                                                            inscripción:</p>
+                                                        <div class="payment-buttons justify-content-center">
+                                                            <button type="button" class="btn-payment"
+                                                                style="background: #e30613; color: white; width: 100%; max-width: 300px; margin: 0 auto; display: block; opacity: 0.6; cursor: not-allowed;">
+                                                                <i
+                                                                    class="fa-solid fa-building-columns me-2"></i>Págalo.pe
+                                                            </button>
+                                                        </div>
+                                                        <div class="payment-note mt-3">
+                                                            <i class="fa-solid fa-circle-info me-1"></i>
+                                                            <strong>Importante:</strong> Los <strong>ponentes</strong>
+                                                            están exonerados del pago. Panelistas y asistentes requieren
+                                                            pago.
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Confirmación de pago -->
+                                            <div class="col-12" id="paymentConfirmation" style="display:none;">
+                                                <div class="payment-success">
+                                                    <i class="fa-solid fa-circle-check fa-2x mb-2"></i>
+                                                    <h5>¡Pago Confirmado!</h5>
+                                                    <p>Tu código de validación ha sido enviado a tu correo electrónico.
+                                                    </p>
+                                                    <div class="voucher-code" id="voucherCodeDisplay"></div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12 mt-4">
+                                                <button type="submit" class="btn btn-gold w-100 py-3 fw-bold"
+                                                    id="btnSubmit">
+                                                    <i class="fa-solid fa-paper-plane me-2"></i>ENVIAR REGISTRO
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Apartado 2: Matrícula -->
+                        <div class="accordion-item"
+                            style="border: none; border-radius: var(--radius); box-shadow: var(--shadow-md); overflow: hidden;">
+                            <h2 class="accordion-header" id="headingMatricula">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#collapseMatricula" aria-expanded="false"
+                                    aria-controls="collapseMatricula" data-bs-theme="dark"
+                                    style="background-color: var(--untels-blue-dark); color: white; font-weight: bold; font-size: 1.1rem; padding: 1.2rem 1.5rem;">
+                                    <span class="me-2"
+                                        style="color: var(--untels-gold); font-family: 'Montserrat', sans-serif;">II.</span>
+                                    MATRÍCULA
+                                </button>
+                            </h2>
+                            <div id="collapseMatricula" class="accordion-collapse collapse"
+                                aria-labelledby="headingMatricula" data-bs-parent="#accordionRegistroMatricula">
+                                <div class="accordion-body p-0">
+                                    <form id="formMatricula" class="form-registro"
+                                        style="border-top-left-radius: 0; border-top-right-radius: 0;">
+                                        <div class="row g-3">
+                                            <div class="col-md-12">
+                                                <label class="form-label">Nombre Completo</label>
+                                                <input type="text" class="form-control" id="matNombre"
+                                                    placeholder="Ingresa tu nombre completo" required>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label class="form-label">Contraseña</label>
+                                                <input type="password" class="form-control" id="matPassword"
+                                                    placeholder="Ingresa tu contraseña" required>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label class="form-label">Código de Pago</label>
+                                                <select class="form-select" id="matCodigo" required>
+                                                    <option selected disabled value="">Seleccionar código de pago...
+                                                    </option>
+                                                    <option value="cod-pagalo">Págalo.pe</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-12 mt-4">
+                                                <button type="submit" class="btn btn-gold w-100 py-3 fw-bold">
+                                                    <i class="fa-solid fa-graduation-cap me-2"></i>CONFIRMAR MATRÍCULA
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <!-- Info lateral -->
                 <div class="col-lg-5 reveal">
                     <div class="pago-info mb-4">
                         <p class="precio-label mb-1">Certificación</p>
                         <p class="precio mb-1">S/. 30.00</p>
-                        <p class="mb-0" style="font-size:0.88rem; opacity:0.8;">Pago único que incluye certificado
-                            digital del congreso para asistentes y ponentes.</p>
+                        <p class="mb-0" style="font-size:0.88rem; opacity:0.8;">Pago único para recibir certificado
+                            digital oficial del congreso.</p>
+                        <hr style="border-color: rgba(255,255,255,0.2); margin: 1rem 0;">
+                        <div style="font-size:0.82rem; opacity:0.9;">
+                            <p class="mb-1"><i class="fa-solid fa-check-circle me-1 text-gold"></i>
+                                <strong>Participantes y panelistas:</strong> Requieren pago
+                            </p>
+                            <p class="mb-0"><i class="fa-solid fa-gift me-1 text-gold"></i> <strong>Ponentes:</strong>
+                                Exonerados de pago</p>
+                        </div>
                     </div>
-                    <div class="easychair-box">
-                        <i class="fa-solid fa-cloud-arrow-up fa-2x mb-2" style="color: var(--untels-blue);"></i>
-                        <h5>Recepción de Ponencias</h5>
-                        <p class="small text-muted mb-3">Las ponencias se reciben exclusivamente a través de la
-                            plataforma EasyChair.</p>
-                        <a href="#" class="btn btn-blue btn-sm px-4 py-2 fw-bold">
-                            <i class="fa-solid fa-arrow-up-right-from-square me-1"></i> Ir a EasyChair
-                        </a>
+                    <div class="modalidad-info mb-4">
+                        <div
+                            style="background: linear-gradient(135deg, #f0f7ff, #e8f4fd); border: 2px solid var(--untels-blue); border-radius: var(--radius); padding: 1.5rem; text-align: center;">
+                            <h5 style="color: var(--untels-blue); font-weight: 700; margin-bottom: 0.8rem;"><i
+                                    class="fa-solid fa-earth-americas me-2"></i>Modalidad</h5>
+                            <p style="font-size: 0.85rem; color: #333; margin-bottom: 0.5rem;"><i
+                                    class="fa-solid fa-building me-1"></i> <strong>Ponentes nacionales:</strong>
+                                Presencial</p>
+                            <p style="font-size: 0.85rem; color: #333; margin-bottom: 0;"><i
+                                    class="fa-solid fa-laptop me-1"></i> <strong>Ponentes internacionales:</strong>
+                                Híbrido (virtual)</p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+
+    <!-- ============ SECTOR 2: VALIDACIÓN Y ACCESO DE USUARIO ============ -->
+    <section id="validacion" class="py-5 section-validacion" style="display:none;">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="badge-label">Acceso al Evento</span>
+                <h2>Validación de Inscripción</h2>
+                <div class="divider"></div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-lg-6 col-md-8 reveal">
+                    <div class="validacion-card">
+                        <div class="validacion-icon">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <p class="validacion-desc">Ingresa tus credenciales y el código de comprobante recibido en tu
+                            correo para acceder a los recursos del evento.</p>
+                        <form id="formValidacion">
+                            <div class="mb-3">
+                                <label class="form-label"><i class="fa-solid fa-envelope me-1"></i> Usuario /
+                                    Correo</label>
+                                <input type="email" class="form-control" id="valEmail" placeholder="correo@ejemplo.com"
+                                    required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label"><i class="fa-solid fa-key me-1"></i> Contraseña</label>
+                                <input type="password" class="form-control" id="valPassword" placeholder="Tu contraseña"
+                                    required>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label"><i class="fa-solid fa-ticket me-1"></i> Código de
+                                    Comprobante</label>
+                                <input type="text" class="form-control" id="valCodigo"
+                                    placeholder="Ej: CICTAI-2026-XXXXX" required>
+                                <div class="form-text">Ingresa el código recibido en tu correo de confirmación de pago.
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-gold w-100 py-3 fw-bold" id="btnValidar">
+                                <i class="fa-solid fa-right-to-bracket me-2"></i>VALIDAR Y ENTRAR
+                            </button>
+                        </form>
+                        <div id="validacionResult" class="mt-3" style="display:none;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
 
     <!-- ============ FOOTER ============ -->
     <footer class="footer">
@@ -304,8 +648,9 @@
             <div class="row g-4">
                 <div class="col-lg-4 col-md-6">
                     <div class="d-flex align-items-center mb-3">
-                        <img src="img/logo_UNTELS.png" alt="UNTELS" width="40" class="me-2 rounded-circle bg-white p-1">
-                        <span class="fw-bold text-white"><span class="text-gold">CICTAI</span> 2026</span>
+                        <img src="img/logo_UNTELS.png" alt="UNTELS" width="50" height="50" style="object-fit: contain;"
+                            class="me-2 rounded-circle bg-white p-1">
+                        <span class="fw-bold text-white fs-5"><span class="text-gold">CICTAI</span> 2026</span>
                     </div>
                     <p class="small">I Congreso Internacional Científico de Ciencias y Tecnologías Aplicadas a la
                         Ingeniería. Organizado por la Universidad Nacional Tecnológica de Lima Sur.</p>
@@ -349,8 +694,40 @@
         </div>
     </footer>
 
+    <!-- ============ MODAL PONENCIAS (EJES TEMÁTICOS) ============ -->
+    <div class="modal fade" id="modalEjePonencia" tabindex="-1" aria-labelledby="modalEjePonenciaLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content" style="border-radius: var(--radius); border: none; overflow: hidden;">
+                <div class="modal-header text-white"
+                    style="background: linear-gradient(135deg, var(--untels-blue), var(--untels-blue-light)); border-bottom: 3px solid var(--untels-gold);">
+                    <h5 class="modal-title fw-bold" id="modalEjePonenciaLabel"><i
+                            class="fa-solid fa-book-open me-2"></i>Artículos del Eje Temático</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4 text-center">
+                    <h6 class="mb-4 fw-bold" style="color: var(--untels-blue);" id="ejeSeleccionadoText">Eje: ...</h6>
+
+                    <i class="fa-solid fa-file-pdf mb-3" style="font-size: 3.5rem; color: #e30613;"></i>
+                    <h5 class="fw-bold mb-3">Compendio de Ponencias</h5>
+                    <p class="text-muted mb-4" style="font-size: 0.95rem; line-height: 1.6;">
+                        Descarga el documento oficial en formato PDF con todos los artículos y resúmenes de los ponentes
+                        correspondientes a esta área temática.
+                    </p>
+
+                    <button class="btn btn-gold btn-lg w-100 fw-bold shadow-sm py-3" onclick="descargarCompendioEje()">
+                        <i class="fa-solid fa-download me-2"></i>Descargar Compendio (PDF)
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jsPDF for PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <!-- Custom JS -->
     <script src="js/script.js"></script>
 </body>

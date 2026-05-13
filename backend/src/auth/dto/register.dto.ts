@@ -17,4 +17,16 @@ export class RegisterDto {
   @IsString()
   @IsNotEmpty({ message: 'El tipo de participación es obligatorio' })
   participacion: string;
+
+  @IsString()
+  @IsOptional()
+  universidad?: string;
+
+  @IsString()
+  @IsOptional()
+  voucherCode?: string;
+
+  @IsString()
+  @IsOptional()
+  codigoOtic?: string;
 }

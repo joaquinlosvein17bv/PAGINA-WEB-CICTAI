@@ -12,6 +12,8 @@ import { diskStorage } from 'multer';
 import { extname, join } from 'path';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
+import { LoginDto } from './dto/login.dto';
+import { ValidateOticDto } from './dto/validate-otic.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -48,5 +50,17 @@ export class AuthController {
         createdAt: user.createdAt,
       },
     };
+  }
+
+  @Post('validate-otic')
+  @HttpCode(HttpStatus.OK)
+  async validateOtic(@Body() dto: ValidateOticDto) {
+    return this.authService.validateOtic(dto);
+  }
+
+  @Post('login')
+  @HttpCode(HttpStatus.OK)
+  async login(@Body() dto: LoginDto) {
+    return this.authService.login(dto);
   }
 }
