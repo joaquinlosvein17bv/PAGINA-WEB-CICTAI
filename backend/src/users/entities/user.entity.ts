@@ -29,6 +29,9 @@ export class User {
   @Column({ type: 'varchar', length: 50, nullable: true })
   codigoOtic: string;
 
+  @Column({ type: 'varchar', length: 20, nullable: true })
+  modalidad: string;
+
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 }

@@ -9,7 +9,7 @@ import { UsersModule } from './users/users.module';
 import { OticCodesModule } from './otic-codes/otic-codes.module';
 import { EjesTematicosModule } from './ejes-tematicos/ejes-tematicos.module';
 import { PonenciasModule } from './ponencias/ponencias.module';
-import { MatriculasModule } from './matriculas/matriculas.module';
+import { CertificadosModule } from './certificados/certificados.module';
 
 @Module({
   imports: [
@@ -18,14 +18,14 @@ import { MatriculasModule } from './matriculas/matriculas.module';
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..'),
       serveRoot: '/',
-      exclude: ['/auth/(.*)', '/ponencias/(.*)', '/ejes-tematicos/(.*)', '/matriculas/(.*)'],
+      exclude: ['/auth/(.*)', '/ponencias/(.*)', '/ejes-tematicos/(.*)', '/certificados/(.*)'],
     }),
     UsersModule,
     AuthModule,
     OticCodesModule,
     EjesTematicosModule,
     PonenciasModule,
-    MatriculasModule,
+    CertificadosModule,
   ],
 })
 export class AppModule {}

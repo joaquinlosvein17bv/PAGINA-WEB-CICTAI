@@ -2,7 +2,6 @@ const API_URL = '';
 
 let codigoValidado = false;
 let ejeSeleccionadoActual = '';
-let paymentCompleted = false;
 let currentVoucherCode = '';
 let ejesCictai = [];
 
@@ -12,24 +11,29 @@ function toggleFlujosParticipacion() {
     const flujosGeneral = document.querySelectorAll('.flujo-general');
     const formularioTech = document.getElementById('formularioInformacion');
     const inputCodigo = document.getElementById('inputCodigo');
-    const tipoSelect = document.getElementById('inputTipo');
-    const paymentSection = document.getElementById('paymentSection');
+    const modalidadSelect = document.getElementById('inputModalidad');
+
+    flujosPonencia.forEach(el => el.classList.add('d-none'));
+    flujosGeneral.forEach(el => el.classList.add('d-none'));
+
+    if (formularioTech) formularioTech.classList.add('d-none');
+    codigoValidado = false;
 
     if (select.value === 'ponente') {
         flujosPonencia.forEach(el => el.classList.remove('d-none'));
-        flujosGeneral.forEach(el => el.classList.remove('d-none'));
 
-        if (tipoSelect) {
-            tipoSelect.value = 'ponente';
-            tipoSelect.disabled = true;
-            tipoSelect.dispatchEvent(new Event('change'));
+        if (inputCodigo) {
+            inputCodigo.value = '';
+            inputCodigo.disabled = false;
         }
-    } else {
-        flujosPonencia.forEach(el => el.classList.add('d-none'));
+
+        if (modalidadSelect) {
+            modalidadSelect.value = 'presencial';
+            modalidadSelect.disabled = true;
+        }
+    } else if (select.value === 'general') {
         flujosGeneral.forEach(el => el.classList.remove('d-none'));
 
-        if (formularioTech) formularioTech.classList.add('d-none');
-        codigoValidado = false;
         if (inputCodigo) {
             inputCodigo.value = '';
             inputCodigo.disabled = false;
@@ -37,15 +41,12 @@ function toggleFlujosParticipacion() {
         const errorMsg = document.getElementById('errorValidacion');
         if (errorMsg) errorMsg.classList.add('d-none');
 
-        if (tipoSelect) {
-            tipoSelect.value = '';
-            tipoSelect.disabled = false;
-            paymentCompleted = false;
-            currentVoucherCode = '';
-            const paymentConfirmation = document.getElementById('paymentConfirmation');
-            if (paymentConfirmation) paymentConfirmation.style.display = 'none';
-            tipoSelect.dispatchEvent(new Event('change'));
+        if (modalidadSelect) {
+            modalidadSelect.value = '';
+            modalidadSelect.disabled = false;
         }
+
+        currentVoucherCode = '';
     }
 }
 
@@ -74,6 +75,7 @@ async function validarCodigoOTIC() {
         codigoValidado = true;
         mensajeError.classList.add('d-none');
         seccionPonente.classList.remove('d-none');
+        document.querySelectorAll('.flujo-general').forEach(el => el.classList.remove('d-none'));
         document.getElementById('inputCodigo').disabled = true;
         showToast('✅ Código de OTIC validado con éxito.', 'success');
     } catch (e) {
@@ -250,39 +252,6 @@ function generateVoucherCode() {
     return code;
 }
 
-function simulateEmail(email, nombre, code) {
-    console.log('=== CORREO ELECTRÓNICO SIMULADO ===');
-    console.log(`Para: ${email}`);
-    console.log(`Asunto: Confirmación de Inscripción — CICTAI 2026`);
-    console.log(`---`);
-    console.log(`Estimado/a ${nombre},`);
-    console.log(`Su inscripción al CICTAI 2026 ha sido confirmada.`);
-    console.log(`Código de Validación: ${code}`);
-    console.log(`Use este código para acceder a los recursos del evento.`);
-    console.log('===================================');
-}
-
-function initPaymentToggle() {
-    const tipoSelect = document.getElementById('inputTipo');
-    if (!tipoSelect) return;
-
-    tipoSelect.addEventListener('change', function () {
-        const paymentSection = document.getElementById('paymentSection');
-        if (!paymentSection) return;
-
-        if (this.value === 'ponente') {
-            paymentSection.style.display = 'none';
-            paymentCompleted = true;
-            currentVoucherCode = generateVoucherCode();
-        } else {
-            paymentSection.style.display = 'block';
-            if (!paymentCompleted) {
-                document.getElementById('paymentConfirmation').style.display = 'none';
-            }
-        }
-    });
-}
-
 async function initForm() {
     const form = document.getElementById('formCictai');
     if (!form) return;
@@ -293,7 +262,8 @@ async function initForm() {
         const nombre = document.getElementById('inputNombre').value.trim();
         const email = document.getElementById('inputEmail').value.trim();
         const univ = document.getElementById('inputUniv').value.trim();
-        const tipo = document.getElementById('inputTipo').value;
+        const participacion = document.getElementById('mainParticipacionSelect').value;
+        const modalidad = document.getElementById('inputModalidad').value;
         const password = document.getElementById('inputPassword').value;
         const passwordConfirm = document.getElementById('inputPasswordConfirm').value;
         const codigoOtic = document.getElementById('inputCodigo')?.value.trim() || undefined;
@@ -303,12 +273,12 @@ async function initForm() {
             return;
         }
 
-        if (tipo !== 'ponente' && !paymentCompleted) {
-            showToast('⚠️ Debes completar el pago antes de enviar el registro.', 'warning');
+        if (participacion === 'ponente' && !codigoValidado) {
+            showToast('⚠️ Primero debes validar tu código OTIC.', 'warning');
             return;
         }
 
-        if (tipo === 'ponente' && !currentVoucherCode) {
+        if (!currentVoucherCode) {
             currentVoucherCode = generateVoucherCode();
         }
 
@@ -325,7 +295,8 @@ async function initForm() {
                     nombre,
                     email,
                     universidad: univ || undefined,
-                    participacion: tipo,
+                    participacion,
+                    modalidad,
                     password,
                     voucherCode: currentVoucherCode,
                     codigoOtic: codigoOtic || undefined,
@@ -358,12 +329,7 @@ async function initForm() {
                 btn.style.background = '';
                 btn.style.color = '';
                 form.reset();
-                paymentCompleted = false;
                 currentVoucherCode = '';
-                const paymentSection = document.getElementById('paymentSection');
-                const paymentConfirmation = document.getElementById('paymentConfirmation');
-                if (paymentSection) paymentSection.style.display = 'block';
-                if (paymentConfirmation) paymentConfirmation.style.display = 'none';
             }, 4000);
         } catch (e) {
             btn.innerHTML = originalText;
@@ -924,8 +890,8 @@ async function generarArchivoLaTeX() {
     }, 500);
 }
 
-async function initMatriculaForm() {
-    const form = document.getElementById('formMatricula');
+async function initCertificadoForm() {
+    const form = document.getElementById('formCertificado');
     if (!form) return;
 
     form.addEventListener('submit', async function (e) {
@@ -938,24 +904,24 @@ async function initMatriculaForm() {
         btn.disabled = true;
 
         try {
-            const res = await fetch(`${API_URL}/matriculas`, {
+            const res = await fetch(`${API_URL}/certificados`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     userId: '00000000-0000-0000-0000-000000000000',
-                    codigoPago: document.getElementById('matCodigo').value,
+                    codigoPago: document.getElementById('certCodigo').value,
                     metodoPago: 'pagalo',
                 }),
             });
 
-            if (!res.ok) throw new Error('Error al confirmar matrícula');
+            if (!res.ok) throw new Error('Error al confirmar certificado');
 
-            showToast('✅ ¡Matrícula confirmada con éxito!', 'success');
+            showToast('✅ ¡Certificado confirmado con éxito!', 'success');
             btn.innerHTML = originalText;
             btn.disabled = false;
             form.reset();
         } catch {
-            showToast('❌ Error al confirmar matrícula', 'error');
+            showToast('❌ Error al confirmar certificado', 'error');
             btn.innerHTML = originalText;
             btn.disabled = false;
         }
@@ -973,7 +939,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     initActiveNav();
     initSmoothScroll();
     initForm();
-    initPaymentToggle();
     initValidation();
-    initMatriculaForm();
+    initCertificadoForm();
 });

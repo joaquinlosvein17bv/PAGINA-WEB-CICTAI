@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString, IsUUID } from 'class-validator';
 
-export class CreateMatriculaDto {
+export class CreateCertificadoDto {
   @IsUUID()
   @IsNotEmpty({ message: 'El userId es obligatorio' })
   userId: string;

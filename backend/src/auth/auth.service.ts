@@ -36,6 +36,7 @@ export class AuthService {
       universidad: dto.universidad,
       voucherCode: dto.voucherCode,
       codigoOtic: dto.codigoOtic,
+      modalidad: dto.modalidad,
       voucherPath,
     });
 
@@ -68,12 +69,13 @@ export class AuthService {
 
     return {
       message: 'Validación exitosa',
-      user: {
-        id: user.id,
-        nombre: user.nombre,
-        email: user.email,
-        participacion: user.participacion,
-      },
+        user: {
+          id: user.id,
+          nombre: user.nombre,
+          email: user.email,
+          participacion: user.participacion,
+          modalidad: user.modalidad,
+        },
     };
   }
 }

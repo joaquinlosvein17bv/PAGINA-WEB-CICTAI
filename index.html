@@ -440,12 +440,11 @@
                                                     placeholder="Ej: UNTELS" required>
                                             </div>
                                             <div class="col-md-6">
-                                                <label class="form-label">Tipo de Participación</label>
-                                                <select class="form-select" id="inputTipo" required>
+                                                <label class="form-label">Modalidad</label>
+                                                <select class="form-select" id="inputModalidad" required>
                                                     <option selected disabled value="">Seleccionar...</option>
-                                                    <option value="ponente">Ponente</option>
-                                                    <option value="panelista">Panelista</option>
-                                                    <option value="asistente">Asistente</option>
+                                                    <option value="presencial">Presencial</option>
+                                                    <option value="virtual">Virtual</option>
                                                 </select>
                                             </div>
                                             <div class="col-md-6">
@@ -459,49 +458,10 @@
                                                     placeholder="Repite tu contraseña" required minlength="6">
                                             </div>
 
-                                            <!-- Pasarela de Pago -->
-                                            <div class="col-12 mt-3" id="paymentSection">
-                                                <div class="payment-gateway">
-                                                    <div class="payment-header">
-                                                        <i class="fa-solid fa-lock me-2"></i>Pasarela de Pago Seguro —
-                                                        <strong>S/. 20.00</strong>
-                                                    </div>
-                                                    <div class="payment-body">
-                                                        <p class="mb-3" style="font-size:0.85rem; color:#555;">
-                                                            Selecciona tu método de pago preferido para completar la
-                                                            inscripción:</p>
-                                                        <div class="payment-buttons justify-content-center">
-                                                            <button type="button" class="btn-payment"
-                                                                style="background: #e30613; color: white; width: 100%; max-width: 300px; margin: 0 auto; display: block; opacity: 0.6; cursor: not-allowed;">
-                                                                <i
-                                                                    class="fa-solid fa-building-columns me-2"></i>Págalo.pe
-                                                            </button>
-                                                        </div>
-                                                        <div class="payment-note mt-3">
-                                                            <i class="fa-solid fa-circle-info me-1"></i>
-                                                            <strong>Importante:</strong> Los <strong>ponentes</strong>
-                                                            están exonerados del pago. Panelistas y asistentes requieren
-                                                            pago.
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            <!-- Confirmación de pago -->
-                                            <div class="col-12" id="paymentConfirmation" style="display:none;">
-                                                <div class="payment-success">
-                                                    <i class="fa-solid fa-circle-check fa-2x mb-2"></i>
-                                                    <h5>¡Pago Confirmado!</h5>
-                                                    <p>Tu código de validación ha sido enviado a tu correo electrónico.
-                                                    </p>
-                                                    <div class="voucher-code" id="voucherCodeDisplay"></div>
-                                                </div>
-                                            </div>
-
                                             <div class="col-12 mt-4">
                                                 <button type="submit" class="btn btn-gold w-100 py-3 fw-bold"
                                                     id="btnSubmit">
-                                                    <i class="fa-solid fa-paper-plane me-2"></i>ENVIAR REGISTRO
+                                                    <i class="fa-solid fa-paper-plane me-2"></i>INSCRIBIRSE
                                                 </button>
                                             </div>
                                         </div>
@@ -510,38 +470,38 @@
                             </div>
                         </div>
 
-                        <!-- Apartado 2: Matrícula -->
+                        <!-- Apartado 2: Certificado -->
                         <div class="accordion-item"
                             style="border: none; border-radius: var(--radius); box-shadow: var(--shadow-md); overflow: hidden;">
-                            <h2 class="accordion-header" id="headingMatricula">
+                            <h2 class="accordion-header" id="headingCertificado">
                                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#collapseMatricula" aria-expanded="false"
-                                    aria-controls="collapseMatricula" data-bs-theme="dark"
+                                    data-bs-target="#collapseCertificado" aria-expanded="false"
+                                    aria-controls="collapseCertificado" data-bs-theme="dark"
                                     style="background-color: var(--untels-blue-dark); color: white; font-weight: bold; font-size: 1.1rem; padding: 1.2rem 1.5rem;">
                                     <span class="me-2"
                                         style="color: var(--untels-gold); font-family: 'Montserrat', sans-serif;">II.</span>
-                                    MATRÍCULA
+                                    CERTIFICADO
                                 </button>
                             </h2>
-                            <div id="collapseMatricula" class="accordion-collapse collapse"
-                                aria-labelledby="headingMatricula" data-bs-parent="#accordionRegistroMatricula">
+                            <div id="collapseCertificado" class="accordion-collapse collapse"
+                                aria-labelledby="headingCertificado" data-bs-parent="#accordionRegistroMatricula">
                                 <div class="accordion-body p-0">
-                                    <form id="formMatricula" class="form-registro"
+                                    <form id="formCertificado" class="form-registro"
                                         style="border-top-left-radius: 0; border-top-right-radius: 0;">
                                         <div class="row g-3">
                                             <div class="col-md-12">
                                                 <label class="form-label">Nombre Completo</label>
-                                                <input type="text" class="form-control" id="matNombre"
+                                                <input type="text" class="form-control" id="certNombre"
                                                     placeholder="Ingresa tu nombre completo" required>
                                             </div>
                                             <div class="col-md-12">
                                                 <label class="form-label">Contraseña</label>
-                                                <input type="password" class="form-control" id="matPassword"
+                                                <input type="password" class="form-control" id="certPassword"
                                                     placeholder="Ingresa tu contraseña" required>
                                             </div>
                                             <div class="col-md-12">
                                                 <label class="form-label">Código de Pago</label>
-                                                <select class="form-select" id="matCodigo" required>
+                                                <select class="form-select" id="certCodigo" required>
                                                     <option selected disabled value="">Seleccionar código de pago...
                                                     </option>
                                                     <option value="cod-pagalo">Págalo.pe</option>
@@ -549,7 +509,7 @@
                                             </div>
                                             <div class="col-12 mt-4">
                                                 <button type="submit" class="btn btn-gold w-100 py-3 fw-bold">
-                                                    <i class="fa-solid fa-graduation-cap me-2"></i>CONFIRMAR MATRÍCULA
+                                                    <i class="fa-solid fa-graduation-cap me-2"></i>CONFIRMAR CERTIFICADO
                                                 </button>
                                             </div>
                                         </div>

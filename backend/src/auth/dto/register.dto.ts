@@ -29,4 +29,8 @@ export class RegisterDto {
   @IsString()
   @IsOptional()
   codigoOtic?: string;
+
+  @IsString()
+  @IsOptional()
+  modalidad?: string;
 }
