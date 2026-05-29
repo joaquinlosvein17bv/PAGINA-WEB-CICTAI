@@ -13,7 +13,7 @@ import { MatriculasModule } from './matriculas/matriculas.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({ isGlobal: true, envFilePath: join(__dirname, '..', '.env') }),
     TypeOrmModule.forRootAsync(typeOrmConfig),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..'),

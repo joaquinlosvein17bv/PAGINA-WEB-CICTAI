@@ -962,9 +962,11 @@ async function initMatriculaForm() {
     });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    renderEjes();
-    poblarSelectEjes();
+document.addEventListener('DOMContentLoaded', async () => {
+    await Promise.all([
+        renderEjes(),
+        poblarSelectEjes(),
+    ]);
     initCountdown();
     initScrollReveal();
     initNavbarScroll();
