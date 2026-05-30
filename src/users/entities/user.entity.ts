@@ -32,6 +32,9 @@ export class User {
   @Column({ type: 'varchar', length: 20, nullable: true })
   modalidad: string;
 
+  @Column({ type: 'text', nullable: true })
+  hojaDeVida: string;
+
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 }

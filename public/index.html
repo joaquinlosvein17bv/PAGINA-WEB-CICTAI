@@ -334,187 +334,221 @@
                         <div class="alert alert-success d-flex align-items-center py-2 mb-3"
                             style="border-radius: var(--radius-sm); font-size: 0.85rem;">
                             <i class="fa-solid fa-circle-check me-2"></i>
-                            <span><strong>Código OTIC validado.</strong> Ya puedes completar tu información técnica como
-                                ponente.</span>
+                            <span><strong>Código OTIC validado.</strong> Completa tu registro personal y luego la información técnica.</span>
                         </div>
-                        <h4 class="text-blue fw-bold mb-4"><i class="fa-solid fa-file-lines me-2"></i>Información
-                            Técnica de la Ponencia</h4>
 
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <label class="form-label fw-bold">Título del Trabajo</label>
-                                <input type="text" id="tituloPonencia" class="form-control"
-                                    placeholder="Ej: Avances en Nanotecnología Aplicada" required>
+                        <!-- SECCIÓN 1: REGISTRO PERSONAL -->
+                        <div id="seccionPersonal">
+                            <h4 class="text-blue fw-bold mb-4"><i class="fa-solid fa-user me-2"></i>Registro Personal</h4>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Nombre Completo</label>
+                                    <input type="text" class="form-control" id="inputNombrePonente"
+                                        placeholder="Ingresa tu nombre completo" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Correo Electrónico</label>
+                                    <input type="email" class="form-control" id="inputEmailPonente"
+                                        placeholder="correo@ejemplo.com" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Universidad / Institución</label>
+                                    <input type="text" class="form-control" id="inputUnivPonente"
+                                        placeholder="Ej: UNTELS" required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Modalidad</label>
+                                    <select class="form-select" id="inputModalidadPonente" disabled>
+                                        <option value="presencial" selected>Presencial</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Crear Contraseña</label>
+                                    <input type="password" class="form-control" id="inputPasswordPonente"
+                                        placeholder="Mín. 6 caracteres" required minlength="6">
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Confirmar Contraseña</label>
+                                    <input type="password" class="form-control" id="inputPasswordConfirmPonente"
+                                        placeholder="Repite tu contraseña" required minlength="6">
+                                </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-bold">Hoja de Vida</label>
+                                    <textarea id="inputHojaVida" class="form-control" rows="6"
+                                        placeholder="Escribe aquí tu hoja de vida: experiencia, formación académica, publicaciones, etc."></textarea>
+                                </div>
+                                <div class="col-12 mt-3">
+                                    <button class="btn btn-blue btn-lg w-100 fw-bold" id="btnContinuar" onclick="mostrarSeccionTecnica()">
+                                        Continuar a Información Técnica <i class="fa-solid fa-arrow-right ms-2"></i>
+                                    </button>
+                                </div>
                             </div>
+                        </div>
 
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Autor(es)</label>
-                                <input type="text" id="autoresPonencia" class="form-control"
-                                    placeholder="Nombres y Apellidos" required>
-                            </div>
+                        <!-- SECCIÓN 2: INFORMACIÓN TÉCNICA DE LA PONENCIA -->
+                        <div id="seccionTecnica" class="d-none">
+                            <hr class="my-4">
+                            <h4 class="text-blue fw-bold mb-4"><i class="fa-solid fa-file-lines me-2"></i>Información
+                                Técnica de la Ponencia</h4>
 
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Afiliaciones</label>
-                                <input type="text" id="afiliacionPonencia" class="form-control"
-                                    placeholder="Ej: Universidad Nacional Mayor de San Marcos" required>
-                            </div>
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label class="form-label fw-bold">Título del Trabajo</label>
+                                    <input type="text" id="tituloPonencia" class="form-control"
+                                        placeholder="Ej: Avances en Nanotecnología Aplicada" required>
+                                </div>
 
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Eje Temático</label>
-                                <select id="selectEje" class="form-select" required>
-                                    <option value="" selected disabled>Seleccione un eje...</option>
-                                    <!-- Opciones generadas dinámicamente por JavaScript -->
-                                </select>
-                            </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Autor(es)</label>
+                                    <input type="text" id="autoresPonencia" class="form-control"
+                                        placeholder="Nombres y Apellidos" required>
+                                </div>
 
-                            <div class="col-md-6">
-                                <label class="form-label fw-bold">Correo (Autor de Correspondencia)</label>
-                                <input type="email" id="correoPonencia" class="form-control"
-                                    placeholder="correo@ejemplo.com" required>
-                            </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Afiliaciones</label>
+                                    <input type="text" id="afiliacionPonencia" class="form-control"
+                                        placeholder="Ej: Universidad Nacional Mayor de San Marcos" required>
+                                </div>
 
-                            <div class="col-12">
-                                <label class="form-label fw-bold">Palabras Claves</label>
-                                <input type="text" id="palabrasClavePonencia" class="form-control"
-                                    placeholder="Ej: Ablación Laser, nanopartículas" required>
-                            </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Eje Temático</label>
+                                    <select id="selectEje" class="form-select" required>
+                                        <option value="" selected disabled>Seleccione un eje...</option>
+                                        <!-- Opciones generadas dinámicamente por JavaScript -->
+                                    </select>
+                                </div>
 
-                            <div class="col-12">
-                                <label class="form-label fw-bold">Resumen</label>
-                                <textarea id="resumenPonencia" class="form-control" rows="5"
-                                    placeholder="Escriba aquí el resumen de su investigación..." required></textarea>
-                            </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Correo (Autor de Correspondencia)</label>
+                                    <input type="email" id="correoPonencia" class="form-control"
+                                        placeholder="correo@ejemplo.com" required>
+                                </div>
 
-                            <div class="col-12">
-                                <label class="form-label fw-bold">Referencias</label>
-                                <textarea id="referenciasPonencia" class="form-control" rows="4"
-                                    placeholder="[1] Autor, Título..." required></textarea>
-                            </div>
+                                <div class="col-12">
+                                    <label class="form-label fw-bold">Palabras Claves</label>
+                                    <input type="text" id="palabrasClavePonencia" class="form-control"
+                                        placeholder="Ej: Ablación Laser, nanopartículas" required>
+                                </div>
 
-                            <div class="col-12 mt-4">
-                                <button onclick="generarArchivoLaTeX()" class="btn btn-gold btn-lg w-100 fw-bold"
-                                    style="letter-spacing: 1px;">
-                                    <i class="fa-solid fa-file-export me-2"></i>GENERAR Y DESCARGAR ARCHIVO .TEX
-                                </button>
-                                <p class="small text-muted mt-2 text-center">
-                                    <i class="fa-solid fa-cloud-arrow-up me-1"></i>Este archivo podrá ser subido
-                                    directamente a Overleaf o EasyChair.
-                                </p>
+                                <div class="col-12">
+                                    <label class="form-label fw-bold">Resumen</label>
+                                    <textarea id="resumenPonencia" class="form-control" rows="5"
+                                        placeholder="Escriba aquí el resumen de su investigación..." required></textarea>
+                                </div>
+
+                                <div class="col-12">
+                                    <label class="form-label fw-bold">Referencias</label>
+                                    <textarea id="referenciasPonencia" class="form-control" rows="4"
+                                        placeholder="[1] Autor, Título..." required></textarea>
+                                </div>
+
+                                <div class="col-12 mt-4">
+                                    <button onclick="guardarTodo()" class="btn btn-gold btn-lg w-100 fw-bold"
+                                        style="letter-spacing: 1px;">
+                                        <i class="fa-solid fa-save me-2"></i>GUARDAR TODO
+                                    </button>
+                                    <p class="small text-muted mt-2 text-center">
+                                        <i class="fa-solid fa-cloud-arrow-up me-1"></i>Se guardará tu registro personal y la ponencia, y se generará el PDF.
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
 
-                    <div class="accordion flujo-general d-none" id="accordionRegistroMatricula">
-                        <!-- Apartado 1: Registro y Pago -->
-                        <div class="accordion-item mb-4"
-                            style="border: none; border-radius: var(--radius); box-shadow: var(--shadow-md); overflow: hidden;">
-                            <h2 class="accordion-header" id="headingRegistro">
-                                <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#collapseRegistro" aria-expanded="true"
-                                    aria-controls="collapseRegistro" data-bs-theme="dark"
-                                    style="background-color: var(--untels-blue-dark); color: white; font-weight: bold; font-size: 1.1rem; padding: 1.2rem 1.5rem;">
-                                    <span class="me-2"
-                                        style="color: var(--untels-gold); font-family: 'Montserrat', sans-serif;">I.</span>
-                                    REGISTRO Y PAGO
-                                </button>
-                            </h2>
-                            <div id="collapseRegistro" class="accordion-collapse collapse show"
-                                aria-labelledby="headingRegistro" data-bs-parent="#accordionRegistroMatricula">
-                                <div class="accordion-body p-0">
-                                    <form id="formCictai" class="form-registro"
-                                        style="border-top-left-radius: 0; border-top-right-radius: 0;">
-                                        <div class="row g-3">
-                                            <div class="col-md-6">
-                                                <label class="form-label">Nombre Completo</label>
-                                                <input type="text" class="form-control" id="inputNombre"
-                                                    placeholder="Ingresa tu nombre completo" required>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label">Correo Electrónico</label>
-                                                <input type="email" class="form-control" id="inputEmail"
-                                                    placeholder="correo@ejemplo.com" required>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label">Universidad / Institución</label>
-                                                <input type="text" class="form-control" id="inputUniv"
-                                                    placeholder="Ej: UNTELS" required>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label">Modalidad</label>
-                                                <select class="form-select" id="inputModalidad" required>
-                                                    <option selected disabled value="">Seleccionar...</option>
-                                                    <option value="presencial">Presencial</option>
-                                                    <option value="virtual">Virtual</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label">Crear Contraseña</label>
-                                                <input type="password" class="form-control" id="inputPassword"
-                                                    placeholder="Mín. 6 caracteres" required minlength="6">
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label class="form-label">Confirmar Contraseña</label>
-                                                <input type="password" class="form-control" id="inputPasswordConfirm"
-                                                    placeholder="Repite tu contraseña" required minlength="6">
-                                            </div>
-
-                                            <div class="col-12 mt-4">
-                                                <button type="submit" class="btn btn-gold w-100 py-3 fw-bold"
-                                                    id="btnSubmit">
-                                                    <i class="fa-solid fa-paper-plane me-2"></i>INSCRIBIRSE
-                                                </button>
-                                            </div>
+                    <div class="flujo-general d-none" id="wrapperFlujoGeneral">
+                        <!-- REGISTRO -->
+                        <div id="sectionRegistro" class="card mb-4"
+                            style="border: 2px solid var(--untels-blue); border-radius: var(--radius); overflow: hidden;">
+                            <div class="card-header"
+                                style="background: linear-gradient(135deg, var(--untels-blue), var(--untels-blue-light)); padding: 1rem 1.5rem;">
+                                <h6 class="mb-0 text-white fw-bold" style="font-size: 1.1rem;">
+                                    REGISTRO <span id="checkRegistro" class="d-none"><i class="fa-solid fa-circle-check ms-2" style="color: #4caf50; font-size: 1.2rem;"></i></span>
+                                </h6>
+                            </div>
+                            <div class="card-body p-0" id="sectionRegistroBody">
+                                <form id="formCictai" class="form-registro"
+                                    style="border-top-left-radius: 0; border-top-right-radius: 0;">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label class="form-label">Nombre Completo</label>
+                                            <input type="text" class="form-control" id="inputNombre"
+                                                placeholder="Ingresa tu nombre completo" required>
                                         </div>
-                                    </form>
-                                </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Correo Electrónico</label>
+                                            <input type="email" class="form-control" id="inputEmail"
+                                                placeholder="correo@ejemplo.com" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Universidad / Institución</label>
+                                            <input type="text" class="form-control" id="inputUniv"
+                                                placeholder="Ej: UNTELS" required>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Modalidad</label>
+                                            <select class="form-select" id="inputModalidad" required>
+                                                <option selected disabled value="">Seleccionar...</option>
+                                                <option value="presencial">Presencial</option>
+                                                <option value="virtual">Virtual</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Crear Contraseña</label>
+                                            <input type="password" class="form-control" id="inputPassword"
+                                                placeholder="Mín. 6 caracteres" required minlength="6">
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label class="form-label">Confirmar Contraseña</label>
+                                            <input type="password" class="form-control" id="inputPasswordConfirm"
+                                                placeholder="Repite tu contraseña" required minlength="6">
+                                        </div>
+                                        <div class="col-12 mt-4">
+                                            <button type="submit" class="btn btn-gold w-100 py-3 fw-bold" id="btnSubmit">
+                                                <i class="fa-solid fa-paper-plane me-2"></i>INSCRIBIRSE
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
 
-                        <!-- Apartado 2: Certificado -->
-                        <div class="accordion-item"
-                            style="border: none; border-radius: var(--radius); box-shadow: var(--shadow-md); overflow: hidden;">
-                            <h2 class="accordion-header" id="headingCertificado">
-                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#collapseCertificado" aria-expanded="false"
-                                    aria-controls="collapseCertificado" data-bs-theme="dark"
-                                    style="background-color: var(--untels-blue-dark); color: white; font-weight: bold; font-size: 1.1rem; padding: 1.2rem 1.5rem;">
-                                    <span class="me-2"
-                                        style="color: var(--untels-gold); font-family: 'Montserrat', sans-serif;">II.</span>
-                                    CERTIFICADO
-                                </button>
-                            </h2>
-                            <div id="collapseCertificado" class="accordion-collapse collapse"
-                                aria-labelledby="headingCertificado" data-bs-parent="#accordionRegistroMatricula">
-                                <div class="accordion-body p-0">
-                                    <form id="formCertificado" class="form-registro"
-                                        style="border-top-left-radius: 0; border-top-right-radius: 0;">
-                                        <div class="row g-3">
-                                            <div class="col-md-12">
-                                                <label class="form-label">Nombre Completo</label>
-                                                <input type="text" class="form-control" id="certNombre"
-                                                    placeholder="Ingresa tu nombre completo" required>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <label class="form-label">Contraseña</label>
-                                                <input type="password" class="form-control" id="certPassword"
-                                                    placeholder="Ingresa tu contraseña" required>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <label class="form-label">Código de Pago</label>
-                                                <select class="form-select" id="certCodigo" required>
-                                                    <option selected disabled value="">Seleccionar código de pago...
-                                                    </option>
-                                                    <option value="cod-pagalo">Págalo.pe</option>
-                                                </select>
-                                            </div>
-                                            <div class="col-12 mt-4">
-                                                <button type="submit" class="btn btn-gold w-100 py-3 fw-bold">
-                                                    <i class="fa-solid fa-graduation-cap me-2"></i>CONFIRMAR CERTIFICADO
-                                                </button>
-                                            </div>
+                        <!-- CERTIFICADO -->
+                        <div id="sectionCertificado" class="card d-none mb-4"
+                            style="border: 2px solid var(--untels-gold); border-radius: var(--radius); overflow: hidden;">
+                            <div class="card-header"
+                                style="background: linear-gradient(135deg, var(--untels-blue), var(--untels-blue-light)); padding: 1rem 1.5rem;">
+                                <h6 class="mb-0 text-white fw-bold" style="font-size: 1.1rem;">
+                                    CERTIFICADO <span id="checkCertificado" class="d-none"><i class="fa-solid fa-circle-check ms-2" style="color: #4caf50; font-size: 1.2rem;"></i></span>
+                                </h6>
+                            </div>
+                            <div class="card-body p-0" id="sectionCertificadoBody">
+                                <form id="formCertificado" class="form-registro"
+                                    style="border-top-left-radius: 0; border-top-right-radius: 0;">
+                                    <div class="row g-3">
+                                        <div class="col-md-12">
+                                            <label class="form-label">Nombre Completo</label>
+                                            <input type="text" class="form-control" id="certNombre"
+                                                placeholder="Ingresa tu nombre completo" required>
                                         </div>
-                                    </form>
-                                </div>
+                                        <div class="col-md-12">
+                                            <label class="form-label">Contraseña</label>
+                                            <input type="password" class="form-control" id="certPassword"
+                                                placeholder="Ingresa tu contraseña" required>
+                                        </div>
+                                        <div class="col-md-12">
+                                            <label class="form-label">Código de Pago</label>
+                                            <select class="form-select" id="certCodigo" required>
+                                                <option selected disabled value="">Seleccionar código de pago...</option>
+                                                <option value="cod-pagalo">Págalo.pe</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-12 mt-4">
+                                            <button type="submit" class="btn btn-gold w-100 py-3 fw-bold">
+                                                <i class="fa-solid fa-graduation-cap me-2"></i>CONFIRMAR CERTIFICADO
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -526,6 +560,9 @@
                         <p class="precio mb-1">S/. 20.00</p>
                         <p class="mb-0" style="font-size:0.88rem; opacity:0.8;">Pago único para recibir certificado
                             digital oficial del congreso.</p>
+                        <button onclick="mostrarCertificado()" class="btn btn-gold w-100 mt-3 fw-bold">
+                            <i class="fa-solid fa-certificate me-2"></i>Certifícate ahora
+                        </button>
                         <hr style="border-color: rgba(255,255,255,0.2); margin: 1rem 0;">
                         <div style="font-size:0.82rem; opacity:0.9;">
                             <p class="mb-1"><i class="fa-solid fa-check-circle me-1 text-gold"></i>

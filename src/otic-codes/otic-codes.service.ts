@@ -18,6 +18,14 @@ export class OticCodesService {
     if (record.usado) {
       throw new ConflictException('El código OTIC ya fue usado');
     }
+    return record;
+  }
+
+  async markAsUsed(codigo: string): Promise<OticCode> {
+    const record = await this.oticCodeRepository.findOne({ where: { codigo } });
+    if (!record) {
+      throw new NotFoundException('El código OTIC no existe');
+    }
     record.usado = true;
     return this.oticCodeRepository.save(record);
   }

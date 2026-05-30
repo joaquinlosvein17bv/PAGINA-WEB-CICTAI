@@ -28,7 +28,13 @@ async function seed() {
   const ponenciaRepo = ds.getRepository(Ponencia);
 
   // ── Códigos OTIC ──
-  const codigosOTIC = ['UNTELS2026', 'OTIC-CICTAI', 'PONENTE2026'];
+  const codigosOTIC = [
+    'UNTELS2026', 'OTIC-CICTAI', 'PONENTE2026',
+    'INVESTIGADOR2026', 'DOCENTE2026', 'ESTUDIANTE2026',
+    'EXPOSITOR2026', 'ORGANIZADOR2026', 'ASISTENTE2026',
+    'COORDINADOR2026', 'EVALUADOR2026', 'TALLERISTA2026',
+    'CONFERENCISTA2026', 'MODERADOR2026', 'SIMPOSIO2026',
+  ];
 
   for (const codigo of codigosOTIC) {
     const exists = await oticRepo.findOne({ where: { codigo } });

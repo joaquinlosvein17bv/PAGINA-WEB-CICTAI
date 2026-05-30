@@ -33,4 +33,8 @@ export class RegisterDto {
   @IsString()
   @IsOptional()
   modalidad?: string;
+
+  @IsString()
+  @IsOptional()
+  hojaDeVida?: string;
 }

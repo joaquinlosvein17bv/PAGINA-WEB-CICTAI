@@ -37,8 +37,13 @@ export class AuthService {
       voucherCode: dto.voucherCode,
       codigoOtic: dto.codigoOtic,
       modalidad: dto.modalidad,
+      hojaDeVida: dto.hojaDeVida,
       voucherPath,
     });
+
+    if (dto.codigoOtic) {
+      await this.oticCodesService.markAsUsed(dto.codigoOtic);
+    }
 
     if (dto.voucherCode) {
       await this.mailService.sendVoucherEmail(dto.email, dto.nombre, dto.voucherCode);

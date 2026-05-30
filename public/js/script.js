@@ -310,10 +310,8 @@ async function initForm() {
 
             const data = await res.json();
 
-            btn.innerHTML = '<i class="fa-solid fa-check me-2"></i>¡Registro Exitoso!';
-            btn.style.background = '#28a745';
-            btn.style.color = '#fff';
-            btn.style.borderRadius = '50px';
+            document.getElementById('sectionRegistroBody').classList.add('d-none');
+            document.getElementById('checkRegistro').classList.remove('d-none');
 
             const validacionSection = document.getElementById('validacion');
             if (validacionSection) {
@@ -328,7 +326,6 @@ async function initForm() {
                 btn.disabled = false;
                 btn.style.background = '';
                 btn.style.color = '';
-                form.reset();
                 currentVoucherCode = '';
             }, 4000);
         } catch (e) {
@@ -397,6 +394,18 @@ async function initValidation() {
         btn.innerHTML = originalText;
         btn.disabled = false;
     });
+}
+
+function mostrarCertificado() {
+    const wrapper = document.getElementById('wrapperFlujoGeneral');
+    const sectionRegistro = document.getElementById('sectionRegistro');
+    const sectionCertificado = document.getElementById('sectionCertificado');
+    if (wrapper) wrapper.classList.remove('d-none');
+    if (sectionRegistro) sectionRegistro.classList.add('d-none');
+    if (sectionCertificado) {
+        sectionCertificado.classList.remove('d-none');
+        setTimeout(() => sectionCertificado.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
+    }
 }
 
 function showToast(message, type = 'info') {
@@ -727,48 +736,173 @@ function generarPDFCompendio(nombreEje, ponencias) {
     }, 500);
 }
 
-async function generarArchivoLaTeX() {
+function mostrarSeccionTecnica() {
+    const nombre = document.getElementById('inputNombrePonente').value.trim();
+    const email = document.getElementById('inputEmailPonente').value.trim();
+    const univ = document.getElementById('inputUnivPonente').value.trim();
+    const password = document.getElementById('inputPasswordPonente').value;
+    const passwordConfirm = document.getElementById('inputPasswordConfirmPonente').value;
+
+    if (!nombre || !email || !univ || !password) {
+        showToast('⚠️ Completa todos los campos obligatorios del Registro Personal.', 'warning');
+        return;
+    }
+
+    if (password !== passwordConfirm) {
+        showToast('⚠️ Las contraseñas no coinciden.', 'warning');
+        return;
+    }
+
+    if (password.length < 6) {
+        showToast('⚠️ La contraseña debe tener al menos 6 caracteres.', 'warning');
+        return;
+    }
+
+    document.getElementById('btnContinuar').classList.add('d-none');
+    document.getElementById('seccionTecnica').classList.remove('d-none');
+    document.getElementById('seccionTecnica').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+async function guardarTodo() {
+    const nombre = document.getElementById('inputNombrePonente').value.trim();
+    const email = document.getElementById('inputEmailPonente').value.trim();
+    const univ = document.getElementById('inputUnivPonente').value.trim();
+    const password = document.getElementById('inputPasswordPonente').value;
+    const hojaVida = document.getElementById('inputHojaVida').value.trim();
+    const codigoOtic = document.getElementById('inputCodigo').value.trim();
+
     const titulo = document.getElementById('tituloPonencia').value.trim();
     const autores = document.getElementById('autoresPonencia').value.trim();
     const afiliacion = document.getElementById('afiliacionPonencia').value.trim();
     const correo = document.getElementById('correoPonencia').value.trim();
-    const palabrasClave = document.getElementById('palabrasClavePonencia').value.trim();
     const ejeId = document.getElementById('selectEje').value;
+    const palabrasClave = document.getElementById('palabrasClavePonencia').value.trim();
     const resumen = document.getElementById('resumenPonencia').value.trim();
     const referencias = document.getElementById('referenciasPonencia').value.trim();
 
-    if (!titulo || !autores || !afiliacion || !correo || !palabrasClave || !ejeId || !resumen || !referencias) {
-        showToast('⚠️ Por favor, completa todos los campos obligatorios antes de generar el archivo.', 'warning');
+    if (!nombre || !email || !univ || !password) {
+        showToast('⚠️ Completa todos los campos del Registro Personal.', 'warning');
         return;
     }
 
-    showToast('⏳ Guardando y generando PDF...', 'info');
+    if (!titulo || !autores || !correo || !ejeId || !palabrasClave || !resumen) {
+        showToast('⚠️ Completa todos los campos obligatorios de la Información Técnica.', 'warning');
+        return;
+    }
+
+    const btn = document.querySelector('#seccionTecnica .btn-gold');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i>Guardando...';
+    btn.disabled = true;
 
     try {
-        const res = await fetch(`${API_URL}/ponencias`, {
+        const registerRes = await fetch(`${API_URL}/auth/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
+                nombre,
+                email,
+                universidad: univ || undefined,
+                participacion: 'ponente',
+                modalidad: 'presencial',
+                password,
+                codigoOtic: codigoOtic || undefined,
+                hojaDeVida: hojaVida || undefined,
+            }),
+        });
+
+        if (!registerRes.ok) {
+            const err = await registerRes.json();
+            throw new Error(err.message || 'Error al registrar usuario');
+        }
+
+        const registerData = await registerRes.json();
+        const userId = registerData.user.id;
+
+        const ponenciaRes = await fetch(`${API_URL}/ponencias`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                userId,
                 titulo,
                 autores,
-                afiliacion,
+                afiliacion: afiliacion || undefined,
                 ejeTematicoId: ejeId,
                 correo,
                 palabrasClave,
                 resumen,
-                referencias,
+                referencias: referencias || undefined,
             }),
         });
 
-        if (!res.ok) {
-            const err = await res.json();
+        if (!ponenciaRes.ok) {
+            const err = await ponenciaRes.json();
             throw new Error(err.message || 'Error al guardar ponencia');
         }
-    } catch (e) {
-        showToast('❌ ' + (e.message || 'Error al guardar ponencia'), 'error');
-        return;
-    }
 
+        generarPDFPonencia(titulo, autores, afiliacion, correo, palabrasClave, resumen, referencias);
+
+        // Auto-generar certificado para ponente
+        try {
+            await fetch(`${API_URL}/certificados`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    userId: registerData.user.id,
+                    codigoPago: currentVoucherCode || generateVoucherCode(),
+                    metodoPago: 'exonerado',
+                }),
+            });
+        } catch (_e) {
+            // No bloquear si falla la generación automática
+        }
+
+        document.getElementById('seccionPersonal').classList.add('d-none');
+        document.getElementById('seccionTecnica').classList.add('d-none');
+        const btnContinuar = document.getElementById('btnContinuar');
+        if (btnContinuar) btnContinuar.classList.add('d-none');
+
+        btn.innerHTML = '<i class="fa-solid fa-check me-2"></i>¡Registro Completo!';
+        btn.style.background = '#28a745';
+        btn.style.color = '#fff';
+        btn.style.borderRadius = '50px';
+
+        showToast('✅ ¡Registro exitoso! Usuario, ponencia y certificado generados.', 'success');
+
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            btn.style.background = '';
+            btn.style.color = '';
+            document.getElementById('inputNombrePonente').value = '';
+            document.getElementById('inputEmailPonente').value = '';
+            document.getElementById('inputUnivPonente').value = '';
+            document.getElementById('inputPasswordPonente').value = '';
+            document.getElementById('inputPasswordConfirmPonente').value = '';
+            document.getElementById('inputHojaVida').value = '';
+            document.getElementById('tituloPonencia').value = '';
+            document.getElementById('autoresPonencia').value = '';
+            document.getElementById('afiliacionPonencia').value = '';
+            document.getElementById('correoPonencia').value = '';
+            document.getElementById('selectEje').value = '';
+            document.getElementById('palabrasClavePonencia').value = '';
+            document.getElementById('resumenPonencia').value = '';
+            document.getElementById('referenciasPonencia').value = '';
+            document.getElementById('seccionTecnica').classList.add('d-none');
+            document.getElementById('btnContinuar').classList.remove('d-none');
+            document.getElementById('inputCodigo').disabled = false;
+            document.getElementById('inputCodigo').value = '';
+            codigoValidado = false;
+            document.getElementById('seccionPersonal').classList.remove('d-none');
+        }, 5000);
+    } catch (e) {
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+        showToast('❌ ' + (e.message || 'Error al guardar todo'), 'error');
+    }
+}
+
+function generarPDFPonencia(titulo, autores, afiliacion, correo, palabrasClave, resumen, referencias) {
     setTimeout(() => {
         if (!window.jspdf) {
             showToast('❌ Error: No se pudo cargar la librería PDF.', 'error');
@@ -812,7 +946,7 @@ async function generarArchivoLaTeX() {
 
         doc.setFont("helvetica", "normal");
         doc.setFontSize(9);
-        const afilLines = doc.splitTextToSize(afiliacion, pageWidth - margin * 2);
+        const afilLines = doc.splitTextToSize(afiliacion || '', pageWidth - margin * 2);
         doc.text(afilLines, pageWidth / 2, cursorY, { align: "center" });
         cursorY += (afilLines.length * 4) + 12;
 
@@ -886,7 +1020,7 @@ async function generarArchivoLaTeX() {
         const nombreArchivo = titulo.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase().substring(0, 50);
         doc.save(`ponencia_${nombreArchivo}_CICTAI2026.pdf`);
 
-        showToast('✅ Ponencia guardada y PDF descargado con éxito.', 'success');
+        showToast('✅ PDF de la ponencia descargado con éxito.', 'success');
     }, 500);
 }
 
@@ -916,10 +1050,12 @@ async function initCertificadoForm() {
 
             if (!res.ok) throw new Error('Error al confirmar certificado');
 
+            document.getElementById('sectionCertificadoBody').classList.add('d-none');
+            document.getElementById('checkCertificado').classList.remove('d-none');
+
             showToast('✅ ¡Certificado confirmado con éxito!', 'success');
             btn.innerHTML = originalText;
             btn.disabled = false;
-            form.reset();
         } catch {
             showToast('❌ Error al confirmar certificado', 'error');
             btn.innerHTML = originalText;
