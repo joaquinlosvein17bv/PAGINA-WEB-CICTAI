@@ -16,7 +16,7 @@ import { CertificadosModule } from './certificados/certificados.module';
     ConfigModule.forRoot({ isGlobal: true, envFilePath: join(__dirname, '..', '.env') }),
     TypeOrmModule.forRootAsync(typeOrmConfig),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '..'),
+      rootPath: join(__dirname, '..', 'public'),
       serveRoot: '/',
       exclude: ['/auth/(.*)', '/ponencias/(.*)', '/ejes-tematicos/(.*)', '/certificados/(.*)'],
     }),
