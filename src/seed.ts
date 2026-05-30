@@ -11,13 +11,12 @@ config();
 async function seed() {
   const ds = new DataSource({
     type: 'postgres',
-    host: process.env.DB_HOST,
-    port: Number(process.env.DB_PORT),
-    username: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
+    url: process.env.POSTGRES_URL || process.env.DATABASE_URL,
     entities: [OticCode, EjeTematico, User, Ponencia],
     synchronize: true,
+    ssl: {
+      rejectUnauthorized: false,
+    },
   });
 
   await ds.initialize();

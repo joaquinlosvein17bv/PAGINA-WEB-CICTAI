@@ -10,6 +10,10 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname, join } from 'path';
+
+const uploadsDir = process.env.VERCEL
+  ? '/tmp/uploads'
+  : join(process.cwd(), 'uploads');
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
@@ -24,7 +28,7 @@ export class AuthController {
   @UseInterceptors(
     FileInterceptor('voucher', {
       storage: diskStorage({
-        destination: join(process.cwd(), 'uploads'),
+        destination: uploadsDir,
         filename: (_req, file, callback) => {
           const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
           const ext = extname(file.originalname);
