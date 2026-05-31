@@ -364,6 +364,10 @@ async function initValidation() {
             resultDiv.style.display = 'block';
 
             if (res.ok) {
+                // Guardar en localStorage para persistencia
+                localStorage.setItem('cictai_user', JSON.stringify(data.user));
+                actualizarNavbarUser();
+
                 resultDiv.innerHTML = `
                     <div class="alert alert-success" style="border-radius: var(--radius-sm);">
                         <i class="fa-solid fa-circle-check me-2"></i>
@@ -441,6 +445,110 @@ function showToast(message, type = 'info') {
     }, 4000);
 }
 
+// ============ LOGIN MODAL (Navbar) ============
+function abrirModalLogin() {
+    const resultDiv = document.getElementById('loginModalResult');
+    if (resultDiv) {
+        resultDiv.style.display = 'none';
+        resultDiv.innerHTML = '';
+    }
+    const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalLogin'));
+    modal.show();
+}
+
+function initLoginModal() {
+    const form = document.getElementById('formLoginModal');
+    if (!form) return;
+
+    form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value;
+        const codigo = document.getElementById('loginCodigo').value.trim().toUpperCase();
+        const resultDiv = document.getElementById('loginModalResult');
+        const btn = document.getElementById('btnLoginModal');
+        const originalText = btn.innerHTML;
+
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i>Ingresando...';
+        btn.disabled = true;
+
+        try {
+            const res = await fetch(`${API_URL}/auth/login`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password, voucherCode: codigo }),
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                localStorage.setItem('cictai_user', JSON.stringify(data.user));
+
+                resultDiv.innerHTML = `
+                    <div class="alert alert-success" style="border-radius: var(--radius-sm);">
+                        <i class="fa-solid fa-circle-check me-2"></i>
+                        <strong>¡Bienvenido/a, ${data.user.nombre}!</strong>
+                    </div>`;
+                resultDiv.style.display = 'block';
+
+                showToast(`✅ ¡Bienvenido/a, ${data.user.nombre}!`, 'success');
+                actualizarNavbarUser();
+
+                setTimeout(() => {
+                    const modal = bootstrap.Modal.getInstance(document.getElementById('modalLogin'));
+                    if (modal) modal.hide();
+                }, 1500);
+            } else {
+                resultDiv.innerHTML = `
+                    <div class="alert alert-danger" style="border-radius: var(--radius-sm);">
+                        <i class="fa-solid fa-circle-xmark me-2"></i>
+                        <strong>${data.message || 'Credenciales inválidas.'}</strong><br>
+                        <span style="font-size:0.85rem;">Verifica tus datos e intenta de nuevo.</span>
+                    </div>`;
+                resultDiv.style.display = 'block';
+                showToast('❌ ' + (data.message || 'Credenciales inválidas'), 'error');
+            }
+        } catch (e) {
+            resultDiv.style.display = 'block';
+            resultDiv.innerHTML = `
+                <div class="alert alert-danger" style="border-radius: var(--radius-sm);">
+                    <i class="fa-solid fa-circle-xmark me-2"></i>
+                    <strong>Error de conexión.</strong><br>
+                    <span style="font-size:0.85rem;">No se pudo conectar con el servidor.</span>
+                </div>`;
+            showToast('❌ Error de conexión con el servidor.', 'error');
+        }
+
+        btn.innerHTML = originalText;
+        btn.disabled = false;
+    });
+}
+
+function actualizarNavbarUser() {
+    const userData = JSON.parse(localStorage.getItem('cictai_user'));
+    const btnIngresar = document.getElementById('btnIngresar');
+    const dropdownUsuario = document.getElementById('dropdownUsuario');
+    const navbarUserName = document.getElementById('navbarUserName');
+
+    if (!btnIngresar || !dropdownUsuario || !navbarUserName) return;
+
+    if (userData && userData.nombre) {
+        btnIngresar.classList.add('d-none');
+        dropdownUsuario.classList.remove('d-none');
+        navbarUserName.textContent = userData.nombre;
+    } else {
+        btnIngresar.classList.remove('d-none');
+        dropdownUsuario.classList.add('d-none');
+    }
+}
+
+function logout() {
+    localStorage.removeItem('cictai_user');
+    actualizarNavbarUser();
+    showToast('👋 Sesión cerrada.', 'info');
+}
+
 function abrirModalPonencia(nombreEje) {
     ejeSeleccionadoActual = nombreEje;
     document.getElementById('ejeSeleccionadoText').innerHTML = `<i class="fa-solid fa-layer-group me-2"></i>Eje Temático: ${nombreEje}`;
@@ -467,6 +575,13 @@ async function descargarCompendioEje() {
 }
 
 async function descargarCompendioGeneral() {
+    // Solo ponentes pueden descargar el Compendio General
+    const userData = JSON.parse(localStorage.getItem('cictai_user'));
+    if (!userData || userData.participacion !== 'ponente') {
+        showToast('🔒 Solo los ponentes tienen acceso al Compendio General.', 'warning');
+        return;
+    }
+
     showToast('⏳ Cargando datos del servidor...', 'info');
 
     try {
@@ -1077,4 +1192,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     initForm();
     initValidation();
     initCertificadoForm();
+    initLoginModal();
+    actualizarNavbarUser();
 });
