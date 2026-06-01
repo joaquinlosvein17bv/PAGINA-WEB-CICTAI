@@ -5,47 +5,55 @@ Sistema de registro, ponencias y matrículas para el **I Congreso Internacional 
 ## Stack
 
 - **Backend:** NestJS + TypeORM + PostgreSQL
+- **Base de datos:** Vercel Neon (PostgreSQL en la nube)
 - **Frontend:** HTML5, CSS3, Bootstrap 5, Vanilla JS
-- **Infra:** Docker Compose (PostgreSQL + pgAdmin)
 
 ## Requisitos
 
 - Node.js >= 18
-- Docker Desktop (para la base de datos)
 - npm
 
-## Instalación y despliegue
+## Configuración de la base de datos (PostgreSQL en Neon)
+
+El proyecto usa **PostgreSQL en la nube** con [Vercel Neon](https://neon.tech). No necesitás Docker ni instalar nada local.
+
+### 1. Crear una base de datos en Neon (si no tenés una)
+
+1. Andá a [console.neon.tech](https://console.neon.tech) e iniciá sesión con tu cuenta de GitHub o Google.
+2. Creá un proyecto nuevo (o usá uno existente).
+3. En el dashboard del proyecto, andá a **Connect** → **Connection String** → **Prisma / General**.
+4. Copiá la URL que se ve así:
+
+   ```
+   postgresql://usuario:contraseña@ep-...us-east-1.aws.neon.tech/neondb?sslmode=require
+   ```
+
+### 2. Configurar el archivo `.env`
 
 ```bash
-# 1. Clonar e instalar dependencias
+cd backend
+
+# Crear el .env a partir del template
+cp .env.template .env
+```
+
+Abrí `.env` y **reemplazá el valor de `DATABASE_URL`** con la connection string de Neon que copiaste en el paso anterior.
+
+> ⚠️ **Importante:** no compartas tu `.env`. La `DATABASE_URL` contiene la contraseña de la base de datos y nunca debe subirse a git (`.env` ya está en `.gitignore`).
+
+### 3. Iniciar el servidor
+
+```bash
 cd backend
 npm install
-
-# 2. Configurar variables de entorno
-cp .env.template .env
-# Editar .env si es necesario (por defecto funciona con Docker)
-```
-
-## Base de datos
-
-```bash
-# Levantar PostgreSQL y pgAdmin con Docker
-docker compose up -d
-
-# PostgreSQL: puerto 5427, usuario cictai_user, pass cictai_pass
-# pgAdmin:    http://localhost:5050 (admin@cictai.com / admin123)
-```
-
-## Iniciar servidor
-
-```bash
-cd backend
 npm run start:dev    # Modo desarrollo (con watch)
 ```
 
 El servidor se levanta en **http://localhost:3000** y sirve tanto el frontend como la API.
 
-## Sembrar datos iniciales
+### 4. Sembrar datos iniciales
+
+Con el servidor corriendo, abrí otra terminal y ejecutá:
 
 ```bash
 cd backend
