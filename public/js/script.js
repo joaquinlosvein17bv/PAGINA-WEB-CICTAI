@@ -357,7 +357,7 @@ async function initValidation() {
             const res = await fetch(`${API_URL}/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password, voucherCode: codigo }),
+                body: JSON.stringify({ email, password }),
             });
 
             const data = await res.json();
@@ -465,7 +465,6 @@ function initLoginModal() {
 
         const email = document.getElementById('loginEmail').value.trim();
         const password = document.getElementById('loginPassword').value;
-        const codigo = document.getElementById('loginCodigo').value.trim().toUpperCase();
         const resultDiv = document.getElementById('loginModalResult');
         const btn = document.getElementById('btnLoginModal');
         const originalText = btn.innerHTML;
@@ -477,7 +476,7 @@ function initLoginModal() {
             const res = await fetch(`${API_URL}/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password, voucherCode: codigo }),
+                body: JSON.stringify({ email, password }),
             });
 
             const data = await res.json();
@@ -528,16 +527,19 @@ function initLoginModal() {
 function actualizarNavbarUser() {
     const userData = JSON.parse(localStorage.getItem('cictai_user'));
     const btnIngresar = document.getElementById('btnIngresar');
+    const btnRegistrarse = document.getElementById('btnRegistrarse');
     const dropdownUsuario = document.getElementById('dropdownUsuario');
     const navbarUserName = document.getElementById('navbarUserName');
 
-    if (!btnIngresar || !dropdownUsuario || !navbarUserName) return;
+    if (!btnIngresar || !btnRegistrarse || !dropdownUsuario || !navbarUserName) return;
 
     if (userData && userData.nombre) {
+        btnRegistrarse.classList.add('d-none');
         btnIngresar.classList.add('d-none');
         dropdownUsuario.classList.remove('d-none');
         navbarUserName.textContent = userData.nombre;
     } else {
+        btnRegistrarse.classList.remove('d-none');
         btnIngresar.classList.remove('d-none');
         dropdownUsuario.classList.add('d-none');
     }

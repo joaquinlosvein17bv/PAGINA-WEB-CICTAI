@@ -9,7 +9,5 @@ export class LoginDto {
   @IsNotEmpty({ message: 'La contraseña es obligatoria' })
   password: string;
 
-  @IsString()
-  @IsNotEmpty({ message: 'El código de comprobante es obligatorio' })
-  voucherCode: string;
+
 }

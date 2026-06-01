@@ -68,10 +68,6 @@ export class AuthService {
       throw new UnauthorizedException('Credenciales inválidas');
     }
 
-    if (user.voucherCode !== dto.voucherCode) {
-      throw new UnauthorizedException('El código de comprobante no coincide');
-    }
-
     return {
       message: 'Validación exitosa',
         user: {

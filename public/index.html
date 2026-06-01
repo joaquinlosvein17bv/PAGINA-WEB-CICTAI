@@ -46,7 +46,7 @@
                 </ul>
                 <!-- Botones de Usuario -->
                 <div class="ms-3 d-flex gap-2" id="navbarUserSection">
-                    <a href="#registro" class="btn btn-gold btn-sm px-2 text-nowrap">
+                    <a href="#registro" class="btn btn-gold btn-sm px-2 text-nowrap" id="btnRegistrarse">
                         <i class="fa-solid fa-user-plus me-1"></i>Registrarse
                     </a>
                     <button class="btn btn-outline-gold btn-sm px-2 text-nowrap" onclick="abrirModalLogin()" id="btnIngresar">
@@ -755,11 +755,7 @@
                             <label class="form-label"><i class="fa-solid fa-key me-1"></i> Contraseña</label>
                             <input type="password" class="form-control" id="loginPassword" placeholder="Tu contraseña" required>
                         </div>
-                        <div class="mb-4">
-                            <label class="form-label"><i class="fa-solid fa-ticket me-1"></i> Código de Comprobante</label>
-                            <input type="text" class="form-control" id="loginCodigo" placeholder="Ej: CICTAI-2026-XXXXX" required>
-                            <div class="form-text">Ingresa el código recibido en tu correo de confirmación.</div>
-                        </div>
+
                         <button type="submit" class="btn btn-gold w-100 py-3 fw-bold" id="btnLoginModal">
                             <i class="fa-solid fa-right-to-bracket me-2"></i>INGRESAR
                         </button>
