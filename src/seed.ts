@@ -28,21 +28,45 @@ async function seed() {
   const ponenciaRepo = ds.getRepository(Ponencia);
 
   // ── Códigos OTIC ──
-  const codigosOTIC = [
-    'UNTELS2026', 'OTIC-CICTAI', 'PONENTE2026',
-    'INVESTIGADOR2026', 'DOCENTE2026', 'ESTUDIANTE2026',
-    'EXPOSITOR2026', 'ORGANIZADOR2026', 'ASISTENTE2026',
-    'COORDINADOR2026', 'EVALUADOR2026', 'TALLERISTA2026',
-    'CONFERENCISTA2026', 'MODERADOR2026', 'SIMPOSIO2026',
+  const codigosOTIC: { codigo: string; email?: string }[] = [
+    { codigo: 'UNTELS2026' },
+    { codigo: 'OTIC-CICTAI' },
+    { codigo: 'PONENTE2026' },
+    { codigo: 'INVESTIGADOR2026' },
+    { codigo: 'DOCENTE2026' },
+    { codigo: 'ESTUDIANTE2026' },
+    { codigo: 'EXPOSITOR2026' },
+    { codigo: 'ORGANIZADOR2026' },
+    { codigo: 'ASISTENTE2026' },
+    { codigo: 'COORDINADOR2026' },
+    { codigo: 'EVALUADOR2026' },
+    { codigo: 'TALLERISTA2026' },
+    { codigo: 'CONFERENCISTA2026' },
+    { codigo: 'MODERADOR2026' },
+    { codigo: 'SIMPOSIO2026' },
+    // Codes with assigned emails
+    { codigo: '3ESSM2026', email: 'sespinozas@unmsm.edu.pe' },
+    { codigo: '4SE2026', email: 'enrique.solano@kipu-quantum.com' },
+    { codigo: '5THW2026', email: 'wth@waremlab.com' },
+    { codigo: '6PJR2026', email: 'ropaja@hotmail.com' },
+    { codigo: '7PBAM2026', email: 'apoma@ippt.pan.pl' },
+    { codigo: '8CCD2026', email: 'david.correa@gmail.com' },
+    { codigo: '9CCD2026', email: 'carlos.prado@autonoma.pe' },
+    { codigo: '10PQR2026', email: 'rpillaca@techeraperu.com' },
+    { codigo: '11RPN2026', email: 'nramos@testcontrol.com.pe' },
+    { codigo: '12MNJO2026', email: 'oremazz@gmail.com' },
+    { codigo: '13PSDG2026', email: 'dpachecos@unsa.edu.pe' },
+    { codigo: '19VGA2026', email: 'araceli.venegas-gomez@qureca.com' },
   ];
 
-  for (const codigo of codigosOTIC) {
-    const exists = await oticRepo.findOne({ where: { codigo } });
+  for (const item of codigosOTIC) {
+    const exists = await oticRepo.findOne({ where: { codigo: item.codigo } });
     if (!exists) {
-      await oticRepo.save({ codigo });
-      console.log(`  Código OTIC insertado: ${codigo}`);
+      await oticRepo.save({ codigo: item.codigo, ...(item.email ? { email: item.email } : {}) });
+      const logEmail = item.email ? ` (email: ${item.email})` : '';
+      console.log(`  Código OTIC insertado: ${item.codigo}${logEmail}`);
     } else {
-      console.log(`  Código OTIC ya existe: ${codigo}`);
+      console.log(`  Código OTIC ya existe: ${item.codigo}`);
     }
   }
 

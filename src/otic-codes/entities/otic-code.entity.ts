@@ -8,6 +8,9 @@ export class OticCode {
   @Column({ type: 'varchar', length: 50, unique: true })
   codigo: string;
 
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  email: string;
+
   @Column({ type: 'boolean', default: false })
   usado: boolean;
 

@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -42,6 +43,10 @@ export class AuthService {
     });
 
     if (dto.codigoOtic) {
+      const record = await this.oticCodesService.validate(dto.codigoOtic);
+      if (record.email && record.email !== dto.email) {
+        throw new BadRequestException('Este código OTIC no está asignado a tu correo. Verifica que el código ingresado corresponda al correo registrado.');
+      }
       await this.oticCodesService.markAsUsed(dto.codigoOtic);
     }
 

@@ -285,7 +285,8 @@
                                 style="max-width: 400px; border: 2px solid var(--untels-gold); font-weight: 500; cursor: pointer;">
                                 <option value="" selected disabled>Selecciona tu rol...</option>
                                 <option value="ponente">Soy Ponente Oficial</option>
-                                <option value="general">Soy Asistente o Panelista</option>
+                                <option value="panelista">Soy Panelista</option>
+                                <option value="general">Soy Asistente</option>
                             </select>
                         </div>
                     </div>
@@ -295,8 +296,8 @@
                         style="background-color: var(--untels-gold-soft); border-left: 4px solid var(--untels-gold); border-radius: var(--radius-sm); border-top: none; border-bottom: none; border-right: none; box-shadow: var(--shadow-sm);">
                         <i class="fa-solid fa-clock-rotate-left fa-2x me-3" style="color: var(--untels-gold-dark);"></i>
                         <div>
-                            <strong style="color: var(--untels-blue); font-size: 1rem;">¡Asistencia
-                                Flexible!</strong><br>
+                            <strong style="color: var(--untels-blue); font-size: 1rem;">¡Para
+                                Asistentes!</strong><br>
                             <span
                                 style="font-size: 0.85rem; color: #444; line-height: 1.4; display: block; margin-top: 2px;">No
                                 es necesario asistir los 2 días completos para obtener tu certificado. Puedes combinar
@@ -311,15 +312,14 @@
                         <div class="card-header"
                             style="background: linear-gradient(135deg, var(--untels-blue), var(--untels-blue-light)); border-bottom: 3px solid var(--untels-gold); padding: 1rem 1.5rem;">
                             <h6 class="mb-0 text-white fw-bold"><i class="fa-solid fa-key me-2"
-                                    style="color: var(--untels-gold);"></i>Validación de Código OTIC (Solo Ponentes)
+                                    style="color: var(--untels-gold);"></i>Validación de Código OTIC (Solo Ponentes y Panelistas)
                             </h6>
                         </div>
                         <div class="card-body" style="padding: 1.5rem;">
                             <p style="font-size: 0.85rem; color: #555; margin-bottom: 1rem;">
                                 <i class="fa-solid fa-info-circle me-1" style="color: var(--untels-blue);"></i>
-                                Si eres <strong>ponente</strong>, ingresa el código proporcionado por OTIC para
-                                desbloquear el formulario de información técnica. Los <strong>asistentes y
-                                    panelistas</strong> pueden proceder directamente al registro.
+                                Si eres <strong>ponente o panelista</strong>, ingresa el código proporcionado por OTIC para
+                                desbloquear el formulario de información técnica. Los <strong>asistentes</strong> pueden proceder directamente al registro.
                             </p>
                             <div class="input-group mb-2">
                                 <span class="input-group-text"
@@ -374,8 +374,9 @@
                                 </div>
                                 <div class="col-md-6">
                                     <label class="form-label fw-bold">Modalidad</label>
-                                    <select class="form-select" id="inputModalidadPonente" disabled>
-                                        <option value="presencial" selected>Presencial</option>
+                                    <select class="form-select" id="inputModalidadPonente">
+                                        <option value="presencial">Presencial</option>
+                                        <option value="virtual">Virtual</option>
                                     </select>
                                 </div>
                                 <div class="col-md-6">

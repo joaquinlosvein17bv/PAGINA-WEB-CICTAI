@@ -11,7 +11,8 @@ function toggleFlujosParticipacion() {
     const flujosGeneral = document.querySelectorAll('.flujo-general');
     const formularioTech = document.getElementById('formularioInformacion');
     const inputCodigo = document.getElementById('inputCodigo');
-    const modalidadSelect = document.getElementById('inputModalidad');
+    const modalidadGeneral = document.getElementById('inputModalidad');
+    const modalidadPonente = document.getElementById('inputModalidadPonente');
 
     flujosPonencia.forEach(el => el.classList.add('d-none'));
     flujosGeneral.forEach(el => el.classList.add('d-none'));
@@ -19,7 +20,7 @@ function toggleFlujosParticipacion() {
     if (formularioTech) formularioTech.classList.add('d-none');
     codigoValidado = false;
 
-    if (select.value === 'ponente') {
+    if (select.value === 'ponente' || select.value === 'panelista') {
         flujosPonencia.forEach(el => el.classList.remove('d-none'));
 
         if (inputCodigo) {
@@ -27,9 +28,14 @@ function toggleFlujosParticipacion() {
             inputCodigo.disabled = false;
         }
 
-        if (modalidadSelect) {
-            modalidadSelect.value = 'presencial';
-            modalidadSelect.disabled = true;
+        if (modalidadPonente) {
+            modalidadPonente.disabled = false;
+            modalidadPonente.value = select.value === 'ponente' ? 'presencial' : 'virtual';
+        }
+
+        if (modalidadGeneral) {
+            modalidadGeneral.value = '';
+            modalidadGeneral.disabled = false;
         }
     } else if (select.value === 'general') {
         flujosGeneral.forEach(el => el.classList.remove('d-none'));
@@ -41,9 +47,9 @@ function toggleFlujosParticipacion() {
         const errorMsg = document.getElementById('errorValidacion');
         if (errorMsg) errorMsg.classList.add('d-none');
 
-        if (modalidadSelect) {
-            modalidadSelect.value = '';
-            modalidadSelect.disabled = false;
+        if (modalidadGeneral) {
+            modalidadGeneral.value = '';
+            modalidadGeneral.disabled = false;
         }
 
         currentVoucherCode = '';
@@ -75,7 +81,6 @@ async function validarCodigoOTIC() {
         codigoValidado = true;
         mensajeError.classList.add('d-none');
         seccionPonente.classList.remove('d-none');
-        document.querySelectorAll('.flujo-general').forEach(el => el.classList.remove('d-none'));
         document.getElementById('inputCodigo').disabled = true;
         showToast('✅ Código de OTIC validado con éxito.', 'success');
     } catch (e) {
@@ -577,10 +582,9 @@ async function descargarCompendioEje() {
 }
 
 async function descargarCompendioGeneral() {
-    // Solo ponentes pueden descargar el Compendio General
     const userData = JSON.parse(localStorage.getItem('cictai_user'));
-    if (!userData || userData.participacion !== 'ponente') {
-        showToast('🔒 Solo los ponentes tienen acceso al Compendio General.', 'warning');
+    if (!userData) {
+        showToast('🔒 Debes iniciar sesión para descargar el Compendio General.', 'warning');
         return;
     }
 
@@ -603,6 +607,7 @@ async function descargarCompendioGeneral() {
             const margin = 20;
             let cursorY = 50;
 
+            // --- HEADER ---
             doc.setFont("helvetica", "bold");
             doc.setFontSize(22);
             doc.setTextColor(0, 43, 91);
@@ -616,7 +621,11 @@ async function descargarCompendioGeneral() {
             doc.text("COMPENDIO GENERAL DE ARTÍCULOS", pageWidth / 2, cursorY, { align: "center" });
             cursorY += 35;
 
-            if (ponencias.length === 0) {
+            // --- SPLIT BY ROLE ---
+            const ponentes = ponencias.filter(p => p.user?.participacion === 'ponente');
+            const panelistas = ponencias.filter(p => p.user?.participacion === 'panelista');
+
+            if (ponentes.length === 0 && panelistas.length === 0) {
                 doc.setFont("helvetica", "italic");
                 doc.setFontSize(12);
                 doc.setTextColor(100, 100, 100);
@@ -626,89 +635,153 @@ async function descargarCompendioGeneral() {
                 return;
             }
 
-            doc.setFont("helvetica", "normal");
-            doc.setFontSize(12);
-            doc.setTextColor(0, 0, 0);
-            doc.text(`Total de artículos recopilados: ${ponencias.length}`, pageWidth / 2, cursorY, { align: "center" });
+            // --- HELPER: group by axis ---
+            function groupByAxis(arr) {
+                const grupos = {};
+                arr.forEach(p => {
+                    const eje = p.ejeTematico?.nombre || 'Sin eje';
+                    if (!grupos[eje]) grupos[eje] = [];
+                    grupos[eje].push(p);
+                });
+                return grupos;
+            }
 
-            const ejesAgrupados = {};
-            ponencias.forEach(p => {
-                const eje = p.ejeTematico?.nombre || 'Sin eje';
-                if (!ejesAgrupados[eje]) ejesAgrupados[eje] = [];
-                ejesAgrupados[eje].push(p);
-            });
+            // --- HELPER: render axis list ---
+            function renderAxisList(grupos) {
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(11);
+                doc.setTextColor(0, 0, 0);
+                doc.text("Ejes representados:", margin, cursorY);
+                cursorY += 7;
+                doc.setFont("helvetica", "normal");
+                doc.setFontSize(10);
+                doc.setTextColor(60, 60, 60);
+                Object.keys(grupos).forEach((eje, idx) => {
+                    if (cursorY > 270) {
+                        doc.addPage();
+                        cursorY = 20;
+                    }
+                    doc.text(`${idx + 1}. ${eje}`, margin + 5, cursorY);
+                    cursorY += 6;
+                });
+                cursorY += 8;
+            }
 
-            Object.values(ejesAgrupados).forEach(grupo => {
-                grupo.forEach((p, i) => {
-                    doc.addPage();
-                    cursorY = 20;
+            // --- HELPER: render ponencia card ---
+            function renderPonenciaCard(p) {
+                doc.addPage();
+                cursorY = 20;
 
+                doc.setFont("helvetica", "italic");
+                doc.setFontSize(10);
+                doc.setTextColor(100, 100, 100);
+                const ejeHeader = doc.splitTextToSize(`Eje Temático: ${(p.ejeTematico?.nombre || 'Sin eje').toUpperCase()}`, pageWidth - margin * 2);
+                doc.text(ejeHeader, margin, cursorY);
+                cursorY += (ejeHeader.length * 5);
+
+                doc.setLineWidth(0.5);
+                doc.setDrawColor(0, 0, 0);
+                doc.line(margin, cursorY, pageWidth - margin, cursorY);
+                cursorY += 10;
+
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(14);
+                doc.setTextColor(0, 0, 0);
+                const titleLines = doc.splitTextToSize(p.titulo, pageWidth - margin * 2);
+                doc.text(titleLines, pageWidth / 2, cursorY, { align: "center" });
+                cursorY += (titleLines.length * 6) + 4;
+
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(11);
+                const autorLines = doc.splitTextToSize(p.autores, pageWidth - margin * 2);
+                doc.text(autorLines, pageWidth / 2, cursorY, { align: "center" });
+                cursorY += (autorLines.length * 5) + 2;
+
+                doc.setFont("helvetica", "normal");
+                doc.setFontSize(9);
+                const afilLines = doc.splitTextToSize(p.afiliacion || '', pageWidth - margin * 2);
+                doc.text(afilLines, pageWidth / 2, cursorY, { align: "center" });
+                cursorY += (afilLines.length * 4) + 10;
+
+                doc.setFont("helvetica", "normal");
+                doc.setFontSize(10);
+                const abstractLines = doc.splitTextToSize(p.resumen || '', pageWidth - margin * 2);
+                doc.text(abstractLines, margin, cursorY, { align: "justify", maxWidth: pageWidth - margin * 2 });
+                cursorY += (abstractLines.length * 4) + 8;
+
+                doc.setFont("helvetica", "bold");
+                doc.text("Palabras Claves : ", margin, cursorY);
+                doc.setFont("helvetica", "normal");
+                doc.text(p.palabrasClave || '', margin + doc.getTextWidth("Palabras Claves : "), cursorY);
+                cursorY += 6;
+
+                doc.setFont("helvetica", "bold");
+                doc.text("*Correspondiente autor : ", margin, cursorY);
+                doc.setFont("helvetica", "normal");
+                doc.text(p.correo || '', margin + doc.getTextWidth("*Correspondiente autor : "), cursorY);
+                cursorY += 10;
+
+                doc.setFont("helvetica", "bold");
+                doc.text("Referencias :", margin, cursorY);
+                cursorY += 6;
+
+                doc.setFont("helvetica", "normal");
+                const refsArray = (p.referencias || '').split('\n').filter(r => r.trim() !== '');
+                refsArray.forEach(ref => {
+                    const refLines = doc.splitTextToSize(ref.trim(), pageWidth - margin * 2);
+                    if (cursorY + (refLines.length * 4) > 280) {
+                        doc.addPage();
+                        cursorY = 20;
+                    }
+                    doc.text(refLines, margin, cursorY);
+                    cursorY += (refLines.length * 4) + 2;
+                });
+            }
+
+            // --- HELPER: render a full section (section title + axis list + ponencia cards) ---
+            function renderSection(sectionTitle, items) {
+                doc.addPage();
+                cursorY = 30;
+
+                // Section header with spaced letters
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(22);
+                doc.setTextColor(0, 43, 91);
+                const spacedTitle = sectionTitle.split('').join(' ');
+                doc.text(spacedTitle, pageWidth / 2, cursorY, { align: "center" });
+                cursorY += 18;
+
+                if (items.length === 0) {
                     doc.setFont("helvetica", "italic");
-                    doc.setFontSize(10);
+                    doc.setFontSize(12);
                     doc.setTextColor(100, 100, 100);
-                    const ejeHeader = doc.splitTextToSize(`Eje Temático: ${(p.ejeTematico?.nombre || 'Sin eje').toUpperCase()}`, pageWidth - margin * 2);
-                    doc.text(ejeHeader, margin, cursorY);
-                    cursorY += (ejeHeader.length * 5);
+                    doc.text("No hay artículos de " + sectionTitle.toLowerCase() + " registrados.", pageWidth / 2, cursorY, { align: "center" });
+                    cursorY += 15;
+                    return;
+                }
 
-                    doc.setLineWidth(0.5);
-                    doc.setDrawColor(0, 0, 0);
-                    doc.line(margin, cursorY, pageWidth - margin, cursorY);
-                    cursorY += 10;
+                doc.setFont("helvetica", "normal");
+                doc.setFontSize(11);
+                doc.setTextColor(0, 0, 0);
+                doc.text(`Total de artículos: ${items.length}`, pageWidth / 2, cursorY, { align: "center" });
+                cursorY += 15;
 
-                    doc.setFont("helvetica", "bold");
-                    doc.setFontSize(14);
-                    doc.setTextColor(0, 0, 0);
-                    const titleLines = doc.splitTextToSize(p.titulo, pageWidth - margin * 2);
-                    doc.text(titleLines, pageWidth / 2, cursorY, { align: "center" });
-                    cursorY += (titleLines.length * 6) + 4;
+                const grupos = groupByAxis(items);
+                renderAxisList(grupos);
 
-                    doc.setFont("helvetica", "bold");
-                    doc.setFontSize(11);
-                    const autorLines = doc.splitTextToSize(p.autores, pageWidth - margin * 2);
-                    doc.text(autorLines, pageWidth / 2, cursorY, { align: "center" });
-                    cursorY += (autorLines.length * 5) + 2;
-
-                    doc.setFont("helvetica", "normal");
-                    doc.setFontSize(9);
-                    const afilLines = doc.splitTextToSize(p.afiliacion || '', pageWidth - margin * 2);
-                    doc.text(afilLines, pageWidth / 2, cursorY, { align: "center" });
-                    cursorY += (afilLines.length * 4) + 10;
-
-                    doc.setFont("helvetica", "normal");
-                    doc.setFontSize(10);
-                    const abstractLines = doc.splitTextToSize(p.resumen || '', pageWidth - margin * 2);
-                    doc.text(abstractLines, margin, cursorY, { align: "justify", maxWidth: pageWidth - margin * 2 });
-                    cursorY += (abstractLines.length * 4) + 8;
-
-                    doc.setFont("helvetica", "bold");
-                    doc.text("Palabras Claves : ", margin, cursorY);
-                    doc.setFont("helvetica", "normal");
-                    doc.text(p.palabrasClave || '', margin + doc.getTextWidth("Palabras Claves : "), cursorY);
-                    cursorY += 6;
-
-                    doc.setFont("helvetica", "bold");
-                    doc.text("*Correspondiente autor : ", margin, cursorY);
-                    doc.setFont("helvetica", "normal");
-                    doc.text(p.correo || '', margin + doc.getTextWidth("*Correspondiente autor : "), cursorY);
-                    cursorY += 10;
-
-                    doc.setFont("helvetica", "bold");
-                    doc.text("Referencias :", margin, cursorY);
-                    cursorY += 6;
-
-                    doc.setFont("helvetica", "normal");
-                    const refsArray = (p.referencias || '').split('\n').filter(r => r.trim() !== '');
-                    refsArray.forEach(ref => {
-                        const refLines = doc.splitTextToSize(ref.trim(), pageWidth - margin * 2);
-                        if (cursorY + (refLines.length * 4) > 280) {
-                            doc.addPage();
-                            cursorY = 20;
-                        }
-                        doc.text(refLines, margin, cursorY);
-                        cursorY += (refLines.length * 4) + 2;
+                // Render each ponencia card grouped by axis
+                Object.keys(grupos).forEach(eje => {
+                    grupos[eje].forEach(p => {
+                        renderPonenciaCard(p);
                     });
                 });
-            });
+            }
+
+            // --- PONENTES SECTION ---
+            renderSection("PONENTES", ponentes);
+
+            // --- PANELISTAS SECTION ---
+            renderSection("PANELISTAS", panelistas);
 
             doc.save("Compendio_General_CICTAI2026.pdf");
             showToast('✅ Compendio General generado con éxito.', 'success');
@@ -920,8 +993,8 @@ async function guardarTodo() {
                 nombre,
                 email,
                 universidad: univ || undefined,
-                participacion: 'ponente',
-                modalidad: 'presencial',
+                participacion: document.getElementById('mainParticipacionSelect').value,
+                modalidad: document.getElementById('inputModalidadPonente').value,
                 password,
                 codigoOtic: codigoOtic || undefined,
                 hojaDeVida: hojaVida || undefined,
@@ -958,6 +1031,10 @@ async function guardarTodo() {
         }
 
         generarPDFPonencia(titulo, autores, afiliacion, correo, palabrasClave, resumen, referencias);
+
+        // Descargar plantilla PPT según el rol
+        const rol = document.getElementById('mainParticipacionSelect').value;
+        descargarPlantilla(rol);
 
         // Auto-generar certificado para ponente
         try {
@@ -1139,6 +1216,25 @@ function generarPDFPonencia(titulo, autores, afiliacion, correo, palabrasClave, 
 
         showToast('✅ PDF de la ponencia descargado con éxito.', 'success');
     }, 500);
+}
+
+function descargarPlantilla(rol) {
+    const archivos = {
+        ponente: 'plantillas/ponente.pptx',
+        panelista: 'plantillas/panelista.pptx',
+    };
+
+    const ruta = archivos[rol];
+    if (!ruta) return;
+
+    const link = document.createElement('a');
+    link.href = ruta;
+    link.download = rol === 'ponente' ? 'Plantilla_Ponente_CICTAI2026.pptx' : 'Plantilla_Panelista_CICTAI2026.pptx';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    showToast(`📥 Plantilla para ${rol} descargada.`, 'success');
 }
 
 async function initCertificadoForm() {
