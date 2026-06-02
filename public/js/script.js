@@ -618,7 +618,7 @@ async function descargarCompendioGeneral() {
 
             doc.setFontSize(16);
             doc.setTextColor(80, 80, 80);
-            doc.text("COMPENDIO GENERAL DE ARTÍCULOS", pageWidth / 2, cursorY, { align: "center" });
+            doc.text("COMPENDIO OFICIAL DE ARTÍCULOS", pageWidth / 2, cursorY, { align: "center" });
             cursorY += 35;
 
             // --- SPLIT BY ROLE ---
@@ -630,12 +630,12 @@ async function descargarCompendioGeneral() {
                 doc.setFontSize(12);
                 doc.setTextColor(100, 100, 100);
                 doc.text("Aún no hay artículos registrados en el sistema.", pageWidth / 2, cursorY, { align: "center" });
-                doc.save("Compendio_General_CICTAI2026.pdf");
+                doc.save("Compendio_Oficial_CICTAI2026.pdf");
                 showToast('✅ Compendio generado (Vacío).', 'success');
                 return;
             }
 
-            // --- HELPER: group by axis ---
+            // --- HELPER: group ponencias by eje ---
             function groupByAxis(arr) {
                 const grupos = {};
                 arr.forEach(p => {
@@ -646,35 +646,14 @@ async function descargarCompendioGeneral() {
                 return grupos;
             }
 
-            // --- HELPER: render axis list ---
-            function renderAxisList(grupos) {
-                doc.setFont("helvetica", "bold");
-                doc.setFontSize(11);
-                doc.setTextColor(0, 0, 0);
-                doc.text("Ejes representados:", margin, cursorY);
-                cursorY += 7;
-                doc.setFont("helvetica", "normal");
-                doc.setFontSize(10);
-                doc.setTextColor(60, 60, 60);
-                Object.keys(grupos).forEach((eje, idx) => {
-                    if (cursorY > 270) {
-                        doc.addPage();
-                        cursorY = 20;
-                    }
-                    doc.text(`${idx + 1}. ${eje}`, margin + 5, cursorY);
-                    cursorY += 6;
-                });
-                cursorY += 8;
-            }
-
-            // --- HELPER: render ponencia card ---
+            // --- HELPER: render a full ponencia card ---
             function renderPonenciaCard(p) {
                 doc.addPage();
                 cursorY = 20;
 
-                doc.setFont("helvetica", "italic");
-                doc.setFontSize(10);
-                doc.setTextColor(100, 100, 100);
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(13);
+                doc.setTextColor(0, 0, 0);
                 const ejeHeader = doc.splitTextToSize(`Eje Temático: ${(p.ejeTematico?.nombre || 'Sin eje').toUpperCase()}`, pageWidth - margin * 2);
                 doc.text(ejeHeader, margin, cursorY);
                 cursorY += (ejeHeader.length * 5);
@@ -712,13 +691,37 @@ async function descargarCompendioGeneral() {
                 doc.setFont("helvetica", "bold");
                 doc.text("Palabras Claves : ", margin, cursorY);
                 doc.setFont("helvetica", "normal");
-                doc.text(p.palabrasClave || '', margin + doc.getTextWidth("Palabras Claves : "), cursorY);
-                cursorY += 6;
+                const kwText = p.palabrasClave || '';
+                const kwX = margin + doc.getTextWidth("Palabras Claves : ");
+                const kwMaxWidth = pageWidth - kwX - margin;
+                const kwLines = doc.splitTextToSize(kwText, kwMaxWidth);
+                kwLines.forEach((line, idx) => {
+                    if (idx === 0) {
+                        doc.text(line, kwX, cursorY);
+                    } else {
+                        cursorY += 5;
+                        if (cursorY > 280) { doc.addPage(); cursorY = 20; }
+                        doc.text(line, margin, cursorY);
+                    }
+                });
+                cursorY += 8;
 
                 doc.setFont("helvetica", "bold");
                 doc.text("*Correspondiente autor : ", margin, cursorY);
                 doc.setFont("helvetica", "normal");
-                doc.text(p.correo || '', margin + doc.getTextWidth("*Correspondiente autor : "), cursorY);
+                const caText = p.correo || '';
+                const caX = margin + doc.getTextWidth("*Correspondiente autor : ");
+                const caMaxWidth = pageWidth - caX - margin;
+                const caLines = doc.splitTextToSize(caText, caMaxWidth);
+                caLines.forEach((line, idx) => {
+                    if (idx === 0) {
+                        doc.text(line, caX, cursorY);
+                    } else {
+                        cursorY += 5;
+                        if (cursorY > 280) { doc.addPage(); cursorY = 20; }
+                        doc.text(line, margin, cursorY);
+                    }
+                });
                 cursorY += 10;
 
                 doc.setFont("helvetica", "bold");
@@ -738,38 +741,35 @@ async function descargarCompendioGeneral() {
                 });
             }
 
-            // --- HELPER: render a full section (section title + axis list + ponencia cards) ---
-            function renderSection(sectionTitle, items) {
+            // --- HELPER: render a role section (Lista de... + ponencias directo) ---
+            function renderRoleSection(roleTitle, roleLabel, items) {
+                if (items.length === 0) return;
+
+                const grupos = groupByAxis(items);
+
+                // --- Section header page ---
                 doc.addPage();
                 cursorY = 30;
 
-                // Section header with spaced letters
                 doc.setFont("helvetica", "bold");
                 doc.setFontSize(22);
                 doc.setTextColor(0, 43, 91);
-                const spacedTitle = sectionTitle.split('').join(' ');
+                const spacedTitle = roleTitle.split('').join(' ');
                 doc.text(spacedTitle, pageWidth / 2, cursorY, { align: "center" });
-                cursorY += 18;
+                cursorY += 22;
 
-                if (items.length === 0) {
-                    doc.setFont("helvetica", "italic");
-                    doc.setFontSize(12);
-                    doc.setTextColor(100, 100, 100);
-                    doc.text("No hay artículos de " + sectionTitle.toLowerCase() + " registrados.", pageWidth / 2, cursorY, { align: "center" });
-                    cursorY += 15;
-                    return;
-                }
+                doc.setFontSize(14);
+                doc.setTextColor(80, 80, 80);
+                doc.text(`Lista de ${roleLabel}`, pageWidth / 2, cursorY, { align: "center" });
+                cursorY += 14;
 
-                doc.setFont("helvetica", "normal");
-                doc.setFontSize(11);
-                doc.setTextColor(0, 0, 0);
-                doc.text(`Total de artículos: ${items.length}`, pageWidth / 2, cursorY, { align: "center" });
-                cursorY += 15;
+                // Horizontal line divider
+                doc.setLineWidth(0.8);
+                doc.setDrawColor(0, 43, 91);
+                doc.line(margin, cursorY, pageWidth - margin, cursorY);
+                cursorY += 16;
 
-                const grupos = groupByAxis(items);
-                renderAxisList(grupos);
-
-                // Render each ponencia card grouped by axis
+                // --- Full ponencia cards directly ---
                 Object.keys(grupos).forEach(eje => {
                     grupos[eje].forEach(p => {
                         renderPonenciaCard(p);
@@ -778,13 +778,13 @@ async function descargarCompendioGeneral() {
             }
 
             // --- PONENTES SECTION ---
-            renderSection("PONENTES", ponentes);
+            renderRoleSection("PONENTES", "Ponentes", ponentes);
 
             // --- PANELISTAS SECTION ---
-            renderSection("PANELISTAS", panelistas);
+            renderRoleSection("PANELISTAS", "Panelistas", panelistas);
 
-            doc.save("Compendio_General_CICTAI2026.pdf");
-            showToast('✅ Compendio General generado con éxito.', 'success');
+            doc.save("Compendio_Oficial_CICTAI2026.pdf");
+            showToast('✅ Compendio Oficial generado con éxito.', 'success');
         }, 500);
     } catch {
         showToast('❌ Error al cargar datos del servidor', 'error');
@@ -873,13 +873,37 @@ function generarPDFCompendio(nombreEje, ponencias) {
                 doc.setFont("helvetica", "bold");
                 doc.text("Palabras Claves : ", margin, cursorY);
                 doc.setFont("helvetica", "normal");
-                doc.text(p.palabrasClave || '', margin + doc.getTextWidth("Palabras Claves : "), cursorY);
-                cursorY += 6;
+                const kwText = p.palabrasClave || '';
+                const kwX = margin + doc.getTextWidth("Palabras Claves : ");
+                const kwMaxWidth = pageWidth - kwX - margin;
+                const kwLines = doc.splitTextToSize(kwText, kwMaxWidth);
+                kwLines.forEach((line, idx) => {
+                    if (idx === 0) {
+                        doc.text(line, kwX, cursorY);
+                    } else {
+                        cursorY += 5;
+                        if (cursorY > 280) { doc.addPage(); cursorY = 20; }
+                        doc.text(line, margin, cursorY);
+                    }
+                });
+                cursorY += 8;
 
                 doc.setFont("helvetica", "bold");
                 doc.text("*Correspondiente autor : ", margin, cursorY);
                 doc.setFont("helvetica", "normal");
-                doc.text(p.correo || '', margin + doc.getTextWidth("*Correspondiente autor : "), cursorY);
+                const caText = p.correo || '';
+                const caX = margin + doc.getTextWidth("*Correspondiente autor : ");
+                const caMaxWidth = pageWidth - caX - margin;
+                const caLines = doc.splitTextToSize(caText, caMaxWidth);
+                caLines.forEach((line, idx) => {
+                    if (idx === 0) {
+                        doc.text(line, caX, cursorY);
+                    } else {
+                        cursorY += 5;
+                        if (cursorY > 280) { doc.addPage(); cursorY = 20; }
+                        doc.text(line, margin, cursorY);
+                    }
+                });
                 cursorY += 10;
 
                 doc.setFont("helvetica", "bold");
