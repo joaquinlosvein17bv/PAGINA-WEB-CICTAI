@@ -315,6 +315,9 @@ async function initForm() {
 
             const data = await res.json();
 
+            localStorage.setItem('cictai_user', JSON.stringify(data.user));
+            actualizarNavbarUser();
+
             document.getElementById('sectionRegistroBody').classList.add('d-none');
             document.getElementById('checkRegistro').classList.remove('d-none');
 
@@ -583,8 +586,8 @@ async function descargarCompendioEje() {
 
 async function descargarCompendioGeneral() {
     const userData = JSON.parse(localStorage.getItem('cictai_user'));
-    if (!userData) {
-        showToast('🔒 Debes iniciar sesión para descargar el Compendio General.', 'warning');
+    if (!userData || (userData.participacion !== 'ponente' && userData.participacion !== 'panelista')) {
+        showToast('🔒 Solo ponentes y panelistas pueden descargar el Compendio General.', 'warning');
         return;
     }
 
@@ -1031,6 +1034,10 @@ async function guardarTodo() {
         }
 
         const registerData = await registerRes.json();
+
+        localStorage.setItem('cictai_user', JSON.stringify(registerData.user));
+        actualizarNavbarUser();
+
         const userId = registerData.user.id;
 
         const ponenciaRes = await fetch(`${API_URL}/ponencias`, {
