@@ -409,15 +409,7 @@ async function initValidation() {
 }
 
 function mostrarCertificado() {
-    const wrapper = document.getElementById('wrapperFlujoGeneral');
-    const sectionRegistro = document.getElementById('sectionRegistro');
-    const sectionCertificado = document.getElementById('sectionCertificado');
-    if (wrapper) wrapper.classList.remove('d-none');
-    if (sectionRegistro) sectionRegistro.classList.add('d-none');
-    if (sectionCertificado) {
-        sectionCertificado.classList.remove('d-none');
-        setTimeout(() => sectionCertificado.scrollIntoView({ behavior: 'smooth', block: 'start' }), 300);
-    }
+    showToast('Las certificaciones estarán disponibles después del evento.', 'info');
 }
 
 function showToast(message, type = 'info') {
