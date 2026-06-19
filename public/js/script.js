@@ -999,6 +999,12 @@ async function guardarTodo() {
         return;
     }
 
+    const wordsCount = resumen.split(/\s+/).filter(Boolean).length;
+    if (wordsCount > 300) {
+        showToast('⚠️ El resumen no puede superar las 300 palabras.', 'warning');
+        return;
+    }
+
     const btn = document.querySelector('#seccionTecnica .btn-gold');
     const originalText = btn.innerHTML;
     btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i>Guardando...';
@@ -1300,6 +1306,38 @@ async function initCertificadoForm() {
     });
 }
 
+function initResumenLimit() {
+    const textarea = document.getElementById('resumenPonencia');
+    const label = document.getElementById('wordCountLabel');
+    if (!textarea || !label) return;
+
+    let warningShown = false;
+
+    function checkLimit() {
+        const text = textarea.value;
+        const words = text.trim().split(/\s+/).filter(Boolean);
+        const count = words.length;
+
+        if (count > 300) {
+            textarea.value = words.slice(0, 300).join(' ');
+            label.textContent = '300 / 300 palabras';
+            label.classList.remove('text-muted');
+            label.classList.add('text-danger', 'fw-bold');
+            if (!warningShown) {
+                showToast('⚠️ El resumen no puede superar las 300 palabras.', 'warning');
+                warningShown = true;
+                setTimeout(() => { warningShown = false; }, 3000);
+            }
+        } else {
+            label.textContent = `${count} / 300 palabras`;
+            label.classList.remove('text-danger', 'fw-bold');
+            label.classList.add('text-muted');
+        }
+    }
+
+    textarea.addEventListener('input', checkLimit);
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     await Promise.all([
         renderEjes(),
@@ -1314,5 +1352,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     initValidation();
     initCertificadoForm();
     initLoginModal();
+    initResumenLimit();
     actualizarNavbarUser();
 });
