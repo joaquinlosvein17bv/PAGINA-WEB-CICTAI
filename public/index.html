@@ -47,6 +47,8 @@
                                 class="fa-solid fa-sitemap me-1"></i>Organización</a></li>
                     <li class="nav-item"><a class="nav-link text-nowrap" href="#ejes"><i
                                 class="fa-solid fa-layer-group me-1"></i>Ejes Temáticos</a></li>
+                    <li class="nav-item"><a class="nav-link text-nowrap" href="#horarios"><i
+                                class="fa-solid fa-clock me-1"></i>Horarios</a></li>
                     <li class="nav-item"><a class="nav-link text-nowrap" href="#recursos"><i
                                 class="fa-solid fa-file-lines me-1"></i>Recursos</a></li>
                 </ul>
@@ -210,6 +212,31 @@
             </div>
             <div class="row g-3" id="grid-ejes">
                 <!-- Generado por JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ CRONOGRAMA Y HORARIOS ============ -->
+    <section id="horarios" class="py-5" style="background: var(--gray-50);">
+        <div class="container">
+            <div class="section-header reveal">
+                <span class="badge-label">Cronograma</span>
+                <h2>Horarios del Congreso</h2>
+                <div class="divider"></div>
+            </div>
+            <div class="row justify-content-center reveal">
+                <div class="col-lg-8 text-center">
+                    <div class="horarios-card p-5 shadow-sm border bg-white" style="border-radius: var(--radius) !important;">
+                        <i class="fa-solid fa-clock mb-3" style="font-size: 3.5rem; color: var(--untels-gold);"></i>
+                        <h4 class="fw-bold mb-3 text-blue" style="color: var(--untels-blue);">Programa del Evento</h4>
+                        <p class="text-muted mb-4 px-md-4">
+                            Consulta la programación detallada de las ponencias, conferencias magistrales, mesas redondas y coffee breaks para los días 25 y 26 de Junio de 2026.
+                        </p>
+                        <button class="btn btn-gold btn-lg px-5 py-3 fw-bold" data-bs-toggle="modal" data-bs-target="#modalHorarios">
+                            <i class="fa-solid fa-calendar-days me-2"></i>Ver Horarios Completos
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -707,6 +734,8 @@
                                     class="fa-solid fa-chevron-right me-2 small"></i>Autoridades</a></li>
                         <li class="mb-2"><a href="#ejes"><i class="fa-solid fa-chevron-right me-2 small"></i>Ejes
                                 Temáticos</a></li>
+                        <li class="mb-2"><a href="#horarios"><i
+                                    class="fa-solid fa-chevron-right me-2 small"></i>Horarios</a></li>
                         <li class="mb-2"><a href="#recursos"><i
                                     class="fa-solid fa-chevron-right me-2 small"></i>Recursos</a></li>
                         <li class="mb-2"><a href="#registro"><i
@@ -730,6 +759,300 @@
             </div>
         </div>
     </footer>
+
+    <!-- ============ MODAL HORARIOS ============ -->
+    <div class="modal fade" id="modalHorarios" tabindex="-1" aria-labelledby="modalHorariosLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content" style="border-radius: var(--radius); border: none; overflow: hidden; box-shadow: var(--shadow-lg);">
+                <div class="modal-header text-white"
+                    style="background: linear-gradient(135deg, var(--untels-blue), var(--untels-blue-light)); border-bottom: 3px solid var(--untels-gold); padding: 1.25rem 1.75rem;">
+                    <h5 class="modal-title fw-bold" id="modalHorariosLabel">
+                        <i class="fa-solid fa-calendar-days me-2" style="color: var(--untels-gold);"></i>Cronograma y Horarios del Evento
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <!-- Navigation Pills -->
+                    <ul class="nav nav-pills justify-content-center mb-4 gap-2" id="horariosTab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="jueves-m-tab" data-bs-toggle="pill" data-bs-target="#jueves-m" type="button" role="tab" aria-controls="jueves-m" aria-selected="true">
+                                <i class="fa-solid fa-sun me-1"></i> Jueves 25 (Mañana)
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="jueves-t-tab" data-bs-toggle="pill" data-bs-target="#jueves-t" type="button" role="tab" aria-controls="jueves-t" aria-selected="false">
+                                <i class="fa-solid fa-moon me-1"></i> Jueves 25 (Tarde)
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="viernes-m-tab" data-bs-toggle="pill" data-bs-target="#viernes-m" type="button" role="tab" aria-controls="viernes-m" aria-selected="false">
+                                <i class="fa-solid fa-sun me-1"></i> Viernes 26 (Mañana)
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="viernes-t-tab" data-bs-toggle="pill" data-bs-target="#viernes-t" type="button" role="tab" aria-controls="viernes-t" aria-selected="false">
+                                <i class="fa-solid fa-moon me-1"></i> Viernes 26 (Tarde)
+                            </button>
+                        </li>
+                    </ul>
+
+                    <!-- Tab Content -->
+                    <div class="tab-content" id="horariosTabContent">
+                        <!-- Jueves 25 Mañana -->
+                        <div class="tab-pane fade show active" id="jueves-m" role="tabpanel" aria-labelledby="jueves-m-tab">
+                            <div class="table-responsive">
+                                <table class="table align-middle">
+                                    <thead>
+                                        <tr class="table-light">
+                                            <th style="border-radius: 8px 0 0 8px; color: var(--untels-blue);">Hora</th>
+                                            <th style="color: var(--untels-blue);">Ponente / Responsable</th>
+                                            <th style="border-radius: 0 8px 8px 0; color: var(--untels-blue);">Tema / Actividad</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><i class="fa-solid fa-clock me-2 text-gold"></i>09:00 a.m. - 09:45 a.m.</td>
+                                            <td>Autoridades</td>
+                                            <td>
+                                                <span class="badge-especial mb-1"><i class="fa-solid fa-star me-1"></i>Inauguración</span><br>
+                                                <strong>INAUGURACIÓN DEL EVENTO</strong> - Presentación de autoridades
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="fa-solid fa-clock me-2 text-gold"></i>09:45 a.m. - 10:30 a.m.</td>
+                                            <td>Dra. Araceli Venegas Gómez</td>
+                                            <td>
+                                                <span class="badge-ponencia mb-1"><i class="fa-solid fa-microphone me-1"></i>Ponencia</span><br>
+                                                <strong>El ecosistema mundial de las tecnologías cuánticas</strong>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="fa-solid fa-clock me-2 text-gold"></i>10:30 a.m. - 11:15 a.m.</td>
+                                            <td>Ing. Dr. Carlos Alberto Lon Kan Prado</td>
+                                            <td>
+                                                <span class="badge-ponencia mb-1"><i class="fa-solid fa-microphone me-1"></i>Ponencia</span><br>
+                                                <strong>MHUTEMP: Sistema lot de código abierto para el monitoreo confiable y trazable de temperatura y humedad en tiempo real en bancos de sangre hospitalarios.</strong>
+                                            </td>
+                                        </tr>
+                                        <tr class="coffee-break-row" style="background-color: var(--untels-gold-soft) !important;">
+                                            <td><i class="fa-solid fa-mug-hot me-2 text-gold"></i>11:15 a.m. - 11:35 a.m.</td>
+                                            <td>-</td>
+                                            <td>
+                                                <span class="badge-cafe"><i class="fa-solid fa-mug-hot me-1"></i>Coffee Break</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="fa-solid fa-clock me-2 text-gold"></i>11:35 a.m. - 12:20 p.m.</td>
+                                            <td>Ing. Rubén Pillaca Quispe, CEO</td>
+                                            <td>
+                                                <span class="badge-ponencia mb-1"><i class="fa-solid fa-microphone me-1"></i>Ponencia</span><br>
+                                                <strong>Impacto de la Computación Cuántica en negocios innovadores</strong>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="fa-solid fa-clock me-2 text-gold"></i>12:20 p.m. - 01:05 p.m.</td>
+                                            <td>Dr. Juan Z. Dávalos Prado</td>
+                                            <td>
+                                                <span class="badge-ponencia mb-1"><i class="fa-solid fa-microphone me-1"></i>Ponencia</span><br>
+                                                <strong>Detección in-situ de mercurio oxidado atmosférico en las zonas polares</strong>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Jueves 25 Tarde -->
+                        <div class="tab-pane fade" id="jueves-t" role="tabpanel" aria-labelledby="jueves-t-tab">
+                            <div class="table-responsive">
+                                <table class="table align-middle">
+                                    <thead>
+                                        <tr class="table-light">
+                                            <th style="border-radius: 8px 0 0 8px; color: var(--untels-blue);">Hora</th>
+                                            <th style="color: var(--untels-blue);">Ponente / Responsable</th>
+                                            <th style="border-radius: 0 8px 8px 0; color: var(--untels-blue);">Tema / Actividad</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><i class="fa-solid fa-clock me-2 text-gold"></i>02:15 p.m. - 03:00 p.m.</td>
+                                            <td>Ing. José Luis Huayanay Villar</td>
+                                            <td>
+                                                <span class="badge-ponencia mb-1"><i class="fa-solid fa-microphone me-1"></i>Ponencia</span><br>
+                                                <strong>Robótica E Inteligencia Artificial Para El Desarrollo Estratégico Del Perú.</strong>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="fa-solid fa-clock me-2 text-gold"></i>03:00 p.m. - 03:45 p.m.</td>
+                                            <td>Mag. María Luisa Cerón Loayza</td>
+                                            <td>
+                                                <span class="badge-ponencia mb-1"><i class="fa-solid fa-microphone me-1"></i>Ponencia</span><br>
+                                                <strong>Nanofibras de membranas PVDF bajo condiciones de pH para una mejor optimización</strong>
+                                            </td>
+                                        </tr>
+                                        <tr class="coffee-break-row" style="background-color: var(--untels-gold-soft) !important;">
+                                            <td><i class="fa-solid fa-mug-hot me-2 text-gold"></i>03:45 p.m. - 04:05 p.m.</td>
+                                            <td>-</td>
+                                            <td>
+                                                <span class="badge-cafe"><i class="fa-solid fa-mug-hot me-1"></i>Coffee Break</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="fa-solid fa-clock me-2 text-gold"></i>04:05 p.m. - 04:50 p.m.</td>
+                                            <td>Dr. David Gregorio Pacheco Salazar</td>
+                                            <td>
+                                                <span class="badge-ponencia mb-1"><i class="fa-solid fa-microphone me-1"></i>Ponencia</span><br>
+                                                <strong>Materiales Nanoestructurados para Aplicaciones en Salud y Contaminación Ambiental</strong>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="fa-solid fa-clock me-2 text-gold"></i>04:50 p.m. - 05:35 p.m.</td>
+                                            <td>Dr. Eleazar Obed Torres Jiménez; Mag. Myrna Manco Caycho; Ing. Janett Deisy Julca Flores</td>
+                                            <td>
+                                                <span class="badge-ponencia mb-1"><i class="fa-solid fa-microphone me-1"></i>Ponencia</span><br>
+                                                <strong>Evaluación funcional del software de una compañía de transporte público en Lima Metropolitana empleando el enfoque GQM, 2026.</strong>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Viernes 26 Mañana -->
+                        <div class="tab-pane fade" id="viernes-m" role="tabpanel" aria-labelledby="viernes-m-tab">
+                            <div class="table-responsive">
+                                <table class="table align-middle">
+                                    <thead>
+                                        <tr class="table-light">
+                                            <th style="border-radius: 8px 0 0 8px; color: var(--untels-blue);">Hora</th>
+                                            <th style="color: var(--untels-blue);">Ponente / Responsable</th>
+                                            <th style="border-radius: 0 8px 8px 0; color: var(--untels-blue);">Tema / Actividad</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><i class="fa-solid fa-clock me-2 text-gold"></i>09:00 a.m. - 09:45 a.m.</td>
+                                            <td>Dr. Adolfo Máximo Poma Bernaola</td>
+                                            <td>
+                                                <span class="badge-ponencia mb-1"><i class="fa-solid fa-microphone me-1"></i>Ponencia</span><br>
+                                                <strong>Nanomecánica de la unión de anticuerpos y nanocuerpos a variantes del SARS-CoV-2 mediante el enfoque GoMartini 3</strong>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="fa-solid fa-clock me-2 text-gold"></i>09:45 a.m. - 10:30 a.m.</td>
+                                            <td>Dra. Silvia Marisel Espinoza Suárez</td>
+                                            <td>
+                                                <span class="badge-ponencia mb-1"><i class="fa-solid fa-microphone me-1"></i>Ponencia</span><br>
+                                                <strong>Caracterización multitécnica de relaves mineros de la región central del Perú para la recuperación de metales estratégicos en el marco de la economía circular</strong>
+                                            </td>
+                                        </tr>
+                                        <tr class="coffee-break-row" style="background-color: var(--untels-gold-soft) !important;">
+                                            <td><i class="fa-solid fa-mug-hot me-2 text-gold"></i>10:30 a.m. - 11:00 a.m.</td>
+                                            <td>-</td>
+                                            <td>
+                                                <span class="badge-cafe"><i class="fa-solid fa-mug-hot me-1"></i>Coffee Break</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="fa-solid fa-clock me-2 text-gold"></i>11:00 a.m. - 11:45 a.m.</td>
+                                            <td>Dr. Robert Mikhail Guzmán Arellano</td>
+                                            <td>
+                                                <span class="badge-ponencia mb-1"><i class="fa-solid fa-microphone me-1"></i>Ponencia</span><br>
+                                                <strong>Aplicación básica de los cálculos de primeros principios DFT en la predicción de propiedades electrónicas y estructurales en ciencia de materiales</strong>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="fa-solid fa-clock me-2 text-gold"></i>11:45 a.m. - 12:30 p.m.</td>
+                                            <td>Dr. Enrique Solano Kipu, CEO Kipu Quantum</td>
+                                            <td>
+                                                <span class="badge-ponencia mb-1"><i class="fa-solid fa-microphone me-1"></i>Ponencia</span><br>
+                                                <strong>Computación Cuántica para la Universidad y la Industria</strong>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Viernes 26 Tarde -->
+                        <div class="tab-pane fade" id="viernes-t" role="tabpanel" aria-labelledby="viernes-t-tab">
+                            <div class="table-responsive">
+                                <table class="table align-middle">
+                                    <thead>
+                                        <tr class="table-light">
+                                            <th style="border-radius: 8px 0 0 8px; color: var(--untels-blue);">Hora</th>
+                                            <th style="color: var(--untels-blue);">Ponente / Responsable</th>
+                                            <th style="border-radius: 0 8px 8px 0; color: var(--untels-blue);">Tema / Actividad</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td><i class="fa-solid fa-clock me-2 text-gold"></i>02:00 p.m. - 02:45 p.m.</td>
+                                            <td>Dr. José Oreste Mazini Nossar</td>
+                                            <td>
+                                                <span class="badge-ponencia mb-1"><i class="fa-solid fa-microphone me-1"></i>Ponencia</span><br>
+                                                <strong>Novedosa interpretación de la dilatación temporal presente en las comunicaciones y del efecto túnel en los componentes electrónicos</strong>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="fa-solid fa-clock me-2 text-gold"></i>02:45 p.m. - 03:30 p.m.</td>
+                                            <td>Lic. Nicolas Ramos Paucar</td>
+                                            <td>
+                                                <span class="badge-ponencia mb-1"><i class="fa-solid fa-microphone me-1"></i>Ponencia</span><br>
+                                                <strong>La Metrología: Pilar de la Confianza en las Publicaciones Científicas</strong>
+                                            </td>
+                                        </tr>
+                                        <tr class="coffee-break-row" style="background-color: var(--untels-gold-soft) !important;">
+                                            <td><i class="fa-solid fa-mug-hot me-2 text-gold"></i>03:30 p.m. - 04:00 p.m.</td>
+                                            <td>-</td>
+                                            <td>
+                                                <span class="badge-cafe"><i class="fa-solid fa-mug-hot me-1"></i>Coffee Break</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="fa-solid fa-clock me-2 text-gold"></i>04:00 p.m. - 04:45 p.m.</td>
+                                            <td>Dr. William Trujillo Herrera, CEO</td>
+                                            <td>
+                                                <span class="badge-ponencia mb-1"><i class="fa-solid fa-microphone me-1"></i>Ponencia</span><br>
+                                                <strong>Espectroscopia NIR Portátil y Machine Learning para la Trazabilidad de Fármacos y Alimentos bajo Estándares ISO 17025 e ISO 27001</strong>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="fa-solid fa-clock me-2 text-gold"></i>04:45 p.m. - 05:30 p.m.</td>
+                                            <td>Mag. David Correa Chillón, CEO</td>
+                                            <td>
+                                                <span class="badge-ponencia mb-1"><i class="fa-solid fa-microphone me-1"></i>Ponencia</span><br>
+                                                <strong>Variabilidad Espacio-Temporal del Perfil Vertical del Viento en las Regiones Costeras de Perú</strong>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="fa-solid fa-clock me-2 text-gold"></i>05:30 p.m. - 06:00 p.m.</td>
+                                            <td>-</td>
+                                            <td>
+                                                <span class="badge-especial mb-1"><i class="fa-solid fa-users me-1"></i>Mesa Redonda</span><br>
+                                                <strong>MESA REDONDA</strong>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td><i class="fa-solid fa-clock me-2 text-gold"></i>06:00 p.m. - 06:20 p.m.</td>
+                                            <td>-</td>
+                                            <td>
+                                                <span class="badge-especial mb-1"><i class="fa-solid fa-flag-checkered me-1"></i>Clausura</span><br>
+                                                <strong>CLAUSURA DEL EVENTO</strong>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer" style="background-color: var(--gray-50); border-top: 1px solid var(--gray-100);">
+                    <button type="button" class="btn btn-blue px-4" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- ============ MODAL PONENCIAS (EJES TEMÁTICOS) ============ -->
     <div class="modal fade" id="modalEjePonencia" tabindex="-1" aria-labelledby="modalEjePonenciaLabel"

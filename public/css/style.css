@@ -1455,3 +1455,119 @@ h6 {
         padding: 1.5rem;
     }
 }
+
+/* ============================================
+   SECCIÓN HORARIOS & MODAL
+   ============================================ */
+.horarios-card {
+    transition: var(--transition);
+    border: 1px solid var(--gray-100);
+}
+
+.horarios-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md) !important;
+}
+
+#modalHorarios .nav-pills .nav-link {
+    color: var(--untels-blue) !important;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    padding: 10px 20px;
+    transition: var(--transition);
+    border: 1px solid transparent;
+}
+
+#modalHorarios .nav-pills .nav-link.active {
+    background-color: var(--untels-blue) !important;
+    color: var(--untels-gold) !important;
+    border-color: var(--untels-blue) !important;
+}
+
+#modalHorarios .nav-pills .nav-link:hover:not(.active) {
+    background-color: var(--gray-100) !important;
+    color: var(--untels-blue-dark) !important;
+}
+
+#modalHorarios .table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 10px;
+}
+
+#modalHorarios .table th {
+    background-color: var(--untels-blue);
+    color: white !important;
+    font-weight: 700;
+    padding: 14px 18px;
+    border: 1px solid #cbd5e1;
+}
+
+#modalHorarios .table td {
+    padding: 14px 18px;
+    vertical-align: middle;
+    border: 1px solid #cbd5e1;
+    color: #334155;
+}
+
+#modalHorarios .table tbody tr {
+    background-color: #ffffff;
+    transition: var(--transition);
+}
+
+#modalHorarios .table tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+#modalHorarios .table tbody tr.coffee-break-row {
+    background-color: var(--untels-gold-soft) !important;
+}
+
+#modalHorarios .table tbody tr td:first-child {
+    font-weight: 700;
+    color: var(--untels-blue);
+    width: 25%;
+}
+
+#modalHorarios .table tbody tr td:nth-child(2) {
+    font-weight: 600;
+    color: #495057;
+    width: 30%;
+}
+
+#modalHorarios .table tbody tr td:last-child {
+    width: 45%;
+}
+
+.badge-cafe {
+    background-color: var(--untels-gold-soft);
+    color: #b25900;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 50px;
+    font-size: 0.78rem;
+    display: inline-flex;
+    align-items: center;
+}
+
+.badge-especial {
+    background-color: #e3f2fd;
+    color: #0d47a1;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 50px;
+    font-size: 0.78rem;
+    display: inline-flex;
+    align-items: center;
+}
+
+.badge-ponencia {
+    background-color: #e8f5e9;
+    color: #1b5e20;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 50px;
+    font-size: 0.78rem;
+    display: inline-flex;
+    align-items: center;
+}
