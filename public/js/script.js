@@ -266,6 +266,7 @@ async function initForm() {
 
         const nombre = document.getElementById('inputNombre').value.trim();
         const email = document.getElementById('inputEmail').value.trim();
+        const dni = document.getElementById('inputDni')?.value.trim() || undefined;
         const univ = document.getElementById('inputUniv').value.trim();
         const participacion = document.getElementById('mainParticipacionSelect').value;
         const modalidad = document.getElementById('inputModalidad').value;
@@ -299,6 +300,7 @@ async function initForm() {
                 body: JSON.stringify({
                     nombre,
                     email,
+                    dni,
                     universidad: univ || undefined,
                     participacion,
                     modalidad,
@@ -1017,6 +1019,7 @@ async function guardarTodo() {
             body: JSON.stringify({
                 nombre,
                 email,
+                dni: document.getElementById('inputDniPonente')?.value.trim() || undefined,
                 universidad: univ || undefined,
                 participacion: document.getElementById('mainParticipacionSelect').value,
                 modalidad: document.getElementById('inputModalidadPonente').value,
@@ -1354,4 +1357,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     initLoginModal();
     initResumenLimit();
     actualizarNavbarUser();
+
+    // Auto-scroll a la sección de registro al cargar la página
+    setTimeout(() => {
+        const registroSection = document.getElementById('registro');
+        if (registroSection) {
+            registroSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }, 800);
 });

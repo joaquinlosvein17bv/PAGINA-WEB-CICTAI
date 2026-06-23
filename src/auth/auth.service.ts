@@ -34,6 +34,7 @@ export class AuthService {
       email: dto.email,
       password: hashedPassword,
       participacion: dto.participacion,
+      dni: dto.dni,
       universidad: dto.universidad,
       voucherCode: dto.voucherCode,
       codigoOtic: dto.codigoOtic,
