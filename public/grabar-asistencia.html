@@ -221,8 +221,8 @@
                     <input type="email" class="form-control" id="email" placeholder="correo@ejemplo.com" required autocomplete="email">
                 </div>
                 <div class="mb-4">
-                    <label for="password" class="form-label"><i class="fa-solid fa-lock me-1"></i> Contraseña</label>
-                    <input type="password" class="form-control" id="password" placeholder="Tu contraseña" required autocomplete="current-password">
+                    <label for="dni" class="form-label"><i class="fa-solid fa-id-card me-1"></i> DNI</label>
+                    <input type="text" class="form-control" id="dni" placeholder="Ej: 12345678" inputmode="numeric" pattern="[0-9]{8}" maxlength="8" required>
                 </div>
 
                 <button type="submit" class="btn-submit">
@@ -304,7 +304,7 @@
 
                 const data = {
                     email: document.getElementById('email').value.trim(),
-                    password: document.getElementById('password').value,
+                    dni: document.getElementById('dni').value.trim(),
                 };
 
                 try {

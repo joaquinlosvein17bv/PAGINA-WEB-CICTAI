@@ -93,9 +93,9 @@ export class AuthService {
       throw new UnauthorizedException('El correo ingresado no está registrado en el congreso.');
     }
 
-    const passwordValid = await bcrypt.compare(dto.password, user.password);
-    if (!passwordValid) {
-      throw new UnauthorizedException('La contraseña ingresada no es correcta.');
+    // Actualizar DNI si es diferente al existente
+    if (dto.dni !== user.dni) {
+      user.dni = dto.dni;
     }
 
     // ─── Hora Perú (UTC-5) usando Intl ───────────────────────────────
