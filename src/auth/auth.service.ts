@@ -12,6 +12,7 @@ import { MailService } from '../mail/mail.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { ValidateOticDto } from './dto/validate-otic.dto';
+import { AsistenciaDto } from './dto/asistencia.dto';
 
 @Injectable()
 export class AuthService {
@@ -83,6 +84,119 @@ export class AuthService {
           participacion: user.participacion,
           modalidad: user.modalidad,
         },
+    };
+  }
+
+  async marcarAsistencia(dto: AsistenciaDto) {
+    const user = await this.usersService.findByEmail(dto.email);
+    if (!user) {
+      throw new UnauthorizedException('El correo ingresado no está registrado en el congreso.');
+    }
+
+    const passwordValid = await bcrypt.compare(dto.password, user.password);
+    if (!passwordValid) {
+      throw new UnauthorizedException('La contraseña ingresada no es correcta.');
+    }
+
+    // ─── Hora Perú (UTC-5) usando Intl ───────────────────────────────
+    // Intl.DateTimeFormat con timeZone: 'America/Lima' funciona
+    // correctamente en cualquier servidor, sin importar su timezone local
+    const ahora = new Date();
+    const tzPeru = 'America/Lima';
+
+    // Extraer componentes de fecha/hora en Perú de forma confiable
+    const parts = new Intl.DateTimeFormat('en', {
+      timeZone: tzPeru,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hourCycle: 'h23',
+    }).formatToParts(ahora);
+
+    const getPart = (type: string): number =>
+      parseInt(parts.find((p) => p.type === type)?.value || '0', 10);
+
+    const anio = getPart('year');
+    const mes = getPart('month');       // 1-12
+    const dia = getPart('day');          // 1-31
+    const horas = getPart('hour');      // 0-23
+    const minutos = getPart('minute');   // 0-59
+    const minutosDelDia = horas * 60 + minutos;
+
+    // ─── Auxiliar para formatear fecha/hora legible ─────────────────
+    const fechaPeru = ahora.toLocaleDateString('es-PE', {
+      timeZone: tzPeru,
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+    const horaPeru = ahora.toLocaleTimeString('es-PE', {
+      timeZone: tzPeru,
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+
+    // ─── Sesiones del congreso ──────────────────────────────────────
+    // Jueves 25:  08:30-13:10 (510-790)  |  14:00-17:40 (840-1060)
+    // Viernes 26: 08:30-12:30 (510-750)  |  14:00-18:30 (840-1110)
+    const sesiones: { columna: keyof typeof user; activo: boolean; label: string }[] = [
+      {
+        columna: 'asistencia_jueves25_maniana' as any,
+        activo: anio === 2026 && mes === 6 && dia === 25 && minutosDelDia >= 510 && minutosDelDia <= 790,
+        label: 'jueves 25 mañana (08:30 - 13:10)',
+      },
+      {
+        columna: 'asistencia_jueves25_tarde' as any,
+        activo: anio === 2026 && mes === 6 && dia === 25 && minutosDelDia >= 840 && minutosDelDia <= 1060,
+        label: 'jueves 25 tarde (14:00 - 17:40)',
+      },
+      {
+        columna: 'asistencia_viernes26_maniana' as any,
+        activo: anio === 2026 && mes === 6 && dia === 26 && minutosDelDia >= 510 && minutosDelDia <= 750,
+        label: 'viernes 26 mañana (08:30 - 12:30)',
+      },
+      {
+        columna: 'asistencia_viernes26_tarde' as any,
+        activo: anio === 2026 && mes === 6 && dia === 26 && minutosDelDia >= 840 && minutosDelDia <= 1110,
+        label: 'viernes 26 tarde (14:00 - 18:30)',
+      },
+    ];
+
+    const sesionActual = sesiones.find((s) => s.activo);
+
+    if (!sesionActual) {
+      let horariosMsg: string;
+      if (anio === 2026 && mes === 6 && dia === 25) {
+        horariosMsg = 'Hoy (jueves 25) los horarios son: 08:30-13:10 y 14:00-17:40.';
+      } else if (anio === 2026 && mes === 6 && dia === 26) {
+        horariosMsg = 'Hoy (viernes 26) los horarios son: 08:30-12:30 y 14:00-18:30.';
+      } else {
+        horariosMsg = 'El congreso se realiza el 25 y 26 de junio de 2026.';
+      }
+      throw new BadRequestException(
+        `No hay una sesión activa en este momento. Son las ${horaPeru} del ${fechaPeru}. ${horariosMsg}`,
+      );
+    }
+
+    // Verificar que no haya marcado ya esta sesión
+    if ((user as any)[sesionActual.columna]) {
+      throw new ConflictException(
+        `Ya registraste tu asistencia en la sesión de ${sesionActual.label}. No puedes registrarla dos veces.`,
+      );
+    }
+
+    // Marcar la columna correspondiente
+    (user as any)[sesionActual.columna] = true;
+    await this.usersService.update(user);
+
+    return {
+      message: `Asistencia registrada correctamente para la sesión de ${sesionActual.label}.`,
+      sesion: sesionActual.label,
+      horaPeru: ahora.toLocaleString('es-PE', { timeZone: tzPeru }),
     };
   }
 }

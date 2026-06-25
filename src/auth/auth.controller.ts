@@ -18,6 +18,7 @@ import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { ValidateOticDto } from './dto/validate-otic.dto';
+import { AsistenciaDto } from './dto/asistencia.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -66,5 +67,11 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async login(@Body() dto: LoginDto) {
     return this.authService.login(dto);
+  }
+
+  @Post('asistencia')
+  @HttpCode(HttpStatus.OK)
+  async marcarAsistencia(@Body() dto: AsistenciaDto) {
+    return this.authService.marcarAsistencia(dto);
   }
 }

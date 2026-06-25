@@ -38,6 +38,18 @@ export class User {
   @Column({ type: 'text', nullable: true })
   hojaDeVida: string;
 
+  @Column({ type: 'boolean', default: false })
+  asistencia_jueves25_maniana: boolean;
+
+  @Column({ type: 'boolean', default: false })
+  asistencia_jueves25_tarde: boolean;
+
+  @Column({ type: 'boolean', default: false })
+  asistencia_viernes26_maniana: boolean;
+
+  @Column({ type: 'boolean', default: false })
+  asistencia_viernes26_tarde: boolean;
+
   @CreateDateColumn({ type: 'timestamp' })
   createdAt: Date;
 }
