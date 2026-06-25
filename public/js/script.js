@@ -1,5 +1,5 @@
 const API_URL = '';
-
+//hola
 let codigoValidado = false;
 let ejeSeleccionadoActual = '';
 let currentVoucherCode = '';
