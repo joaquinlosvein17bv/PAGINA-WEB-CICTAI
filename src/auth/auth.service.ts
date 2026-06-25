@@ -141,13 +141,13 @@ export class AuthService {
     });
 
     // ─── Sesiones del congreso ──────────────────────────────────────
-    // Jueves 25:  08:30-13:10 (510-790)  |  13:50-17:40 (830-1060)
-    // Viernes 26: 08:30-12:30 (510-750)  |  13:50-18:30 (830-1110)
+    // Jueves 25:  08:00-13:10 (480-790)  |  13:50-17:40 (830-1060)
+    // Viernes 26: 08:00-12:30 (480-750)  |  13:50-18:30 (830-1110)
     const sesiones: { columna: keyof typeof user; activo: boolean; label: string }[] = [
       {
         columna: 'asistencia_jueves25_maniana' as any,
-        activo: anio === 2026 && mes === 6 && dia === 25 && minutosDelDia >= 510 && minutosDelDia <= 790,
-        label: 'jueves 25 mañana (08:30 - 13:10)',
+        activo: anio === 2026 && mes === 6 && dia === 25 && minutosDelDia >= 480 && minutosDelDia <= 790,
+        label: 'jueves 25 mañana (08:00 - 13:10)',
       },
       {
         columna: 'asistencia_jueves25_tarde' as any,
@@ -156,8 +156,8 @@ export class AuthService {
       },
       {
         columna: 'asistencia_viernes26_maniana' as any,
-        activo: anio === 2026 && mes === 6 && dia === 26 && minutosDelDia >= 510 && minutosDelDia <= 750,
-        label: 'viernes 26 mañana (08:30 - 12:30)',
+        activo: anio === 2026 && mes === 6 && dia === 26 && minutosDelDia >= 480 && minutosDelDia <= 750,
+        label: 'viernes 26 mañana (08:00 - 12:30)',
       },
       {
         columna: 'asistencia_viernes26_tarde' as any,
@@ -171,9 +171,9 @@ export class AuthService {
     if (!sesionActual) {
       let horariosMsg: string;
       if (anio === 2026 && mes === 6 && dia === 25) {
-        horariosMsg = 'Hoy (jueves 25) los horarios son: 08:30-13:10 y 13:50-17:40.';
+        horariosMsg = 'Hoy (jueves 25) los horarios son: 08:00-13:10 y 13:50-17:40.';
       } else if (anio === 2026 && mes === 6 && dia === 26) {
-        horariosMsg = 'Hoy (viernes 26) los horarios son: 08:30-12:30 y 13:50-18:30.';
+        horariosMsg = 'Hoy (viernes 26) los horarios son: 08:00-12:30 y 13:50-18:30.';
       } else {
         horariosMsg = 'El congreso se realiza el 25 y 26 de junio de 2026.';
       }
