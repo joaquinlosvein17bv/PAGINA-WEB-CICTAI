@@ -270,14 +270,7 @@ async function initForm() {
         const univ = document.getElementById('inputUniv').value.trim();
         const participacion = document.getElementById('mainParticipacionSelect').value;
         const modalidad = document.getElementById('inputModalidad').value;
-        const password = document.getElementById('inputPassword').value;
-        const passwordConfirm = document.getElementById('inputPasswordConfirm').value;
         const codigoOtic = document.getElementById('inputCodigo')?.value.trim() || undefined;
-
-        if (password !== passwordConfirm) {
-            showToast('⚠️ Las contraseñas no coinciden.', 'warning');
-            return;
-        }
 
         if (participacion === 'ponente' && !codigoValidado) {
             showToast('⚠️ Primero debes validar tu código OTIC.', 'warning');
@@ -304,7 +297,6 @@ async function initForm() {
                     universidad: univ || undefined,
                     participacion,
                     modalidad,
-                    password,
                     voucherCode: currentVoucherCode,
                     codigoOtic: codigoOtic || undefined,
                 }),
@@ -354,7 +346,6 @@ async function initValidation() {
         e.preventDefault();
 
         const email = document.getElementById('valEmail').value.trim();
-        const password = document.getElementById('valPassword').value;
         const codigo = document.getElementById('valCodigo').value.trim().toUpperCase();
         const resultDiv = document.getElementById('validacionResult');
         const btn = document.getElementById('btnValidar');
@@ -367,7 +358,7 @@ async function initValidation() {
             const res = await fetch(`${API_URL}/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ email }),
             });
 
             const data = await res.json();
@@ -466,7 +457,6 @@ function initLoginModal() {
         e.preventDefault();
 
         const email = document.getElementById('loginEmail').value.trim();
-        const password = document.getElementById('loginPassword').value;
         const resultDiv = document.getElementById('loginModalResult');
         const btn = document.getElementById('btnLoginModal');
         const originalText = btn.innerHTML;
@@ -478,7 +468,7 @@ function initLoginModal() {
             const res = await fetch(`${API_URL}/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password }),
+                body: JSON.stringify({ email }),
             });
 
             const data = await res.json();
@@ -951,21 +941,9 @@ function mostrarSeccionTecnica() {
     const nombre = document.getElementById('inputNombrePonente').value.trim();
     const email = document.getElementById('inputEmailPonente').value.trim();
     const univ = document.getElementById('inputUnivPonente').value.trim();
-    const password = document.getElementById('inputPasswordPonente').value;
-    const passwordConfirm = document.getElementById('inputPasswordConfirmPonente').value;
 
-    if (!nombre || !email || !univ || !password) {
+    if (!nombre || !email || !univ) {
         showToast('⚠️ Completa todos los campos obligatorios del Registro Personal.', 'warning');
-        return;
-    }
-
-    if (password !== passwordConfirm) {
-        showToast('⚠️ Las contraseñas no coinciden.', 'warning');
-        return;
-    }
-
-    if (password.length < 6) {
-        showToast('⚠️ La contraseña debe tener al menos 6 caracteres.', 'warning');
         return;
     }
 
@@ -978,7 +956,6 @@ async function guardarTodo() {
     const nombre = document.getElementById('inputNombrePonente').value.trim();
     const email = document.getElementById('inputEmailPonente').value.trim();
     const univ = document.getElementById('inputUnivPonente').value.trim();
-    const password = document.getElementById('inputPasswordPonente').value;
     const hojaVida = document.getElementById('inputHojaVida').value.trim();
     const codigoOtic = document.getElementById('inputCodigo').value.trim();
 
@@ -991,7 +968,7 @@ async function guardarTodo() {
     const resumen = document.getElementById('resumenPonencia').value.trim();
     const referencias = document.getElementById('referenciasPonencia').value.trim();
 
-    if (!nombre || !email || !univ || !password) {
+    if (!nombre || !email || !univ) {
         showToast('⚠️ Completa todos los campos del Registro Personal.', 'warning');
         return;
     }
@@ -1023,7 +1000,6 @@ async function guardarTodo() {
                 universidad: univ || undefined,
                 participacion: document.getElementById('mainParticipacionSelect').value,
                 modalidad: document.getElementById('inputModalidadPonente').value,
-                password,
                 codigoOtic: codigoOtic || undefined,
                 hojaDeVida: hojaVida || undefined,
             }),
@@ -1103,8 +1079,6 @@ async function guardarTodo() {
             document.getElementById('inputNombrePonente').value = '';
             document.getElementById('inputEmailPonente').value = '';
             document.getElementById('inputUnivPonente').value = '';
-            document.getElementById('inputPasswordPonente').value = '';
-            document.getElementById('inputPasswordConfirmPonente').value = '';
             document.getElementById('inputHojaVida').value = '';
             document.getElementById('tituloPonencia').value = '';
             document.getElementById('autoresPonencia').value = '';
