@@ -141,8 +141,8 @@ export class AuthService {
     });
 
     // ─── Sesiones del congreso ──────────────────────────────────────
-    // Jueves 25:  08:30-13:10 (510-790)  |  14:00-17:40 (840-1060)
-    // Viernes 26: 08:30-12:30 (510-750)  |  14:00-18:30 (840-1110)
+    // Jueves 25:  08:30-13:10 (510-790)  |  13:50-17:40 (830-1060)
+    // Viernes 26: 08:30-12:30 (510-750)  |  13:50-18:30 (830-1110)
     const sesiones: { columna: keyof typeof user; activo: boolean; label: string }[] = [
       {
         columna: 'asistencia_jueves25_maniana' as any,
@@ -151,8 +151,8 @@ export class AuthService {
       },
       {
         columna: 'asistencia_jueves25_tarde' as any,
-        activo: anio === 2026 && mes === 6 && dia === 25 && minutosDelDia >= 840 && minutosDelDia <= 1060,
-        label: 'jueves 25 tarde (14:00 - 17:40)',
+        activo: anio === 2026 && mes === 6 && dia === 25 && minutosDelDia >= 830 && minutosDelDia <= 1060,
+        label: 'jueves 25 tarde (13:50 - 17:40)',
       },
       {
         columna: 'asistencia_viernes26_maniana' as any,
@@ -161,8 +161,8 @@ export class AuthService {
       },
       {
         columna: 'asistencia_viernes26_tarde' as any,
-        activo: anio === 2026 && mes === 6 && dia === 26 && minutosDelDia >= 840 && minutosDelDia <= 1110,
-        label: 'viernes 26 tarde (14:00 - 18:30)',
+        activo: anio === 2026 && mes === 6 && dia === 26 && minutosDelDia >= 830 && minutosDelDia <= 1110,
+        label: 'viernes 26 tarde (13:50 - 18:30)',
       },
     ];
 
@@ -171,9 +171,9 @@ export class AuthService {
     if (!sesionActual) {
       let horariosMsg: string;
       if (anio === 2026 && mes === 6 && dia === 25) {
-        horariosMsg = 'Hoy (jueves 25) los horarios son: 08:30-13:10 y 14:00-17:40.';
+        horariosMsg = 'Hoy (jueves 25) los horarios son: 08:30-13:10 y 13:50-17:40.';
       } else if (anio === 2026 && mes === 6 && dia === 26) {
-        horariosMsg = 'Hoy (viernes 26) los horarios son: 08:30-12:30 y 14:00-18:30.';
+        horariosMsg = 'Hoy (viernes 26) los horarios son: 08:30-12:30 y 13:50-18:30.';
       } else {
         horariosMsg = 'El congreso se realiza el 25 y 26 de junio de 2026.';
       }
