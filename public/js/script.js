@@ -402,7 +402,8 @@ async function initValidation() {
 }
 
 function mostrarCertificado() {
-    showToast('Las certificaciones estarán disponibles después del evento.', 'info');
+    const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalCertificadoPago'));
+    modal.show();
 }
 
 function showToast(message, type = 'info') {
