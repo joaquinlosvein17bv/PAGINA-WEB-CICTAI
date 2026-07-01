@@ -12,6 +12,8 @@ import { LoginDto } from './dto/login.dto';
 import { ValidateOticDto } from './dto/validate-otic.dto';
 import { AsistenciaDto } from './dto/asistencia.dto';
 import { VerificarAsistenciaDto } from './dto/verificar-asistencia.dto';
+import { RegistrarBoucherDto } from './dto/registrar-boucher.dto';
+import { GoogleDriveService } from '../google-drive/google-drive.service';
 
 @Injectable()
 export class AuthService {
@@ -19,6 +21,7 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly oticCodesService: OticCodesService,
     private readonly mailService: MailService,
+    private readonly googleDriveService: GoogleDriveService,
   ) {}
 
   async register(dto: RegisterDto, voucherPath?: string) {
@@ -105,6 +108,57 @@ export class AuthService {
     return {
       asistio: false,
       message: 'No registrás asistencia al evento. Es necesario asistir al menos a una sesión para obtener el certificado.',
+    };
+  }
+
+  async registrarBoucher(
+    dto: RegistrarBoucherDto,
+    file?: Express.Multer.File,
+  ) {
+    const user = await this.usersService.findByDni(dto.dniActual);
+    if (!user) {
+      throw new UnauthorizedException('No se encontró ningún usuario con ese DNI.');
+    }
+
+    // Actualizar nombre
+    user.nombre = dto.nombre;
+
+    // Actualizar DNI si cambió
+    const dniFinal = dto.nuevoDni || dto.dniActual;
+    if (dniFinal !== user.dni) {
+      // Verificar que el nuevo DNI no esté en uso por otro usuario
+      const existente = await this.usersService.findByDni(dniFinal);
+      if (existente && existente.id !== user.id) {
+        throw new BadRequestException('El nuevo DNI ya está registrado por otro usuario.');
+      }
+      user.dni = dniFinal;
+    }
+
+    // Actualizar código de boucher
+    user.voucherCode = dto.codigoBoucher;
+
+    // Subir el PDF a Google Drive si se adjuntó un archivo
+    if (file) {
+      const nombreArchivo = `boucher_${dto.dniActual}_${Date.now()}.pdf`;
+      const driveResult = await this.googleDriveService.uploadFile(
+        file,
+        nombreArchivo,
+        file.mimetype || 'application/pdf',
+      );
+      user.voucherPath = JSON.stringify({
+        fileId: driveResult.fileId,
+        webViewLink: driveResult.webViewLink,
+        fileName: nombreArchivo,
+      });
+    }
+
+    await this.usersService.update(user);
+
+    return {
+      message: 'Boucher registrado correctamente.',
+      dni: user.dni,
+      nombre: user.nombre,
+      voucherCode: user.voucherCode,
     };
   }
 

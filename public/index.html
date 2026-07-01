@@ -1214,10 +1214,75 @@
                     <button type="button" class="btn btn-blue px-4" data-bs-dismiss="modal">
                         <i class="fa-solid fa-times me-1"></i>Cerrar
                     </button>
-                    <a href="https://pagalo.pe/" target="_blank" rel="noopener"
-                        class="btn btn-gold px-4 fw-bold">
-                        <i class="fa-solid fa-arrow-up-right-from-square me-2"></i>Ir a Págalo.pe
-                    </a>
+                    <button type="button" class="btn btn-gold px-4 fw-bold" onclick="abrirModalRegistrarBoucher()">
+                        <i class="fa-solid fa-arrow-right me-2"></i>Proseguir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============ MODAL REGISTRAR BOUCHER ============ -->
+    <div class="modal fade" id="modalRegistrarBoucher" tabindex="-1" aria-labelledby="modalRegistrarBoucherLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content" style="border-radius: var(--radius); border: none; overflow: hidden;">
+                <div class="modal-header text-white"
+                    style="background: linear-gradient(135deg, var(--untels-blue), var(--untels-blue-light)); border-bottom: 3px solid var(--untels-gold);">
+                    <h5 class="modal-title fw-bold" id="modalRegistrarBoucherLabel">
+                        <i class="fa-solid fa-receipt me-2" style="color: var(--untels-gold);"></i>Registrar Boucher
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <p class="text-muted mb-4" style="font-size: 0.9rem;">
+                        <i class="fa-solid fa-info-circle me-1" style="color: var(--untels-blue);"></i>
+                        Completá los datos de tu boucher de pago para obtener el certificado.
+                    </p>
+
+                    <form id="formRegistrarBoucher">
+                        <div class="mb-3">
+                            <label for="boucherNombre" class="form-label fw-bold" style="color: var(--untels-blue);">
+                                <i class="fa-solid fa-user me-1"></i> Nombre Completo
+                            </label>
+                            <input type="text" class="form-control" id="boucherNombre"
+                                placeholder="Ingresa tu nombre completo" required
+                                style="border: 2px solid var(--gray-100); border-radius: var(--radius-sm); padding: 12px 16px;">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="boucherDni" class="form-label fw-bold" style="color: var(--untels-blue);">
+                                <i class="fa-solid fa-id-card me-1"></i> DNI
+                            </label>
+                            <input type="text" class="form-control" id="boucherDni"
+                                placeholder="Ej: 12345678" inputmode="numeric" pattern="[0-9]{8}" maxlength="8" required
+                                style="border: 2px solid var(--gray-100); border-radius: var(--radius-sm); padding: 12px 16px; letter-spacing: 2px;">
+                            <div class="form-text">Si cambiás el DNI, los datos se actualizarán para este nuevo DNI.</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="boucherCodigo" class="form-label fw-bold" style="color: var(--untels-blue);">
+                                <i class="fa-solid fa-hashtag me-1"></i> Código de Boucher
+                            </label>
+                            <input type="text" class="form-control" id="boucherCodigo"
+                                placeholder="Ej: CICTAI-2026-XXXXX" required
+                                style="border: 2px solid var(--gray-100); border-radius: var(--radius-sm); padding: 12px 16px;">
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="boucherFile" class="form-label fw-bold" style="color: var(--untels-blue);">
+                                <i class="fa-solid fa-file-pdf me-1"></i> Boucher PDF
+                            </label>
+                            <input type="file" class="form-control" id="boucherFile" accept=".pdf,application/pdf" required
+                                style="border: 2px solid var(--gray-100); border-radius: var(--radius-sm); padding: 10px 16px;">
+                            <div class="form-text">Subí el comprobante de pago en formato PDF (máx. 5 MB).</div>
+                        </div>
+
+                        <div id="boucherResultado" class="d-none mb-3" style="font-size: 0.9rem; border-radius: var(--radius-sm); padding: 12px 16px;"></div>
+
+                        <button type="submit" class="btn btn-gold w-100 py-3 fw-bold" id="btnGuardarBoucher">
+                            <i class="fa-solid fa-save me-2"></i>GUARDAR
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

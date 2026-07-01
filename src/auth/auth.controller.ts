@@ -20,6 +20,7 @@ import { LoginDto } from './dto/login.dto';
 import { ValidateOticDto } from './dto/validate-otic.dto';
 import { AsistenciaDto } from './dto/asistencia.dto';
 import { VerificarAsistenciaDto } from './dto/verificar-asistencia.dto';
+import { RegistrarBoucherDto } from './dto/registrar-boucher.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -80,5 +81,27 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async verificarAsistencia(@Body() dto: VerificarAsistenciaDto) {
     return this.authService.verificarAsistencia(dto);
+  }
+
+  @Post('registrar-boucher')
+  @HttpCode(HttpStatus.OK)
+  @UseInterceptors(
+    FileInterceptor('file', {
+      storage: diskStorage({
+        destination: uploadsDir,
+        filename: (_req, file, callback) => {
+          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+          const ext = extname(file.originalname);
+          callback(null, `${uniqueSuffix}${ext}`);
+        },
+      }),
+      limits: { fileSize: 5 * 1024 * 1024 },
+    }),
+  )
+  async registrarBoucher(
+    @Body() dto: RegistrarBoucherDto,
+    @UploadedFile() file?: Express.Multer.File,
+  ) {
+    return this.authService.registrarBoucher(dto, file);
   }
 }

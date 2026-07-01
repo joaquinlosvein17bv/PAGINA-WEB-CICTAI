@@ -5,6 +5,10 @@ let ejeSeleccionadoActual = '';
 let currentVoucherCode = '';
 let ejesCictai = [];
 
+// Variables para el flujo de verificación → certificado
+let verificacionDni = '';
+let verificacionNombre = '';
+
 function toggleFlujosParticipacion() {
     const select = document.getElementById('mainParticipacionSelect');
     const flujosPonencia = document.querySelectorAll('.flujo-ponencia');
@@ -449,6 +453,10 @@ async function verificarAsistenciaDNI() {
         resultado.classList.remove('d-none');
 
         if (data.asistio) {
+            // Guardar datos para el flujo siguiente
+            verificacionDni = dni;
+            verificacionNombre = data.nombre || '';
+
             resultado.className = 'mb-3 alert alert-success text-center';
             resultado.style.borderRadius = 'var(--radius-sm)';
             resultado.style.padding = '12px 16px';
@@ -491,9 +499,144 @@ function proseguirACertificado() {
     const modalVerif = bootstrap.Modal.getInstance(document.getElementById('modalVerificacionAsistencia'));
     if (modalVerif) modalVerif.hide();
 
-    // Abrir modal de pago de certificado
+    // Abrir modal de pasos de certificado
     const modalPago = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalCertificadoPago'));
     modalPago.show();
+}
+
+function abrirModalRegistrarBoucher() {
+    // Cerrar modal de pasos de certificado
+    const modalPago = bootstrap.Modal.getInstance(document.getElementById('modalCertificadoPago'));
+    if (modalPago) modalPago.hide();
+
+    // Resetear el formulario
+    const form = document.getElementById('formRegistrarBoucher');
+    if (form) form.reset();
+
+    // Ocultar resultado previo
+    const resultado = document.getElementById('boucherResultado');
+    if (resultado) {
+        resultado.classList.add('d-none');
+        resultado.innerHTML = '';
+        resultado.className = 'd-none mb-3';
+    }
+
+    // Restaurar botón
+    const btn = document.getElementById('btnGuardarBoucher');
+    if (btn) {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-save me-2"></i>GUARDAR';
+    }
+
+    // Pre-cargar datos desde la verificación
+    const inputNombre = document.getElementById('boucherNombre');
+    const inputDni = document.getElementById('boucherDni');
+    if (inputNombre) inputNombre.value = verificacionNombre;
+    if (inputDni) inputDni.value = verificacionDni;
+
+    // Abrir modal de registro de boucher
+    const modalBoucher = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalRegistrarBoucher'));
+    modalBoucher.show();
+}
+
+async function guardarBoucher(e) {
+    e.preventDefault();
+
+    const nombre = document.getElementById('boucherNombre').value.trim();
+    const dni = document.getElementById('boucherDni').value.trim();
+    const codigo = document.getElementById('boucherCodigo').value.trim();
+    const fileInput = document.getElementById('boucherFile');
+    const file = fileInput?.files?.[0];
+    const resultado = document.getElementById('boucherResultado');
+    const btn = document.getElementById('btnGuardarBoucher');
+
+    if (!nombre || !dni || !codigo) {
+        showToast('⚠️ Completá todos los campos obligatorios.', 'warning');
+        return;
+    }
+
+    if (!/^\d{8}$/.test(dni)) {
+        showToast('⚠️ El DNI debe tener exactamente 8 dígitos.', 'warning');
+        return;
+    }
+
+    if (!file) {
+        showToast('⚠️ Seleccioná el archivo PDF del boucher.', 'warning');
+        return;
+    }
+
+    if (file.type !== 'application/pdf') {
+        showToast('⚠️ El archivo debe ser un PDF.', 'warning');
+        return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+        showToast('⚠️ El archivo no puede superar los 5 MB.', 'warning');
+        return;
+    }
+
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i>Guardando...';
+
+    try {
+        const formData = new FormData();
+        formData.append('dniActual', verificacionDni);
+        formData.append('nombre', nombre);
+        formData.append('nuevoDni', dni !== verificacionDni ? dni : '');
+        formData.append('codigoBoucher', codigo);
+        formData.append('file', file);
+
+        const res = await fetch(`${API_URL}/auth/registrar-boucher`, {
+            method: 'POST',
+            body: formData,
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            throw new Error(data.message || 'Error al guardar el boucher');
+        }
+
+        resultado.classList.remove('d-none');
+        resultado.className = 'mb-3 alert alert-success text-center';
+        resultado.style.borderRadius = 'var(--radius-sm)';
+        resultado.style.padding = '12px 16px';
+        resultado.innerHTML = `
+            <i class="fa-solid fa-circle-check me-2"></i>
+            <strong>¡Boucher registrado correctamente!</strong><br>
+            <span style="font-size:0.85rem;">${data.message || 'Ya podés obtener tu certificado.'}</span>
+        `;
+
+        showToast('✅ Boucher registrado con éxito.', 'success');
+        btn.innerHTML = '<i class="fa-solid fa-check me-2"></i>¡REGISTRADO!';
+        btn.style.background = '#28a745';
+        btn.style.color = '#fff';
+
+        // Limpiar el file input
+        if (fileInput) fileInput.value = '';
+
+        setTimeout(() => {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('modalRegistrarBoucher'));
+            if (modal) modal.hide();
+            btn.innerHTML = '<i class="fa-solid fa-save me-2"></i>GUARDAR';
+            btn.style.background = '';
+            btn.style.color = '';
+            btn.disabled = false;
+        }, 3000);
+    } catch (e) {
+        resultado.classList.remove('d-none');
+        resultado.className = 'mb-3 alert alert-danger text-center';
+        resultado.style.borderRadius = 'var(--radius-sm)';
+        resultado.style.padding = '12px 16px';
+        resultado.innerHTML = `
+            <i class="fa-solid fa-circle-xmark me-2"></i>
+            <strong>Error</strong><br>
+            <span style="font-size:0.85rem;">${e.message || 'No se pudo guardar el boucher.'}</span>
+        `;
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-solid fa-save me-2"></i>GUARDAR';
+        showToast('❌ ' + (e.message || 'Error al guardar el boucher'), 'error');
+    }
 }
 
 function showToast(message, type = 'info') {
@@ -1374,6 +1517,12 @@ async function initCertificadoForm() {
     });
 }
 
+function initBoucherForm() {
+    const form = document.getElementById('formRegistrarBoucher');
+    if (!form) return;
+    form.addEventListener('submit', guardarBoucher);
+}
+
 function initResumenLimit() {
     const textarea = document.getElementById('resumenPonencia');
     const label = document.getElementById('wordCountLabel');
@@ -1419,6 +1568,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     initForm();
     initValidation();
     initCertificadoForm();
+    initBoucherForm();
     initLoginModal();
     initResumenLimit();
     actualizarNavbarUser();
