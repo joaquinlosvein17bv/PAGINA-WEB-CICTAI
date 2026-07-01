@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { put } from '@vercel/blob';
-import { createReadStream, existsSync, unlinkSync } from 'fs';
+import { existsSync, mkdirSync, copyFileSync, unlinkSync } from 'fs';
+import { join } from 'path';
 
 @Injectable()
 export class GoogleDriveService {
@@ -9,27 +9,23 @@ export class GoogleDriveService {
     fileName: string,
     _mimeType: string,
   ): Promise<{ fileId: string; webViewLink: string }> {
-    // En Vercel: usamos Blob Storage
-    if (process.env.BLOB_READ_WRITE_TOKEN) {
-      const blob = await put(fileName, createReadStream(file.path), {
-        access: 'public',
-        contentType: 'application/pdf',
-      });
+    const uploadsDir = join(process.cwd(), 'public', 'uploads', 'bouchers');
 
-      // Limpiar archivo temporal
-      try { if (existsSync(file.path)) unlinkSync(file.path); } catch {}
-
-      return {
-        fileId: blob.url,
-        webViewLink: blob.url,
-      };
+    if (!existsSync(uploadsDir)) {
+      mkdirSync(uploadsDir, { recursive: true });
     }
 
-    // Fallback: guardar localmente (solo para desarrollo)
-    // En Vercel los archivos en /tmp son efímeros
+    const destPath = join(uploadsDir, fileName);
+
+    copyFileSync(file.path, destPath);
+
+    try { if (existsSync(file.path)) unlinkSync(file.path); } catch {}
+
+    const url = `/uploads/bouchers/${fileName}`;
+
     return {
-      fileId: file.path || 'local',
-      webViewLink: file.path || 'local',
+      fileId: url,
+      webViewLink: url,
     };
   }
 }

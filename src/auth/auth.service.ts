@@ -24,10 +24,21 @@ export class AuthService {
     private readonly googleDriveService: GoogleDriveService,
   ) {}
 
-  async register(dto: RegisterDto, voucherPath?: string) {
+  async register(dto: RegisterDto, file?: Express.Multer.File) {
     const existing = await this.usersService.findByEmail(dto.email);
     if (existing) {
       throw new ConflictException('El correo electrónico ya está registrado');
+    }
+
+    let voucherPath: string | undefined;
+    if (file) {
+      const nombreArchivo = `voucher_${dto.email}_${Date.now()}.pdf`;
+      const result = await this.googleDriveService.uploadFile(
+        file,
+        nombreArchivo,
+        file.mimetype || 'application/pdf',
+      );
+      voucherPath = result.webViewLink;
     }
 
     const user = await this.usersService.create({
@@ -154,11 +165,7 @@ export class AuthService {
         nombreArchivo,
         file.mimetype || 'application/pdf',
       );
-      user.voucherPath = JSON.stringify({
-        fileId: driveResult.fileId,
-        webViewLink: driveResult.webViewLink,
-        fileName: nombreArchivo,
-      });
+      user.voucherPath = driveResult.webViewLink;
     }
 
     await this.usersService.update(user);

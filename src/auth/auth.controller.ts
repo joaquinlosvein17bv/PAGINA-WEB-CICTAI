@@ -45,7 +45,7 @@ export class AuthController {
     @Body() dto: RegisterDto,
     @UploadedFile() file?: Express.Multer.File,
   ) {
-    const user = await this.authService.register(dto, file?.path);
+    const user = await this.authService.register(dto, file);
 
     return {
       message: 'Registro exitoso',
