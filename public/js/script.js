@@ -402,8 +402,98 @@ async function initValidation() {
 }
 
 function mostrarCertificado() {
-    const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalCertificadoPago'));
+    // Resetear el modal de verificación
+    const verifDni = document.getElementById('verifDni');
+    if (verifDni) verifDni.value = '';
+    const resultado = document.getElementById('verifResultado');
+    if (resultado) {
+        resultado.classList.add('d-none');
+        resultado.innerHTML = '';
+        resultado.className = 'd-none mb-3';
+    }
+    const btnProseguir = document.getElementById('btnProseguirCertificado');
+    if (btnProseguir) btnProseguir.classList.add('d-none');
+    const btnVerificar = document.getElementById('btnVerificarAsistencia');
+    if (btnVerificar) {
+        btnVerificar.disabled = false;
+        btnVerificar.innerHTML = '<i class="fa-solid fa-search me-1"></i> Verificar';
+    }
+
+    const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalVerificacionAsistencia'));
     modal.show();
+}
+
+async function verificarAsistenciaDNI() {
+    const dni = document.getElementById('verifDni').value.trim();
+    const resultado = document.getElementById('verifResultado');
+    const btnProseguir = document.getElementById('btnProseguirCertificado');
+    const btnVerificar = document.getElementById('btnVerificarAsistencia');
+
+    if (!dni || !/^\d{8}$/.test(dni)) {
+        showToast('⚠️ Ingresá un DNI válido de 8 dígitos.', 'warning');
+        return;
+    }
+
+    btnVerificar.disabled = true;
+    btnVerificar.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i>Verificando...';
+
+    try {
+        const res = await fetch(`${API_URL}/auth/verificar-asistencia`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ dni }),
+        });
+
+        const data = await res.json();
+
+        resultado.classList.remove('d-none');
+
+        if (data.asistio) {
+            resultado.className = 'mb-3 alert alert-success text-center';
+            resultado.style.borderRadius = 'var(--radius-sm)';
+            resultado.style.padding = '12px 16px';
+            resultado.innerHTML = `
+                <i class="fa-solid fa-circle-check me-2"></i>
+                <strong>¡Asistencia verificada!</strong><br>
+                <span style="font-size:0.85rem;">${data.message || 'Podés proseguir con tu certificado.'}</span>
+            `;
+            btnProseguir.classList.remove('d-none');
+        } else {
+            resultado.className = 'mb-3 alert alert-danger text-center';
+            resultado.style.borderRadius = 'var(--radius-sm)';
+            resultado.style.padding = '12px 16px';
+            resultado.innerHTML = `
+                <i class="fa-solid fa-circle-xmark me-2"></i>
+                <strong>Sin asistencia registrada</strong><br>
+                <span style="font-size:0.85rem;">${data.message || 'No registrás asistencia al evento.'}</span>
+            `;
+            btnProseguir.classList.add('d-none');
+        }
+    } catch (e) {
+        resultado.classList.remove('d-none');
+        resultado.className = 'mb-3 alert alert-danger text-center';
+        resultado.style.borderRadius = 'var(--radius-sm)';
+        resultado.style.padding = '12px 16px';
+        resultado.innerHTML = `
+            <i class="fa-solid fa-circle-xmark me-2"></i>
+            <strong>Error de conexión</strong><br>
+            <span style="font-size:0.85rem;">No se pudo conectar con el servidor. Intentá de nuevo.</span>
+        `;
+        btnProseguir.classList.add('d-none');
+    } finally {
+        btnVerificar.disabled = false;
+        btnVerificar.innerHTML = '<i class="fa-solid fa-search me-1"></i> Verificar';
+    }
+}
+
+function proseguirACertificado() {
+    // Cerrar modal de verificación
+    const modalVerif = bootstrap.Modal.getInstance(document.getElementById('modalVerificacionAsistencia'));
+    if (modalVerif) modalVerif.hide();
+
+    // Abrir modal de pago de certificado
+    const modalPago = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalCertificadoPago'));
+    modalPago.show();
 }
 
 function showToast(message, type = 'info') {

@@ -19,6 +19,10 @@ export class UsersService {
     return this.userRepository.findOne({ where: { email } });
   }
 
+  async findByDni(dni: string): Promise<User | null> {
+    return this.userRepository.findOne({ where: { dni } });
+  }
+
   async update(user: User): Promise<User> {
     return this.userRepository.save(user);
   }

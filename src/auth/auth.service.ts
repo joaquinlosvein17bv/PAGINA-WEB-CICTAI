@@ -11,6 +11,7 @@ import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { ValidateOticDto } from './dto/validate-otic.dto';
 import { AsistenciaDto } from './dto/asistencia.dto';
+import { VerificarAsistenciaDto } from './dto/verificar-asistencia.dto';
 
 @Injectable()
 export class AuthService {
@@ -74,6 +75,36 @@ export class AuthService {
           participacion: user.participacion,
           modalidad: user.modalidad,
         },
+    };
+  }
+
+  async verificarAsistencia(dto: VerificarAsistenciaDto) {
+    const user = await this.usersService.findByDni(dto.dni);
+
+    if (!user) {
+      return {
+        asistio: false,
+        message: 'No se encontró ningún registro con ese DNI.',
+      };
+    }
+
+    const asistio =
+      user.asistencia_jueves25_maniana ||
+      user.asistencia_jueves25_tarde ||
+      user.asistencia_viernes26_maniana ||
+      user.asistencia_viernes26_tarde;
+
+    if (asistio) {
+      return {
+        asistio: true,
+        message: 'Asistencia verificada correctamente. Podés proseguir con tu certificado.',
+        nombre: user.nombre,
+      };
+    }
+
+    return {
+      asistio: false,
+      message: 'No registrás asistencia al evento. Es necesario asistir al menos a una sesión para obtener el certificado.',
     };
   }
 
