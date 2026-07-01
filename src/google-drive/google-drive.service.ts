@@ -14,7 +14,7 @@ export class GoogleDriveService {
     const credentials = this.getCredentials();
     const auth = new google.auth.GoogleAuth({
       credentials,
-      scopes: ['https://www.googleapis.com/auth/drive.file'],
+      scopes: ['https://www.googleapis.com/auth/drive'],
     });
 
     this.drive = google.drive({ version: 'v3', auth });
@@ -49,22 +49,32 @@ export class GoogleDriveService {
       throw new Error('GOOGLE_DRIVE_FOLDER_ID no está configurado en .env');
     }
 
-    const response = await this.drive.files.create({
-      requestBody: {
-        name: fileName,
-        parents: [this.folderId],
-      },
-      media: {
-        mimeType,
-        body: createReadStream(file.path),
-      },
-      fields: 'id, webViewLink, parents',
-      supportsAllDrives: true,
-    });
+    try {
+      const response = await this.drive.files.create({
+        requestBody: {
+          name: fileName,
+          parents: [this.folderId],
+        },
+        media: {
+          mimeType,
+          body: createReadStream(file.path),
+        },
+        fields: 'id, webViewLink, parents',
+        supportsAllDrives: true,
+      });
 
-    return {
-      fileId: response.data.id,
-      webViewLink: response.data.webViewLink,
-    };
+      console.log('[GoogleDrive] Archivo subido:', response.data.id, response.data.webViewLink);
+
+      return {
+        fileId: response.data.id,
+        webViewLink: response.data.webViewLink,
+      };
+    } catch (error: any) {
+      const details = error.response?.data?.error?.message
+        || error.errors?.map((e: any) => e.message).join(', ')
+        || error.message;
+      console.error('[GoogleDrive] Error al subir:', details);
+      throw new Error('Error al subir el archivo a Drive: ' + details);
+    }
   }
 }
