@@ -58,7 +58,8 @@ export class GoogleDriveService {
         mimeType,
         body: createReadStream(file.path),
       },
-      fields: 'id, webViewLink',
+      fields: 'id, webViewLink, parents',
+      supportsAllDrives: true,
     });
 
     return {
