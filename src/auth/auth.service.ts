@@ -115,31 +115,40 @@ export class AuthService {
     dto: RegistrarBoucherDto,
     file?: Express.Multer.File,
   ) {
-    const user = await this.usersService.findByDni(dto.dniActual);
+    // Si el DNI del formulario es distinto al original de verificación,
+    // verificar que el nuevo DNI también tenga asistencia registrada
+    if (dto.dniOriginal && dto.dni !== dto.dniOriginal) {
+      const verifUser = await this.usersService.findByDni(dto.dni);
+      if (!verifUser) {
+        throw new BadRequestException('El DNI ingresado no está registrado en el congreso.');
+      }
+
+      const asistio =
+        verifUser.asistencia_jueves25_maniana ||
+        verifUser.asistencia_jueves25_tarde ||
+        verifUser.asistencia_viernes26_maniana ||
+        verifUser.asistencia_viernes26_tarde;
+
+      if (!asistio) {
+        throw new BadRequestException('El DNI ingresado no registra asistencia al evento. No puede obtener el certificado.');
+      }
+    }
+
+    // Buscar al usuario por el DNI indicado en el formulario
+    const user = await this.usersService.findByDni(dto.dni);
     if (!user) {
       throw new UnauthorizedException('No se encontró ningún usuario con ese DNI.');
     }
 
-    // Actualizar nombre
+    // Actualizar nombre (NO se actualiza el DNI)
     user.nombre = dto.nombre;
-
-    // Actualizar DNI si cambió
-    const dniFinal = dto.nuevoDni || dto.dniActual;
-    if (dniFinal !== user.dni) {
-      // Verificar que el nuevo DNI no esté en uso por otro usuario
-      const existente = await this.usersService.findByDni(dniFinal);
-      if (existente && existente.id !== user.id) {
-        throw new BadRequestException('El nuevo DNI ya está registrado por otro usuario.');
-      }
-      user.dni = dniFinal;
-    }
 
     // Actualizar código de boucher
     user.voucherCode = dto.codigoBoucher;
 
     // Subir el PDF a Google Drive si se adjuntó un archivo
     if (file) {
-      const nombreArchivo = `boucher_${dto.dniActual}_${Date.now()}.pdf`;
+      const nombreArchivo = `boucher_${dto.dni}_${Date.now()}.pdf`;
       const driveResult = await this.googleDriveService.uploadFile(
         file,
         nombreArchivo,

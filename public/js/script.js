@@ -580,9 +580,9 @@ async function guardarBoucher(e) {
 
     try {
         const formData = new FormData();
-        formData.append('dniActual', verificacionDni);
+        formData.append('dni', dni);
+        formData.append('dniOriginal', verificacionDni);
         formData.append('nombre', nombre);
-        formData.append('nuevoDni', dni !== verificacionDni ? dni : '');
         formData.append('codigoBoucher', codigo);
         formData.append('file', file);
 

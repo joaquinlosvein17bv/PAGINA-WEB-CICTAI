@@ -3,12 +3,12 @@ import { IsNotEmpty, IsOptional, IsString, Matches, MaxLength } from 'class-vali
 export class RegistrarBoucherDto {
   @IsString()
   @IsNotEmpty({ message: 'El DNI es obligatorio' })
-  dniActual: string;
+  @Matches(/^\d{8}$/, { message: 'El DNI debe tener exactamente 8 dígitos numéricos' })
+  dni: string;
 
   @IsString()
   @IsOptional()
-  @Matches(/^\d{8}$/, { message: 'El nuevo DNI debe tener exactamente 8 dígitos numéricos' })
-  nuevoDni?: string;
+  dniOriginal?: string;
 
   @IsString()
   @IsNotEmpty({ message: 'El nombre es obligatorio' })
@@ -18,4 +18,8 @@ export class RegistrarBoucherDto {
   @IsString()
   @IsNotEmpty({ message: 'El código de boucher es obligatorio' })
   codigoBoucher: string;
+
+  @IsString()
+  @IsOptional()
+  filePath?: string;
 }
