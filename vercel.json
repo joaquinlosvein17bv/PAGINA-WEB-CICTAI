@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "npm run build",
+  "buildCommand": "npm run build && cp -r public/. dist/",
   "outputDirectory": "dist",
   "installCommand": "npm install",
   "functions": {
@@ -24,7 +24,7 @@
     },
     {
       "src": "/(.*)",
-      "dest": "public/$1"
+      "dest": "/$1"
     }
   ]
 }
