@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="es">
+<!-- CICTAI 2026 — UNTELS | Reporte de Participantes -->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Reporte de participantes del CICTAI 2026 — Congreso Internacional UNTELS.">
+    <title>CICTAI 2026 | Reporte de Participantes</title>
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.bootstrap5.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        /* ============================================
+           REPORTE — Estilos específicos
+           ============================================ */
+        .reporte-section {
+            min-height: 100vh;
+            background: linear-gradient(135deg, rgba(0, 26, 58, 0.95) 0%, rgba(0, 43, 91, 0.90) 50%, rgba(0, 61, 122, 0.95) 100%),
+                url('img/hero-bg-campus.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            padding: 120px 20px 60px;
+            position: relative;
+        }
+
+        .reporte-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(255, 215, 0, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 215, 0, 0.03) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .reporte-container {
+            position: relative;
+            z-index: 2;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .reporte-header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .reporte-header h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            color: #fff;
+            font-size: 2rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .reporte-header .subtitle {
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 0.95rem;
+        }
+
+        .reporte-header .divider {
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--untels-gold, #FFD700), var(--untels-gold-dark, #e6c200));
+            margin: 0.8rem auto 0;
+            border-radius: 2px;
+        }
+
+        .reporte-card {
+            background: #fff;
+            border-radius: var(--radius, 16px);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 215, 0, 0.1);
+            padding: 1.5rem;
+            animation: fadeInUp 0.8s ease-out 0.1s both;
+        }
+
+        /* Loading */
+        .loading-spinner {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--untels-blue, #002B5B);
+        }
+
+        .loading-spinner i {
+            font-size: 2.5rem;
+            color: var(--untels-gold, #FFD700);
+            margin-bottom: 1rem;
+        }
+
+        /* Tabla */
+        .table-reporte {
+            width: 100%;
+            font-size: 0.82rem;
+            margin-bottom: 0;
+        }
+
+        .table-reporte thead {
+            background: linear-gradient(135deg, var(--untels-blue, #002B5B), var(--untels-blue-light, #003d7a));
+        }
+
+        .table-reporte thead th {
+            color: #fff;
+            font-weight: 600;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 12px 10px;
+            border: none;
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+
+        .table-reporte tbody td {
+            padding: 10px;
+            vertical-align: middle;
+            border-bottom: 1px solid var(--gray-100, #e9ecef);
+            color: #333;
+        }
+
+        .table-reporte tbody tr:hover {
+            background-color: var(--untels-gold-soft, #fff9db);
+        }
+
+        .table-reporte tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge-cargo {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 50px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-cargo.estudiante {
+            background: #e8f4fd;
+            color: #0d6efd;
+        }
+
+        .badge-cargo.docente {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-participacion {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 50px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: capitalize;
+        }
+
+        .badge-participacion.general {
+            background: #e8f4fd;
+            color: #0d6efd;
+        }
+
+        .badge-participacion.ponente {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-participacion.panelista {
+            background: #fce4ec;
+            color: #c62828;
+        }
+
+        .btn-pdf-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 10px;
+            border-radius: 50px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            background: #dc3545;
+            color: #fff;
+            text-decoration: none;
+            transition: 0.3s ease;
+        }
+
+        .btn-pdf-link:hover {
+            background: #b02a37;
+            color: #fff;
+            transform: translateY(-1px);
+        }
+
+        .btn-pdf-link i {
+            font-size: 0.75rem;
+        }
+
+        .text-empty {
+            color: var(--gray-600, #6c757d);
+            font-style: italic;
+            font-size: 0.78rem;
+        }
+
+        /* DataTable personalización */
+        .dataTables_wrapper .dataTables_filter input {
+            border: 2px solid var(--gray-100, #e9ecef);
+            border-radius: var(--radius-sm, 10px);
+            padding: 8px 14px;
+            font-size: 0.85rem;
+            transition: 0.4s ease;
+        }
+
+        .dataTables_wrapper .dataTables_filter input:focus {
+            border-color: var(--untels-gold, #FFD700);
+            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.15);
+            outline: none;
+        }
+
+        .dataTables_wrapper .dataTables_length select {
+            border: 2px solid var(--gray-100, #e9ecef);
+            border-radius: var(--radius-sm, 10px);
+            padding: 6px 10px;
+            font-size: 0.85rem;
+        }
+
+        .dataTables_info {
+            font-size: 0.82rem;
+            color: var(--gray-600, #6c757d);
+        }
+
+        .dataTables_paginate .paginate_button {
+            border-radius: 8px !important;
+            font-size: 0.82rem;
+        }
+
+        .dataTables_paginate .paginate_button.current {
+            background: var(--untels-gold, #FFD700) !important;
+            border-color: var(--untels-gold, #FFD700) !important;
+            color: var(--untels-blue, #002B5B) !important;
+        }
+
+        /* Stats bar */
+        .stats-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem 1.2rem;
+            background: var(--untels-gold-soft, #fff9db);
+            border-radius: var(--radius-sm, 10px);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .stat-item {
+            flex: 1;
+            min-width: 100px;
+            text-align: center;
+        }
+
+        .stat-item .stat-number {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--untels-blue, #002B5B);
+            line-height: 1.2;
+        }
+
+        .stat-item .stat-label {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gray-600, #6c757d);
+            font-weight: 600;
+        }
+
+        .stat-divider {
+            width: 1px;
+            background: rgba(0, 0, 0, 0.1);
+            align-self: stretch;
+        }
+
+        @media (max-width: 768px) {
+            .reporte-section {
+                padding: 100px 10px 40px;
+            }
+
+            .reporte-card {
+                padding: 0.8rem;
+            }
+
+            .table-reporte {
+                font-size: 0.72rem;
+            }
+
+            .table-reporte thead th {
+                font-size: 0.62rem;
+                padding: 8px 6px;
+            }
+
+            .table-reporte tbody td {
+                padding: 6px;
+            }
+
+            .stats-bar {
+                gap: 0.5rem;
+                padding: 0.8rem;
+            }
+
+            .stat-item .stat-number {
+                font-size: 1.2rem;
+            }
+        }
+
+        @media print {
+            .navbar,
+            .footer {
+                display: none !important;
+            }
+            .reporte-section {
+                background: #fff !important;
+                padding: 20px !important;
+            }
+            .reporte-header h2 {
+                color: #002B5B !important;
+            }
+            .reporte-card {
+                box-shadow: none !important;
+                border: 1px solid #ddd !important;
+            }
+            .btn-pdf-link {
+                background: #dc3545 !important;
+                color: #fff !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ============ NAVBAR ============ -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top" id="mainNav">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="index.html">
+                <span class="fw-bold"><span class="text-gold">CICTAI</span> 2026</span>
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto text-uppercase small fw-bold">
+                    <li class="nav-item"><a class="nav-link" href="index.html"><i class="fa-solid fa-house me-1"></i>Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="reporte-asistencia.html"><i class="fa-solid fa-table me-1"></i>Reporte</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ============ SECCIÓN REPORTE ============ -->
+    <section class="reporte-section">
+        <div class="reporte-container">
+            <div class="reporte-header">
+                <h2><i class="fa-solid fa-clipboard-list me-2"></i>Reporte de Participantes</h2>
+                <p class="subtitle">Listado completo de participantes del CICTAI 2026</p>
+                <div class="divider"></div>
+            </div>
+
+            <div class="reporte-card">
+                <!-- Stats -->
+                <div id="statsBar" class="stats-bar" style="display:none;"></div>
+
+                <!-- Loading -->
+                <div id="loading" class="loading-spinner">
+                    <i class="fa-solid fa-circle-notch fa-spin"></i>
+                    <p class="mb-0 fw-semibold">Cargando participantes...</p>
+                </div>
+
+                <!-- Error -->
+                <div id="error" class="alert alert-danger text-center" style="display:none;">
+                    <i class="fa-solid fa-circle-exclamation me-2"></i>
+                    <span id="errorMsg">Error al cargar los datos.</span>
+                </div>
+
+                <!-- Table -->
+                <div id="tableWrapper" style="display:none;">
+                    <div class="table-responsive">
+                        <table id="tablaReporte" class="table table-reporte table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Nombres</th>
+                                    <th>DNI</th>
+                                    <th>Correo</th>
+                                    <th>Resolución</th>
+                                    <th>Horas</th>
+                                    <th>Cargo</th>
+                                    <th>Tipo de Participación</th>
+                                    <th>Temática</th>
+                                    <th>Código Boucher</th>
+                                    <th>Boucher PDF</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tablaBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="img/logo_UNTELS.png" alt="UNTELS" width="50" height="50" style="object-fit: contain;"
+                            class="me-2 rounded-circle bg-white p-1">
+                        <span class="fw-bold text-white fs-5"><span class="text-gold">CICTAI</span> 2026</span>
+                    </div>
+                    <p class="small">I Congreso Internacional Científico de Ciencias y Tecnologías Aplicadas a la
+                        Ingeniería. Organizado por la Universidad Nacional Tecnológica de Lima Sur.</p>
+                    <div class="mt-3">
+                        <a href="#" class="social-link"><i class="fa-brands fa-facebook-f"></i></a>
+                        <a href="#" class="social-link"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#" class="social-link"><i class="fa-brands fa-youtube"></i></a>
+                        <a href="#" class="social-link"><i class="fa-solid fa-globe"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h5>ENLACES RÁPIDOS</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="index.html"><i class="fa-solid fa-chevron-right me-2 small"></i>Inicio</a></li>
+                        <li class="mb-2"><a href="index.html#autoridades"><i class="fa-solid fa-chevron-right me-2 small"></i>Autoridades</a></li>
+                        <li class="mb-2"><a href="index.html#ejes"><i class="fa-solid fa-chevron-right me-2 small"></i>Ejes Temáticos</a></li>
+                        <li class="mb-2"><a href="index.html#horarios"><i class="fa-solid fa-chevron-right me-2 small"></i>Horarios</a></li>
+                        <li class="mb-2"><a href="index.html#recursos"><i class="fa-solid fa-chevron-right me-2 small"></i>Recursos</a></li>
+                        <li class="mb-2"><a href="index.html#registro"><i class="fa-solid fa-chevron-right me-2 small"></i>Inscripción</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h5>CONTACTO</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><i class="fa-solid fa-location-dot me-2 text-gold"></i>Av. Bolívar s/n, sector
+                            3, grupo 1A, Villa El Salvador, Lima</li>
+                        <li class="mb-2"><i class="fa-solid fa-envelope me-2 text-gold"></i>cictai@untels.edu.pe</li>
+                        <li class="mb-2"><i class="fa-solid fa-phone me-2 text-gold"></i>(01) 715-8878</li>
+                        <li class="mb-2"><i class="fa-solid fa-globe me-2 text-gold"></i>www.untels.edu.pe</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom text-center">
+                <p class="mb-0">© 2026 UNTELS — Facultad de Ingeniería de Sistemas Computacionales. Todos los derechos
+                    reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/responsive.bootstrap5.min.js"></script>
+
+    <script>
+        (function() {
+            const loading = document.getElementById('loading');
+            const error = document.getElementById('error');
+            const errorMsg = document.getElementById('errorMsg');
+            const tableWrapper = document.getElementById('tableWrapper');
+            const tablaBody = document.getElementById('tablaBody');
+            const statsBar = document.getElementById('statsBar');
+
+            const CARGO_MAP = {
+                general: 'Estudiante',
+                panelista: 'Estudiante',
+                ponente: 'Docente',
+            };
+
+            const PARTICIPACION_CLASS = {
+                general: 'general',
+                ponente: 'ponente',
+                panelista: 'panelista',
+            };
+
+            async function cargarDatos() {
+                try {
+                    const res = await fetch('/users/reporte');
+                    if (!res.ok) throw new Error('Error del servidor');
+                    const data = await res.json();
+                    renderizar(data);
+                } catch (err) {
+                    loading.style.display = 'none';
+                    error.style.display = 'block';
+                    errorMsg.textContent = err.message || 'Error al cargar los datos. Verifica la conexión.';
+                }
+            }
+
+            function renderizar(data) {
+                if (!data || data.length === 0) {
+                    loading.style.display = 'none';
+                    error.style.display = 'block';
+                    errorMsg.textContent = 'No se encontraron participantes.';
+                    return;
+                }
+
+                // Stats
+                const total = data.length;
+                const generales = data.filter(u => u.tipoParticipacion === 'general').length;
+                const ponentes = data.filter(u => u.tipoParticipacion === 'ponente').length;
+                const panelistas = data.filter(u => u.tipoParticipacion === 'panelista').length;
+                const conBoucher = data.filter(u => u.codigoBoucher).length;
+
+                statsBar.style.display = 'flex';
+                statsBar.innerHTML = `
+                    <div class="stat-item">
+                        <div class="stat-number">${total}</div>
+                        <div class="stat-label">Total</div>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <div class="stat-number">${generales}</div>
+                        <div class="stat-label">Generales</div>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <div class="stat-number">${ponentes}</div>
+                        <div class="stat-label">Ponentes</div>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <div class="stat-number">${panelistas}</div>
+                        <div class="stat-label">Panelistas</div>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <div class="stat-number">${conBoucher}</div>
+                        <div class="stat-label">Con Boucher</div>
+                    </div>
+                `;
+
+                // Filas
+                let html = '';
+                data.forEach(u => {
+                    const cargoClass = (u.cargo || '').toLowerCase() === 'docente' ? 'docente' : 'estudiante';
+                    const partClass = PARTICIPACION_CLASS[u.tipoParticipacion] || '';
+
+                    const badgeCargo = `<span class="badge-cargo ${cargoClass}">${u.cargo || ''}</span>`;
+                    const badgePart = `<span class="badge-participacion ${partClass}">${u.tipoParticipacion}</span>`;
+
+                    let boucherPdf = '<span class="text-empty">—</span>';
+                    if (u.boucherPdf) {
+                        boucherPdf = `<a href="${u.boucherPdf}" target="_blank" class="btn-pdf-link"><i class="fa-solid fa-file-pdf"></i>Ver PDF</a>`;
+                    }
+
+                    html += `<tr>
+                        <td><strong>${escHtml(u.nombres)}</strong></td>
+                        <td>${escHtml(u.dni)}</td>
+                        <td>${escHtml(u.correo)}</td>
+                        <td><span class="text-empty">${u.resolucion || '—'}</span></td>
+                        <td><span class="text-empty">${u.horas || '—'}</span></td>
+                        <td>${badgeCargo}</td>
+                        <td>${badgePart}</td>
+                        <td>${escHtml(u.tematica) || '<span class="text-empty">—</span>'}</td>
+                        <td>${escHtml(u.codigoBoucher) || '<span class="text-empty">—</span>'}</td>
+                        <td>${boucherPdf}</td>
+                    </tr>`;
+                });
+
+                tablaBody.innerHTML = html;
+
+                // Ocultar loading, mostrar tabla
+                loading.style.display = 'none';
+                tableWrapper.style.display = 'block';
+
+                // Inicializar DataTable
+                if ($.fn.DataTable.isDataTable('#tablaReporte')) {
+                    $('#tablaReporte').DataTable().destroy();
+                }
+
+                $('#tablaReporte').DataTable({
+                    language: {
+                        url: 'https://cdn.datatables.net/plug-ins/1.13.6/i18n/es-ES.json',
+                    },
+                    pageLength: 25,
+                    lengthMenu: [10, 25, 50, 100],
+                    order: [[0, 'asc']],
+                    responsive: true,
+                    columnDefs: [
+                        { orderable: false, targets: [3, 4, 9] },
+                        { searchable: false, targets: [3, 4, 9] },
+                    ],
+                });
+            }
+
+            function escHtml(str) {
+                if (!str) return '';
+                const div = document.createElement('div');
+                div.textContent = str;
+                return div.innerHTML;
+            }
+
+            // Cargar al inicio
+            cargarDatos();
+        })();
+    </script>
+</body>
+
+</html>

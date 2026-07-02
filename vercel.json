@@ -11,12 +11,16 @@
   },
   "routes": [
     {
-      "src": "/(auth|ponencias|ejes-tematicos|certificados|uploads)/(.*)",
+      "src": "/(auth|ponencias|ejes-tematicos|certificados|uploads|users)/(.*)",
       "dest": "api/index.ts"
     },
     {
       "src": "/registro",
       "dest": "/grabar-asistencia.html"
+    },
+    {
+      "src": "/reporte",
+      "dest": "/reporte-asistencia.html"
     },
     {
       "src": "/(.*)",

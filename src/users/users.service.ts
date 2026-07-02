@@ -23,6 +23,10 @@ export class UsersService {
     return this.userRepository.findOne({ where: { dni } });
   }
 
+  async findAll(): Promise<User[]> {
+    return this.userRepository.find({ order: { nombre: 'ASC' } });
+  }
+
   async update(user: User): Promise<User> {
     return this.userRepository.save(user);
   }
