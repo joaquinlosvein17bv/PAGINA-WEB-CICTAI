@@ -33,8 +33,8 @@ export class UsersController {
     }> = [];
 
     for (const user of users) {
-      // Filtro: general solo si tiene boucher; ponentes/panelistas siempre
-      if (user.participacion === 'general' && !user.voucherCode) {
+      // Filtro: general solo si tiene boucher PDF; ponentes/panelistas siempre
+      if (user.participacion === 'general' && !user.voucherPath) {
         continue;
       }
 
