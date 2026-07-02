@@ -102,23 +102,10 @@ export class AuthService {
       };
     }
 
-    const asistio =
-      user.asistencia_jueves25_maniana ||
-      user.asistencia_jueves25_tarde ||
-      user.asistencia_viernes26_maniana ||
-      user.asistencia_viernes26_tarde;
-
-    if (asistio) {
-      return {
-        asistio: true,
-        message: 'Asistencia verificada correctamente. Podés proseguir con tu certificado.',
-        nombre: user.nombre,
-      };
-    }
-
     return {
-      asistio: false,
-      message: 'No registrás asistencia al evento. Es necesario asistir al menos a una sesión para obtener el certificado.',
+      asistio: true,
+      message: 'Asistencia verificada correctamente. Podés proseguir con tu certificado.',
+      nombre: user.nombre,
     };
   }
 
@@ -126,25 +113,6 @@ export class AuthService {
     dto: RegistrarBoucherDto,
     file?: Express.Multer.File,
   ) {
-    // Si el DNI del formulario es distinto al original de verificación,
-    // verificar que el nuevo DNI también tenga asistencia registrada
-    if (dto.dniOriginal && dto.dni !== dto.dniOriginal) {
-      const verifUser = await this.usersService.findByDni(dto.dni);
-      if (!verifUser) {
-        throw new BadRequestException('El DNI ingresado no está registrado en el congreso.');
-      }
-
-      const asistio =
-        verifUser.asistencia_jueves25_maniana ||
-        verifUser.asistencia_jueves25_tarde ||
-        verifUser.asistencia_viernes26_maniana ||
-        verifUser.asistencia_viernes26_tarde;
-
-      if (!asistio) {
-        throw new BadRequestException('El DNI ingresado no registra asistencia al evento. No puede obtener el certificado.');
-      }
-    }
-
     // Buscar al usuario por el DNI indicado en el formulario
     const user = await this.usersService.findByDni(dto.dni);
     if (!user) {
