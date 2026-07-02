@@ -254,6 +254,124 @@
             color: var(--untels-blue, #002B5B) !important;
         }
 
+        /* Toolbar de filtros */
+        .reporte-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.2rem;
+            padding: 0.8rem 1rem;
+            background: #f8f9fa;
+            border-radius: var(--radius-sm, 10px);
+            border: 1px solid var(--gray-100, #e9ecef);
+        }
+
+        .reporte-toolbar .toolbar-group {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .reporte-toolbar .toolbar-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--gray-600, #6c757d);
+            margin-right: 0.3rem;
+        }
+
+        .btn-filter {
+            padding: 5px 14px;
+            border-radius: 50px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            border: 2px solid var(--gray-100, #e9ecef);
+            background: #fff;
+            color: var(--gray-600, #6c757d);
+            cursor: pointer;
+            transition: 0.3s ease;
+        }
+
+        .btn-filter:hover {
+            border-color: var(--untels-gold, #FFD700);
+            color: var(--untels-blue, #002B5B);
+        }
+
+        .btn-filter.active {
+            background: var(--untels-blue, #002B5B);
+            border-color: var(--untels-blue, #002B5B);
+            color: #fff;
+        }
+
+        .btn-filter.active-todos {
+            background: var(--untels-blue, #002B5B);
+            border-color: var(--untels-blue, #002B5B);
+            color: #fff;
+        }
+
+        .btn-filter.active-general {
+            background: #0d6efd;
+            border-color: #0d6efd;
+            color: #fff;
+        }
+
+        .btn-filter.active-ponente {
+            background: #155724;
+            border-color: #155724;
+            color: #fff;
+        }
+
+        .btn-filter.active-panelista {
+            background: #c62828;
+            border-color: #c62828;
+            color: #fff;
+        }
+
+        .btn-reload {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 16px;
+            border-radius: 50px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            border: 2px solid var(--untels-gold, #FFD700);
+            background: var(--untels-gold, #FFD700);
+            color: var(--untels-blue, #002B5B);
+            cursor: pointer;
+            transition: 0.3s ease;
+            margin-left: auto;
+        }
+
+        .btn-reload:hover {
+            background: var(--untels-gold-dark, #e6c200);
+            border-color: var(--untels-gold-dark, #e6c200);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+        }
+
+        .btn-reload:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-reload i {
+            font-size: 0.85rem;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .fa-spin-reload {
+            animation: spin 0.8s linear infinite;
+        }
+
         /* Stats bar */
         .stats-bar {
             display: flex;
@@ -379,6 +497,20 @@
             </div>
 
             <div class="reporte-card">
+                <!-- Toolbar: filtros + recarga -->
+                <div id="toolbar" class="reporte-toolbar" style="display:none;">
+                    <div class="toolbar-group">
+                        <span class="toolbar-label"><i class="fa-solid fa-filter me-1"></i>Filtrar:</span>
+                        <button class="btn-filter active active-todos" data-filtro="todos">Todos</button>
+                        <button class="btn-filter" data-filtro="general">Generales</button>
+                        <button class="btn-filter" data-filtro="ponente">Ponentes</button>
+                        <button class="btn-filter" data-filtro="panelista">Panelistas</button>
+                    </div>
+                    <button id="btnRecargar" class="btn-reload" title="Recargar datos">
+                        <i class="fa-solid fa-rotate"></i> Recargar
+                    </button>
+                </div>
+
                 <!-- Stats -->
                 <div id="statsBar" class="stats-bar" style="display:none;"></div>
 
@@ -487,12 +619,8 @@
             const tableWrapper = document.getElementById('tableWrapper');
             const tablaBody = document.getElementById('tablaBody');
             const statsBar = document.getElementById('statsBar');
-
-            const CARGO_MAP = {
-                general: 'Estudiante',
-                panelista: 'Estudiante',
-                ponente: 'Docente',
-            };
+            const toolbar = document.getElementById('toolbar');
+            const btnRecargar = document.getElementById('btnRecargar');
 
             const PARTICIPACION_CLASS = {
                 general: 'general',
@@ -500,12 +628,22 @@
                 panelista: 'panelista',
             };
 
-            async function cargarDatos() {
+            // ─── Almacén de datos crudos ───
+            let datosCrudos = [];
+
+            // ─── Cargar datos ───
+            async function cargarDatos(mostrarLoading = true) {
+                if (mostrarLoading) {
+                    loading.style.display = 'block';
+                    tableWrapper.style.display = 'none';
+                    error.style.display = 'none';
+                }
+
                 try {
                     const res = await fetch('/users/reporte');
                     if (!res.ok) throw new Error('Error del servidor');
-                    const data = await res.json();
-                    renderizar(data);
+                    datosCrudos = await res.json();
+                    renderizar(datosCrudos);
                 } catch (err) {
                     loading.style.display = 'none';
                     error.style.display = 'block';
@@ -513,6 +651,7 @@
                 }
             }
 
+            // ─── Renderizar tabla ───
             function renderizar(data) {
                 if (!data || data.length === 0) {
                     loading.style.display = 'none';
@@ -586,8 +725,9 @@
 
                 tablaBody.innerHTML = html;
 
-                // Ocultar loading, mostrar tabla
+                // Ocultar loading, mostrar toolbar y tabla
                 loading.style.display = 'none';
+                toolbar.style.display = 'flex';
                 tableWrapper.style.display = 'block';
 
                 // Inicializar DataTable
@@ -608,8 +748,48 @@
                         { searchable: false, targets: [3, 4, 9] },
                     ],
                 });
+
+                // Re-aplicar filtro activo si existe
+                const filtroActivo = document.querySelector('.btn-filter.active');
+                if (filtroActivo && filtroActivo.dataset.filtro !== 'todos') {
+                    aplicarFiltro(filtroActivo.dataset.filtro);
+                }
             }
 
+            // ─── Aplicar filtro por columna Tipo Participación (índice 6) ───
+            function aplicarFiltro(tipo) {
+                const table = $('#tablaReporte').DataTable();
+                if (tipo === 'todos') {
+                    table.column(6).search('').draw();
+                } else {
+                    table.column(6).search('^' + tipo + '$', true, false).draw();
+                }
+            }
+
+            // ─── Botones de filtro ───
+            document.querySelectorAll('.btn-filter').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.btn-filter').forEach(b => {
+                        b.className = 'btn-filter';
+                    });
+                    this.classList.add('active', 'active-' + this.dataset.filtro);
+                    aplicarFiltro(this.dataset.filtro);
+                });
+            });
+
+            // ─── Botón de recarga ───
+            btnRecargar.addEventListener('click', async function() {
+                const icon = this.querySelector('i');
+                this.disabled = true;
+                icon.className = 'fa-solid fa-spinner fa-spin-reload';
+
+                await cargarDatos(false);
+
+                icon.className = 'fa-solid fa-rotate';
+                this.disabled = false;
+            });
+
+            // ─── Sanitizar HTML ───
             function escHtml(str) {
                 if (!str) return '';
                 const div = document.createElement('div');
@@ -617,7 +797,7 @@
                 return div.innerHTML;
             }
 
-            // Cargar al inicio
+            // ─── Cargar al inicio ───
             cargarDatos();
         })();
     </script>
