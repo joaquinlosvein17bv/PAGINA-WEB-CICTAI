@@ -16,11 +16,13 @@
     },
     {
       "src": "/registro",
-      "dest": "/grabar-asistencia.html"
+      "dest": "/grabar-asistencia.html",
+      "status": 301
     },
     {
       "src": "/reporte",
-      "dest": "/reporte-asistencia.html"
+      "dest": "/reporte-asistencia.html",
+      "status": 301
     },
     {
       "src": "/(.*)",
