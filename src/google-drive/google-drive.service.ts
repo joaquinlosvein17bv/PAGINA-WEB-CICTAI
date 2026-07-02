@@ -2,7 +2,8 @@ import {
   Injectable,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { existsSync, copyFileSync, mkdirSync, unlinkSync } from 'fs';
+import { put } from '@vercel/blob';
+import { createReadStream, existsSync, unlinkSync, copyFileSync, mkdirSync } from 'fs';
 import { join } from 'path';
 
 @Injectable()
@@ -12,11 +13,33 @@ export class GoogleDriveService {
     fileName: string,
     _mimeType: string,
   ): Promise<{ fileId: string; webViewLink: string }> {
-    // ─── En Vercel → no hay disco persistente ───────────────────
+    // ─── Producción: Vercel Blob ────────────────────────────────
+    if (process.env.BLOB_READ_WRITE_TOKEN) {
+      try {
+        const blob = await put(fileName, createReadStream(file.path), {
+          access: 'public',
+          contentType: 'application/pdf',
+        });
+
+        // Limpiar archivo temporal
+        try { if (existsSync(file.path)) unlinkSync(file.path); } catch {}
+
+        return {
+          fileId: blob.url,
+          webViewLink: blob.url,
+        };
+      } catch (error: any) {
+        console.error('[UploadService] Error al subir a Vercel Blob:', error?.message ?? error);
+        throw new InternalServerErrorException(
+          `Error al subir el archivo a Vercel Blob: ${error?.message ?? 'desconocido'}. Verificá que BLOB_READ_WRITE_TOKEN sea válido.`,
+        );
+      }
+    }
+
+    // ─── En Vercel pero sin token → error claro ─────────────────
     if (process.env.VERCEL) {
       throw new InternalServerErrorException(
-        'En Vercel no se puede guardar archivos localmente porque no hay disco persistente. ' +
-        'Configurá un servicio externo como Vercel Blob, Google Drive o Cloudinary y ajustá esta función.',
+        'Falta configurar BLOB_READ_WRITE_TOKEN. Andá a Vercel Dashboard → Storage → Create Blob Database, copiá el token y agregalo en las Environment Variables del proyecto.',
       );
     }
 
@@ -39,7 +62,6 @@ export class GoogleDriveService {
       );
     }
 
-    // Limpiar archivo temporal de Multer
     try { if (existsSync(file.path)) unlinkSync(file.path); } catch {}
 
     const url = `/uploads/bouchers/${fileName}`;
