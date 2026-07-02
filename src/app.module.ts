@@ -15,11 +15,17 @@ import { CertificadosModule } from './certificados/certificados.module';
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: join(__dirname, '..', '..', '.env') }),
     TypeOrmModule.forRootAsync(typeOrmConfig),
-    ServeStaticModule.forRoot({
-      rootPath: join(process.cwd(), 'public'),
-      serveRoot: '/',
-      exclude: ['/auth/(.*)', '/ponencias/(.*)', '/ejes-tematicos/(.*)', '/certificados/(.*)'],
-    }),
+    ServeStaticModule.forRoot(
+      {
+        rootPath: join(process.cwd(), 'public'),
+        serveRoot: '/',
+        exclude: ['/auth/(.*)', '/ponencias/(.*)', '/ejes-tematicos/(.*)', '/certificados/(.*)'],
+      },
+      {
+        rootPath: join(process.cwd(), 'uploads'),
+        serveRoot: '/uploads',
+      },
+    ),
     UsersModule,
     AuthModule,
     OticCodesModule,

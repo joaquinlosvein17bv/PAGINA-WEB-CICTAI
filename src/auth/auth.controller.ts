@@ -10,10 +10,17 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { extname, join } from 'path';
+import { existsSync, mkdirSync } from 'fs';
 
 const uploadsDir = process.env.VERCEL
   ? '/tmp/uploads'
   : join(process.cwd(), 'uploads');
+
+// Asegurar que el directorio de uploads existe (Multer no lo crea solo)
+if (!existsSync(uploadsDir)) {
+  mkdirSync(uploadsDir, { recursive: true });
+}
+
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
