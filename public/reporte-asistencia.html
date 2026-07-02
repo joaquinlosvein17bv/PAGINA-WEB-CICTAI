@@ -109,6 +109,11 @@
             width: 100%;
             font-size: 0.82rem;
             margin-bottom: 0;
+            border-collapse: separate;
+            border-spacing: 0;
+            border: 1px solid #dee2e6;
+            border-radius: 10px;
+            overflow: hidden;
         }
 
         .table-reporte thead {
@@ -117,25 +122,51 @@
 
         .table-reporte thead th {
             color: #fff;
-            font-weight: 600;
-            font-size: 0.72rem;
+            font-weight: 700;
+            font-size: 0.73rem;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            padding: 12px 10px;
+            padding: 14px 12px;
             border: none;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
             white-space: nowrap;
             vertical-align: middle;
+            text-align: center;
+        }
+
+        .table-reporte thead th:last-child {
+            border-right: none;
         }
 
         .table-reporte tbody td {
-            padding: 10px;
+            padding: 12px;
             vertical-align: middle;
-            border-bottom: 1px solid var(--gray-100, #e9ecef);
+            border-bottom: 1px solid #e9ecef;
+            border-right: 1px solid #f0f0f0;
             color: #333;
+            text-align: center;
+        }
+
+        .table-reporte tbody td:last-child {
+            border-right: none;
+        }
+
+        .table-reporte tbody td:first-child {
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .table-reporte tbody tr {
+            background: #fff;
+            transition: background 0.2s ease;
+        }
+
+        .table-reporte tbody tr:nth-child(even) {
+            background: #f8f9fa;
         }
 
         .table-reporte tbody tr:hover {
-            background-color: var(--untels-gold-soft, #fff9db);
+            background: var(--untels-gold-soft, #fff9db) !important;
         }
 
         .table-reporte tbody tr:last-child td {
@@ -529,7 +560,7 @@
                 <!-- Table -->
                 <div id="tableWrapper" style="display:none;">
                     <div class="table-responsive">
-                        <table id="tablaReporte" class="table table-reporte table-hover">
+                        <table id="tablaReporte" class="table table-reporte">
                             <thead>
                                 <tr>
                                     <th>Nombres</th>
