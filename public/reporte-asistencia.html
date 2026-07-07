@@ -377,10 +377,25 @@
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
-            cursor: help;
+            cursor: pointer;
             text-align: left;
             font-size: 0.82rem;
             color: #2c3e50;
+            transition: background 0.2s ease;
+            border-radius: 4px;
+            padding: 1px 4px;
+        }
+
+        .resumen-truncate:hover {
+            background: #eef2ff;
+        }
+
+        .resumen-truncate.copiado {
+            background: #d4edda;
+            color: #155724;
+            white-space: nowrap;
+            overflow: visible;
+            text-overflow: clip;
         }
 
         .btn-reload {
@@ -768,7 +783,7 @@
                         : '<span class="text-empty">—</span>';
                     const resumenFull = u.resumenPonencia || '';
                     const resumenCell = resumenFull
-                        ? `<span class="resumen-truncate" title="${escHtml(resumenFull)}">${escHtml(truncar(resumenFull, 150))}</span>`
+                        ? `<span class="resumen-truncate" data-fulltext="${escHtml(resumenFull)}">${escHtml(truncar(resumenFull, 150))}</span>`
                         : '<span class="text-empty">—</span>';
 
                     html += `<tr>
@@ -847,6 +862,39 @@
                     this.classList.add('active', 'active-' + this.dataset.filtro);
                     aplicarFiltro(this.dataset.filtro);
                 });
+            });
+
+            // ─── Click en resumen: copiar texto completo ───
+            tablaBody.addEventListener('click', async function(e) {
+                const span = e.target.closest('.resumen-truncate');
+                if (!span) return;
+
+                const texto = span.dataset.fulltext;
+                if (!texto) return;
+
+                try {
+                    await navigator.clipboard.writeText(texto);
+
+                    // Feedback visual
+                    const originalText = span.textContent;
+                    span.classList.add('copiado');
+                    span.textContent = '✓  Copiado';
+
+                    setTimeout(() => {
+                        span.classList.remove('copiado');
+                        span.textContent = originalText;
+                    }, 1500);
+                } catch {
+                    // fallback para navegadores sin clipboard API
+                    const ta = document.createElement('textarea');
+                    ta.value = texto;
+                    ta.style.position = 'fixed';
+                    ta.style.opacity = '0';
+                    document.body.appendChild(ta);
+                    ta.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(ta);
+                }
             });
 
             // ─── Botón de recarga ───
