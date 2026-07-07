@@ -371,6 +371,18 @@
             color: #fff;
         }
 
+        .resumen-truncate {
+            display: block;
+            max-width: 280px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            cursor: help;
+            text-align: left;
+            font-size: 0.82rem;
+            color: #2c3e50;
+        }
+
         .btn-reload {
             display: inline-flex;
             align-items: center;
@@ -581,6 +593,8 @@
                                     <th>Cargo</th>
                                     <th>Tipo de Participación</th>
                                     <th>Temática</th>
+                                    <th>Título de Ponencia</th>
+                                    <th>Resumen</th>
                                     <th>Código Boucher</th>
                                     <th>Boucher PDF</th>
                                 </tr>
@@ -749,6 +763,14 @@
                         boucherPdf = `<a href="${u.boucherPdf}" target="_blank" class="btn-pdf-link"><i class="fa-solid fa-file-pdf"></i>Ver PDF</a>`;
                     }
 
+                    const tituloCell = u.tituloPonencia
+                        ? escHtml(u.tituloPonencia)
+                        : '<span class="text-empty">—</span>';
+                    const resumenFull = u.resumenPonencia || '';
+                    const resumenCell = resumenFull
+                        ? `<span class="resumen-truncate" title="${escHtml(resumenFull)}">${escHtml(truncar(resumenFull, 150))}</span>`
+                        : '<span class="text-empty">—</span>';
+
                     html += `<tr>
                         <td><strong>${escHtml(u.nombres)}</strong></td>
                         <td>${escHtml(u.dni)}</td>
@@ -758,6 +780,8 @@
                         <td>${badgeCargo}</td>
                         <td>${badgePart}</td>
                         <td>${escHtml(u.tematica) || '<span class="text-empty">—</span>'}</td>
+                        <td>${tituloCell}</td>
+                        <td>${resumenCell}</td>
                         <td>${escHtml(u.codigoBoucher) || '<span class="text-empty">—</span>'}</td>
                         <td>${boucherPdf}</td>
                     </tr>`;
@@ -785,8 +809,9 @@
                     scrollX: true,
                     scrollCollapse: true,
                     columnDefs: [
-                        { orderable: false, targets: [3, 4, 9] },
-                        { searchable: false, targets: [3, 4, 9] },
+                        { orderable: false, targets: [3, 4, 8, 9, 10, 11] },
+                        { searchable: false, targets: [3, 4, 10, 11] },
+                        { visible: false, targets: [8, 9] },
                     ],
                 });
 
@@ -800,6 +825,12 @@
             // ─── Aplicar filtro por columna Tipo Participación (índice 6) ───
             function aplicarFiltro(tipo) {
                 const table = $('#tablaReporte').DataTable();
+
+                // Mostrar/ocultar columnas de título (8) y resumen (9)
+                const mostrarPonencia = tipo === 'ponente';
+                table.column(8).visible(mostrarPonencia);
+                table.column(9).visible(mostrarPonencia);
+
                 if (tipo === 'todos') {
                     table.column(6).search('').draw();
                 } else {
@@ -836,6 +867,12 @@
                 const div = document.createElement('div');
                 div.textContent = str;
                 return div.innerHTML;
+            }
+
+            // ─── Truncar texto largo ───
+            function truncar(str, max) {
+                if (!str || str.length <= max) return str || '';
+                return str.substring(0, max) + '…';
             }
 
             // ─── Cargar al inicio ───

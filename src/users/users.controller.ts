@@ -28,6 +28,8 @@ export class UsersController {
       cargo: string;
       tipoParticipacion: string;
       tematica: string;
+      tituloPonencia: string;
+      resumenPonencia: string;
       codigoBoucher: string;
       boucherPdf: string;
     }> = [];
@@ -38,14 +40,24 @@ export class UsersController {
         continue;
       }
 
-      // Obtener temática para ponentes y panelistas
+      // Obtener temática, título y resumen para ponentes y panelistas
       let tematica = '';
+      let tituloPonencia = '';
+      let resumenPonencia = '';
       if (user.participacion === 'ponente' || user.participacion === 'panelista') {
         const ponencias = await this.ponenciasService.findByUser(user.id);
         tematica = ponencias
           .map((p) => p.ejeTematico?.nombre || '')
           .filter(Boolean)
           .join(', ');
+        tituloPonencia = ponencias
+          .map((p) => p.titulo || '')
+          .filter(Boolean)
+          .join(' | ');
+        resumenPonencia = ponencias
+          .map((p) => p.resumen || '')
+          .filter(Boolean)
+          .join(' | ');
       }
 
       result.push({
@@ -57,6 +69,8 @@ export class UsersController {
         cargo: cargoMap[user.participacion] || '',
         tipoParticipacion: user.participacion || '',
         tematica,
+        tituloPonencia,
+        resumenPonencia,
         codigoBoucher: user.voucherCode || '',
         boucherPdf: user.voucherPath || '',
       });
