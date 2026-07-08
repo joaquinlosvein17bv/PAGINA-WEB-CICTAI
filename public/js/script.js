@@ -9,6 +9,13 @@ let ejesCictai = [];
 let verificacionDni = '';
 let verificacionNombre = '';
 
+// Fecha límite para certificación: 26 de Junio 2026 23:59:59
+const FECHA_LIMITE_CERTIFICACION = new Date('2026-06-26T23:59:59-05:00');
+
+function certificacionExpirada() {
+    return new Date() > FECHA_LIMITE_CERTIFICACION;
+}
+
 function toggleFlujosParticipacion() {
     const select = document.getElementById('mainParticipacionSelect');
     const flujosPonencia = document.querySelectorAll('.flujo-ponencia');
@@ -342,6 +349,20 @@ async function initForm() {
     });
 }
 
+function initPlazoCertificacion() {
+    const btn = document.getElementById('btnCertificarse');
+    if (!btn) return;
+
+    if (certificacionExpirada()) {
+        btn.disabled = true;
+        btn.classList.remove('btn-gold');
+        btn.classList.add('btn-secondary', 'disabled');
+        btn.style.opacity = '0.6';
+        btn.style.cursor = 'not-allowed';
+        btn.title = 'Ya venció el plazo para certificarse';
+    }
+}
+
 async function initValidation() {
     const form = document.getElementById('formValidacion');
     if (!form) return;
@@ -406,6 +427,12 @@ async function initValidation() {
 }
 
 function mostrarCertificado() {
+    // Verificar si ya venció el plazo para certificarse
+    if (certificacionExpirada()) {
+        showToast('⛔ Ya no se puede certificar, ya venció el plazo.', 'warning');
+        return;
+    }
+
     // Resetear el modal de verificación
     const verifDni = document.getElementById('verifDni');
     if (verifDni) verifDni.value = '';
@@ -1560,6 +1587,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderEjes(),
         poblarSelectEjes(),
     ]);
+    initPlazoCertificacion();
     initCountdown();
     initScrollReveal();
     initNavbarScroll();
