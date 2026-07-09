@@ -9,13 +9,6 @@ let ejesCictai = [];
 let verificacionDni = '';
 let verificacionNombre = '';
 
-// Fecha límite para certificación: 26 de Junio 2026 23:59:59
-const FECHA_LIMITE_CERTIFICACION = new Date('2026-06-26T23:59:59-05:00');
-
-function certificacionExpirada() {
-    return new Date() > FECHA_LIMITE_CERTIFICACION;
-}
-
 function toggleFlujosParticipacion() {
     const select = document.getElementById('mainParticipacionSelect');
     const flujosPonencia = document.querySelectorAll('.flujo-ponencia');
@@ -349,20 +342,6 @@ async function initForm() {
     });
 }
 
-function initPlazoCertificacion() {
-    const btn = document.getElementById('btnCertificarse');
-    if (!btn) return;
-
-    if (certificacionExpirada()) {
-        btn.disabled = true;
-        btn.classList.remove('btn-gold');
-        btn.classList.add('btn-secondary', 'disabled');
-        btn.style.opacity = '0.6';
-        btn.style.cursor = 'not-allowed';
-        btn.title = 'Ya venció el plazo para certificarse';
-    }
-}
-
 async function initValidation() {
     const form = document.getElementById('formValidacion');
     if (!form) return;
@@ -427,98 +406,9 @@ async function initValidation() {
 }
 
 function mostrarCertificado() {
-    // Verificar si ya venció el plazo para certificarse
-    if (certificacionExpirada()) {
-        showToast('⛔ Ya no se puede certificar, ya venció el plazo.', 'warning');
-        return;
-    }
-
-    // Resetear el modal de verificación
-    const verifDni = document.getElementById('verifDni');
-    if (verifDni) verifDni.value = '';
-    const resultado = document.getElementById('verifResultado');
-    if (resultado) {
-        resultado.classList.add('d-none');
-        resultado.innerHTML = '';
-        resultado.className = 'd-none mb-3';
-    }
-    const btnProseguir = document.getElementById('btnProseguirCertificado');
-    if (btnProseguir) btnProseguir.classList.add('d-none');
-    const btnVerificar = document.getElementById('btnVerificarAsistencia');
-    if (btnVerificar) {
-        btnVerificar.disabled = false;
-        btnVerificar.innerHTML = '<i class="fa-solid fa-search me-1"></i> Verificar';
-    }
-
-    const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalVerificacionAsistencia'));
+    // Ir directamente al flujo de certificado sin verificación de asistencia
+    const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalCertificadoPago'));
     modal.show();
-}
-
-async function verificarAsistenciaDNI() {
-    const dni = document.getElementById('verifDni').value.trim();
-    const resultado = document.getElementById('verifResultado');
-    const btnProseguir = document.getElementById('btnProseguirCertificado');
-    const btnVerificar = document.getElementById('btnVerificarAsistencia');
-
-    if (!dni || !/^\d{8}$/.test(dni)) {
-        showToast('⚠️ Ingresá un DNI válido de 8 dígitos.', 'warning');
-        return;
-    }
-
-    btnVerificar.disabled = true;
-    btnVerificar.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i>Verificando...';
-
-    try {
-        const res = await fetch(`${API_URL}/auth/verificar-asistencia`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ dni }),
-        });
-
-        const data = await res.json();
-
-        resultado.classList.remove('d-none');
-
-        if (data.asistio) {
-            // Guardar datos para el flujo siguiente
-            verificacionDni = dni;
-            verificacionNombre = data.nombre || '';
-
-            resultado.className = 'mb-3 alert alert-success text-center';
-            resultado.style.borderRadius = 'var(--radius-sm)';
-            resultado.style.padding = '12px 16px';
-            resultado.innerHTML = `
-                <i class="fa-solid fa-circle-check me-2"></i>
-                <strong>¡Asistencia verificada!</strong><br>
-                <span style="font-size:0.85rem;">${data.message || 'Podés proseguir con tu certificado.'}</span>
-            `;
-            btnProseguir.classList.remove('d-none');
-        } else {
-            resultado.className = 'mb-3 alert alert-danger text-center';
-            resultado.style.borderRadius = 'var(--radius-sm)';
-            resultado.style.padding = '12px 16px';
-            resultado.innerHTML = `
-                <i class="fa-solid fa-circle-xmark me-2"></i>
-                <strong>Sin asistencia registrada</strong><br>
-                <span style="font-size:0.85rem;">${data.message || 'No registrás asistencia al evento.'}</span>
-            `;
-            btnProseguir.classList.add('d-none');
-        }
-    } catch (e) {
-        resultado.classList.remove('d-none');
-        resultado.className = 'mb-3 alert alert-danger text-center';
-        resultado.style.borderRadius = 'var(--radius-sm)';
-        resultado.style.padding = '12px 16px';
-        resultado.innerHTML = `
-            <i class="fa-solid fa-circle-xmark me-2"></i>
-            <strong>Error de conexión</strong><br>
-            <span style="font-size:0.85rem;">No se pudo conectar con el servidor. Intentá de nuevo.</span>
-        `;
-        btnProseguir.classList.add('d-none');
-    } finally {
-        btnVerificar.disabled = false;
-        btnVerificar.innerHTML = '<i class="fa-solid fa-search me-1"></i> Verificar';
-    }
 }
 
 function proseguirACertificado() {
@@ -554,12 +444,6 @@ function abrirModalRegistrarBoucher() {
         btn.disabled = false;
         btn.innerHTML = '<i class="fa-solid fa-save me-2"></i>GUARDAR';
     }
-
-    // Pre-cargar datos desde la verificación
-    const inputNombre = document.getElementById('boucherNombre');
-    const inputDni = document.getElementById('boucherDni');
-    if (inputNombre) inputNombre.value = verificacionNombre;
-    if (inputDni) inputDni.value = verificacionDni;
 
     // Abrir modal de registro de boucher
     const modalBoucher = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalRegistrarBoucher'));
@@ -608,7 +492,6 @@ async function guardarBoucher(e) {
     try {
         const formData = new FormData();
         formData.append('dni', dni);
-        formData.append('dniOriginal', verificacionDni);
         formData.append('nombre', nombre);
         formData.append('codigoBoucher', codigo);
         formData.append('file', file);
@@ -1587,7 +1470,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderEjes(),
         poblarSelectEjes(),
     ]);
-    initPlazoCertificacion();
     initCountdown();
     initScrollReveal();
     initNavbarScroll();
