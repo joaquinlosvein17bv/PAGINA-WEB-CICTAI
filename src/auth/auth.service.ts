@@ -12,6 +12,8 @@ import { LoginDto } from './dto/login.dto';
 import { ValidateOticDto } from './dto/validate-otic.dto';
 import { AsistenciaDto } from './dto/asistencia.dto';
 import { VerificarAsistenciaDto } from './dto/verificar-asistencia.dto';
+import { VerificarEmailCertificadoDto } from './dto/verificar-email-certificado.dto';
+import { ActualizarDniDto } from './dto/actualizar-dni.dto';
 import { RegistrarBoucherDto } from './dto/registrar-boucher.dto';
 import { GoogleDriveService } from '../google-drive/google-drive.service';
 
@@ -89,6 +91,36 @@ export class AuthService {
           participacion: user.participacion,
           modalidad: user.modalidad,
         },
+    };
+  }
+
+  async verificarEmailCertificado(dto: VerificarEmailCertificadoDto) {
+    const user = await this.usersService.findByEmail(dto.email);
+    if (!user) {
+      return {
+        encontrado: false,
+        message: 'El correo no está registrado en el congreso.',
+      };
+    }
+    return {
+      encontrado: true,
+      nombre: user.nombre,
+      email: user.email,
+      dni: user.dni,
+      dniRegistrado: !!user.dni,
+    };
+  }
+
+  async actualizarDni(dto: ActualizarDniDto) {
+    const user = await this.usersService.findByEmail(dto.email);
+    if (!user) {
+      throw new UnauthorizedException('El correo no está registrado en el congreso.');
+    }
+    user.dni = dto.dni;
+    await this.usersService.update(user);
+    return {
+      message: 'DNI actualizado correctamente.',
+      dni: user.dni,
     };
   }
 

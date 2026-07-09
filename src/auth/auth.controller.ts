@@ -27,6 +27,8 @@ import { LoginDto } from './dto/login.dto';
 import { ValidateOticDto } from './dto/validate-otic.dto';
 import { AsistenciaDto } from './dto/asistencia.dto';
 import { VerificarAsistenciaDto } from './dto/verificar-asistencia.dto';
+import { VerificarEmailCertificadoDto } from './dto/verificar-email-certificado.dto';
+import { ActualizarDniDto } from './dto/actualizar-dni.dto';
 import { RegistrarBoucherDto } from './dto/registrar-boucher.dto';
 
 @Controller('auth')
@@ -82,6 +84,18 @@ export class AuthController {
   @HttpCode(HttpStatus.OK)
   async marcarAsistencia(@Body() dto: AsistenciaDto) {
     return this.authService.marcarAsistencia(dto);
+  }
+
+  @Post('verificar-email-certificado')
+  @HttpCode(HttpStatus.OK)
+  async verificarEmailCertificado(@Body() dto: VerificarEmailCertificadoDto) {
+    return this.authService.verificarEmailCertificado(dto);
+  }
+
+  @Post('actualizar-dni')
+  @HttpCode(HttpStatus.OK)
+  async actualizarDni(@Body() dto: ActualizarDniDto) {
+    return this.authService.actualizarDni(dto);
   }
 
   @Post('verificar-asistencia')

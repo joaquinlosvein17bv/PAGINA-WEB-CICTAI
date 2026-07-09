@@ -406,9 +406,151 @@ async function initValidation() {
 }
 
 function mostrarCertificado() {
-    // Ir directamente al flujo de certificado sin verificación de asistencia
-    const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalCertificadoPago'));
+    // Resetear modal de verificación por correo
+    const emailInput = document.getElementById('verifEmail');
+    if (emailInput) emailInput.value = '';
+    const dniInput = document.getElementById('verifDni');
+    if (dniInput) dniInput.value = '';
+    document.getElementById('emailSection')?.classList.remove('d-none');
+    document.getElementById('dniSection')?.classList.add('d-none');
+    const resultado = document.getElementById('verifResultado');
+    if (resultado) {
+        resultado.classList.add('d-none');
+        resultado.innerHTML = '';
+        resultado.className = 'd-none mb-3';
+    }
+    document.getElementById('btnProseguirCertificado')?.classList.add('d-none');
+    document.getElementById('btnGuardarDni')?.classList.add('d-none');
+    const btnVerificar = document.getElementById('btnVerificarEmail');
+    if (btnVerificar) {
+        btnVerificar.disabled = false;
+        btnVerificar.innerHTML = '<i class="fa-solid fa-search me-1"></i> Verificar';
+    }
+
+    const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalVerificacionAsistencia'));
     modal.show();
+}
+
+async function verificarEmailCertificado() {
+    const email = document.getElementById('verifEmail').value.trim();
+    const resultado = document.getElementById('verifResultado');
+    const btnProseguir = document.getElementById('btnProseguirCertificado');
+    const btnGuardarDni = document.getElementById('btnGuardarDni');
+    const btnVerificar = document.getElementById('btnVerificarEmail');
+    const dniSection = document.getElementById('dniSection');
+    const dniInput = document.getElementById('verifDni');
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showToast('⚠️ Ingresá un correo electrónico válido.', 'warning');
+        return;
+    }
+
+    btnVerificar.disabled = true;
+    btnVerificar.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i>Verificando...';
+
+    try {
+        const res = await fetch(`${API_URL}/auth/verificar-email-certificado`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email }),
+        });
+
+        const data = await res.json();
+
+        resultado.classList.remove('d-none');
+
+        if (data.encontrado) {
+            if (data.dniRegistrado) {
+                // Tiene DNI → puede proseguir directo
+                resultado.className = 'mb-3 alert alert-success text-center';
+                resultado.style.borderRadius = 'var(--radius-sm)';
+                resultado.style.padding = '12px 16px';
+                resultado.innerHTML = `
+                    <i class="fa-solid fa-circle-check me-2"></i>
+                    <strong>¡Bienvenido/a, ${data.nombre}!</strong><br>
+                    <span style="font-size:0.85rem;">Tu correo está verificado. Podés proseguir con tu certificado.</span>
+                `;
+                btnProseguir.classList.remove('d-none');
+                btnGuardarDni.classList.add('d-none');
+                dniSection?.classList.add('d-none');
+            } else {
+                // No tiene DNI → pedir que lo complete
+                resultado.className = 'mb-3 alert alert-warning text-center';
+                resultado.style.borderRadius = 'var(--radius-sm)';
+                resultado.style.padding = '12px 16px';
+                resultado.innerHTML = `
+                    <i class="fa-solid fa-id-card me-2"></i>
+                    <strong>Completá tu DNI, ${data.nombre}</strong><br>
+                    <span style="font-size:0.85rem;">No tenés un DNI registrado. Ingresalo para continuar con la certificación.</span>
+                `;
+                dniSection?.classList.remove('d-none');
+                if (dniInput) dniInput.value = '';
+                btnGuardarDni.classList.remove('d-none');
+                btnProseguir.classList.add('d-none');
+            }
+        } else {
+            resultado.className = 'mb-3 alert alert-danger text-center';
+            resultado.style.borderRadius = 'var(--radius-sm)';
+            resultado.style.padding = '12px 16px';
+            resultado.innerHTML = `
+                <i class="fa-solid fa-circle-xmark me-2"></i>
+                <strong>Correo no registrado</strong><br>
+                <span style="font-size:0.85rem;">${data.message || 'El correo no está registrado en el congreso.'}</span>
+            `;
+            btnProseguir.classList.add('d-none');
+            btnGuardarDni.classList.add('d-none');
+            dniSection?.classList.add('d-none');
+        }
+    } catch (e) {
+        resultado.classList.remove('d-none');
+        resultado.className = 'mb-3 alert alert-danger text-center';
+        resultado.style.borderRadius = 'var(--radius-sm)';
+        resultado.style.padding = '12px 16px';
+        resultado.innerHTML = `
+            <i class="fa-solid fa-circle-xmark me-2"></i>
+            <strong>Error de conexión</strong><br>
+            <span style="font-size:0.85rem;">No se pudo conectar con el servidor. Intentá de nuevo.</span>
+        `;
+        btnProseguir?.classList.add('d-none');
+        btnGuardarDni?.classList.add('d-none');
+    } finally {
+        btnVerificar.disabled = false;
+        btnVerificar.innerHTML = '<i class="fa-solid fa-search me-1"></i> Verificar';
+    }
+}
+
+async function guardarDniYCertificar() {
+    const email = document.getElementById('verifEmail').value.trim();
+    const dni = document.getElementById('verifDni').value.trim();
+    const btnGuardarDni = document.getElementById('btnGuardarDni');
+
+    if (!dni || !/^\d{8}$/.test(dni)) {
+        showToast('⚠️ Ingresá un DNI válido de 8 dígitos.', 'warning');
+        return;
+    }
+
+    btnGuardarDni.disabled = true;
+    btnGuardarDni.innerHTML = '<i class="fa-solid fa-spinner fa-spin me-2"></i>Guardando...';
+
+    try {
+        const res = await fetch(`${API_URL}/auth/actualizar-dni`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, dni }),
+        });
+
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.message || 'Error al guardar el DNI');
+        }
+
+        showToast('✅ DNI registrado correctamente. Ahora podés proseguir.', 'success');
+        proseguirACertificado();
+    } catch (e) {
+        showToast('❌ ' + (e.message || 'Error al guardar el DNI'), 'error');
+        btnGuardarDni.disabled = false;
+        btnGuardarDni.innerHTML = '<i class="fa-solid fa-save me-1"></i> Guardar DNI y proseguir';
+    }
 }
 
 function proseguirACertificado() {
