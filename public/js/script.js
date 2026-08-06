@@ -1529,6 +1529,17 @@ function descargarPlantilla(rol) {
     showToast(`📥 Plantilla para ${rol} descargada.`, 'success');
 }
 
+function descargarLibroResumenes() {
+    const link = document.createElement('a');
+    link.href = 'descargas/Libro%20de%20resumenes-CICTAI-2026.pdf';
+    link.download = 'Libro de resumenes-CICTAI-2026.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    showToast('📥 Libro de Resúmenes descargado.', 'success');
+}
+
 async function initCertificadoForm() {
     const form = document.getElementById('formCertificado');
     if (!form) return;
