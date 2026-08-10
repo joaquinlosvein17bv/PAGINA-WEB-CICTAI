@@ -9,6 +9,13 @@ let ejesCictai = [];
 let verificacionDni = '';
 let verificacionNombre = '';
 
+// Fecha límite para certificación: viernes 14 de agosto de 2026 23:59:59
+const FECHA_LIMITE_CERTIFICACION = new Date('2026-08-14T23:59:59-05:00');
+
+function certificacionExpirada() {
+    return new Date() > FECHA_LIMITE_CERTIFICACION;
+}
+
 function toggleFlujosParticipacion() {
     const select = document.getElementById('mainParticipacionSelect');
     const flujosPonencia = document.querySelectorAll('.flujo-ponencia');
@@ -405,7 +412,26 @@ async function initValidation() {
     });
 }
 
+function initPlazoCertificacion() {
+    const btn = document.getElementById('btnCertificarse');
+    if (!btn) return;
+
+    if (certificacionExpirada()) {
+        btn.disabled = true;
+        btn.classList.remove('btn-gold');
+        btn.classList.add('btn-secondary', 'disabled');
+        btn.style.opacity = '0.6';
+        btn.style.cursor = 'not-allowed';
+        btn.title = 'Ya venció el plazo para certificarse';
+    }
+}
+
 function mostrarCertificado() {
+    // Verificar si ya venció el plazo para certificarse
+    if (certificacionExpirada()) {
+        showToast('⛔ Ya no se puede certificar, ya venció el plazo.', 'warning');
+        return;
+    }
     // Resetear modal de verificación por correo
     const emailInput = document.getElementById('verifEmail');
     if (emailInput) emailInput.value = '';
@@ -1630,6 +1656,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     initSmoothScroll();
     initForm();
     initValidation();
+    initPlazoCertificacion();
     initCertificadoForm();
     initBoucherForm();
     initLoginModal();
