@@ -602,7 +602,7 @@
                                 <tr>
                                     <th>Nombres</th>
                                     <th>DNI</th>
-                                    <th>Correo</th>
+                                    <th>Correos</th>
                                     <th>Resolución</th>
                                     <th>Horas</th>
                                     <th>Cargo</th>
@@ -789,7 +789,7 @@
                     html += `<tr>
                         <td><strong>${escHtml(u.nombres)}</strong></td>
                         <td>${escHtml(u.dni)}</td>
-                        <td>${escHtml(u.correo)}</td>
+                        <td>${escHtml(u.correo) || '<span class="text-empty">—</span>'}</td>
                         <td><span class="text-empty">${u.resolucion || '—'}</span></td>
                         <td><span class="text-empty">${u.horas || '—'}</span></td>
                         <td>${badgeCargo}</td>
